@@ -162,7 +162,7 @@ The visitor pattern enforces completeness at **compile time** — add a node typ
 - `cpp_rewrite_concepts.md` — C++ specific concepts introduced in the rewrite
 - `visitor_pattern.md` — deep dive on the pattern as implemented in this codebase
 - Python and C++ source as reference implementations (~600 and ~1000 lines respectively)
-- `CLAUDE.md` — the actual constraint profile used during the build: `"DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER"`
+- the actual constraint profile used during the build from the original CLAUDE.MD: `"DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER"`
 
 These are real artifacts from the real build, not reconstructed after the fact.
 

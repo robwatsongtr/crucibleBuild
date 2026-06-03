@@ -1,0 +1,7 @@
+know x 5                                                                                                                                           
+know y 10                                                                                                                                          
+                                                                                                                                                     
+doom x < y                                                                                                                                         
+doom x > y                                                                                                                                       
+doom x == y                                                                                                                                        
+doom x != y  

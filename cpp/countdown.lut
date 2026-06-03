@@ -1,0 +1,8 @@
+know count 10                                                                                                                                                        
+know total 0                                                                                                                                                       
+crime count > 0   
+    doom count                                                                                                                                                      
+    know total total + count
+    doom total                                                                                                                                                     
+    know count count - 1                                                                                                                                           
+end          
