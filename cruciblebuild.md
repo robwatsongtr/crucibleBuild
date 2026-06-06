@@ -2,7 +2,7 @@
 
 ## Origin
 
-This product concept emerged from a direct personal experience. The founder — a music teacher of 20 years, self-taught backend/frontend developer of 6 years — built a complete interpreted programming language (Luthor) over two months using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, answering questions, giving feedback on code written by the human — but never writing the code itself.
+This product concept emerged from a direct personal experience. The founder — a music teacher of 20 years, self-taught backend/frontend developer of 6 years — built a complete interpreted programming language (Luthor) using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, answering questions, giving feedback on code written by the human — but never writing the code itself.
 
 The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, visitor pattern, smart pointers, and virtual dispatch than years of conventional learning had produced. The project was built twice: first in Python, then rewritten in C++. The C++ rewrite is where everything "extra clicked."
 

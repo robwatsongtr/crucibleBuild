@@ -1,0 +1,68 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+dist/
+develop-eggs/
+eggs/
+.eggs/
+lib/
+lib64/
+*.egg-info/
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Environment variables
+.env.local
+.env.*.local
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.cache/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+.pytype/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDEs
+.idea/
+
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# C++ build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+cpp/luthor
+cpp/src/*.o
