@@ -11,6 +11,69 @@ AGENTS / LLM : DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER.
 
 ---
 
+## Python Implementation
+
+The original Python version (~500 lines) is in `python/src/` and uses `isinstance`-based dispatch rather than the visitor pattern.
+
+### Tokens (`tokens.py`)
+- Arithmetic: `PLUS`, `MINUS`, `MULTIPLY`, `DIVIDE`
+- Grouping: `L_PARENS`, `R_PARENS`
+- Comparison: `LESS_THAN`, `GREATER_THAN`, `LESS_THAN_EQUAL`, `GREATER_THAN_EQUAL`, `EQUAL_TO`, `NOT_EQUAL`
+- Values: `NUMBER`, `IDENTIFIER`
+- Keywords: `KNOW` (assignment), `SUPPOSE` (if), `OTHERWISE` (else), `END` (block delimiter), `DOOM` (print), `CRIME` (while loop)
+- `EOF`
+
+### Lexer (`lexer.py`)
+- Handles whitespace, single-char tokens via `single_char_map`
+- Multi-character comparison tokens via `peek`/`peek_next` state transition
+- Keywords via `keyword_map`, falls back to `IDENTIFIER`
+- Numeric literals
+- Raises `ValueError` on unexpected characters
+
+### Parser (`parser.py`)
+- Recursive descent
+- Precedence chain: `expression → comparison → term → factor → unary → primary`
+- `primary` handles `NUMBER`, `IDENTIFIER`, and parenthesized expressions
+- `comparison` handles all six comparison operators via class-level `comparison_tokens` list
+- `assignment` method — consumes `KNOW`, `IDENTIFIER`, then parses expression; not part of precedence chain
+- `block` method — loops collecting statements until `END`, returns `BlockNode`
+- `consume` does validation and advances in one step; includes `None` guard for unexpected EOF
+- `conditional` method — consumes `SUPPOSE`, parses condition expression, then-block, optional `OTHERWISE` else-block
+- `while_statement` method — consumes `CRIME`, parses condition expression and body block, returns `WhileNode`
+- `print_statement` method — consumes `DOOM`, parses expression, returns `PrintNode`
+- `statement` method — dispatcher; peeks at current token and routes to `assignment`, `conditional`, `while_statement`, `print_statement`, or `expression`
+- `unary` method — checks for leading `-` token; if found consumes it, parses `primary`, returns `UnaryOpNode`; otherwise passes through to `primary`
+- `program` method — entry point; loops collecting statements until EOF, returns `ProgramNode`
+
+### Nodes (`nodes.py`)
+- `BinaryOpNode(op, left, right)` — binary operations
+- `NumberNode(number)` — numeric literals
+- `IdentifierNode(identifier)` — leaf node for variable references
+- `AssignNode(var_name, expression)` — stores variable name and expression to assign
+- `BlockNode(statements)` — container for a list of statement nodes
+- `ConditionalNode(condition, then_block, else_block)` — conditional branching; `else_block` can be `None`
+- `WhileNode(condition, body_block)` — while loop; re-evaluates condition each iteration
+- `UnaryOpNode(op, operand)` — unary operations; operand is a single child node
+- `PrintNode(expression)` — wraps an expression to print
+- `ProgramNode(statements)` — top-level container for all statements
+
+### Interpreter (`interpreter.py`)
+- Tree walker using `isinstance` dispatch chain
+- `symbol_table` — plain dict for variable storage, initialized in `__init__`
+- `binary_op_map` — maps `TokenType` to Python `operator` functions (arithmetic + comparison operators)
+- `unary_op_map` — maps `TokenType` to Python unary `operator` functions (`MINUS` → `operator.neg`)
+- `run()` method — entry point; loops through `program.statements` and calls `evaluate()` on each
+- `evaluate(node)` method — type-based dispatch that handles all node types:
+  - `NumberNode` — returns the numeric value (base case)
+  - `IdentifierNode` — looks up variable in symbol table, raises error if undefined
+  - `BinaryOpNode` — recursively evaluates left/right children, applies operator via `binary_op_map`
+  - `UnaryOpNode` — evaluates operand, applies unary operator via `unary_op_map`
+  - `AssignNode` — evaluates expression, stores result in symbol table (mutation enables loops)
+  - `PrintNode` — evaluates expression, prints result to console
+  - `BlockNode` — loops through statements, evaluates each
+  - `ConditionalNode` — evaluates condition, branches to then/else blocks based on truthiness
+  - `WhileNode` — evaluates condition, loops body while truthy, re-evaluates condition each iteration
+
 ## Architecture
 
 The pipeline is: **source string → Lexer → token stream → Parser → AST → Runner → Interpreter → output**
@@ -244,68 +307,7 @@ Source files use `.lut` by convention. The binary prints each pipeline stage (to
 
 ---
 
-## Python Implementation
 
-The original Python version (~500 lines) is in `python/src/` and uses `isinstance`-based dispatch rather than the visitor pattern.
-
-### Tokens (`tokens.py`)
-- Arithmetic: `PLUS`, `MINUS`, `MULTIPLY`, `DIVIDE`
-- Grouping: `L_PARENS`, `R_PARENS`
-- Comparison: `LESS_THAN`, `GREATER_THAN`, `LESS_THAN_EQUAL`, `GREATER_THAN_EQUAL`, `EQUAL_TO`, `NOT_EQUAL`
-- Values: `NUMBER`, `IDENTIFIER`
-- Keywords: `KNOW` (assignment), `SUPPOSE` (if), `OTHERWISE` (else), `END` (block delimiter), `DOOM` (print), `CRIME` (while loop)
-- `EOF`
-
-### Lexer (`lexer.py`)
-- Handles whitespace, single-char tokens via `single_char_map`
-- Multi-character comparison tokens via `peek`/`peek_next` state transition
-- Keywords via `keyword_map`, falls back to `IDENTIFIER`
-- Numeric literals
-- Raises `ValueError` on unexpected characters
-
-### Parser (`parser.py`)
-- Recursive descent
-- Precedence chain: `expression → comparison → term → factor → unary → primary`
-- `primary` handles `NUMBER`, `IDENTIFIER`, and parenthesized expressions
-- `comparison` handles all six comparison operators via class-level `comparison_tokens` list
-- `assignment` method — consumes `KNOW`, `IDENTIFIER`, then parses expression; not part of precedence chain
-- `block` method — loops collecting statements until `END`, returns `BlockNode`
-- `consume` does validation and advances in one step; includes `None` guard for unexpected EOF
-- `conditional` method — consumes `SUPPOSE`, parses condition expression, then-block, optional `OTHERWISE` else-block
-- `while_statement` method — consumes `CRIME`, parses condition expression and body block, returns `WhileNode`
-- `print_statement` method — consumes `DOOM`, parses expression, returns `PrintNode`
-- `statement` method — dispatcher; peeks at current token and routes to `assignment`, `conditional`, `while_statement`, `print_statement`, or `expression`
-- `unary` method — checks for leading `-` token; if found consumes it, parses `primary`, returns `UnaryOpNode`; otherwise passes through to `primary`
-- `program` method — entry point; loops collecting statements until EOF, returns `ProgramNode`
-
-### Nodes (`nodes.py`)
-- `BinaryOpNode(op, left, right)` — binary operations
-- `NumberNode(number)` — numeric literals
-- `IdentifierNode(identifier)` — leaf node for variable references
-- `AssignNode(var_name, expression)` — stores variable name and expression to assign
-- `BlockNode(statements)` — container for a list of statement nodes
-- `ConditionalNode(condition, then_block, else_block)` — conditional branching; `else_block` can be `None`
-- `WhileNode(condition, body_block)` — while loop; re-evaluates condition each iteration
-- `UnaryOpNode(op, operand)` — unary operations; operand is a single child node
-- `PrintNode(expression)` — wraps an expression to print
-- `ProgramNode(statements)` — top-level container for all statements
-
-### Interpreter (`interpreter.py`)
-- Tree walker using `isinstance` dispatch chain
-- `symbol_table` — plain dict for variable storage, initialized in `__init__`
-- `binary_op_map` — maps `TokenType` to Python `operator` functions (arithmetic + comparison operators)
-- `unary_op_map` — maps `TokenType` to Python unary `operator` functions (`MINUS` → `operator.neg`)
-- `run()` method — entry point; loops through `program.statements` and calls `evaluate()` on each
-- `evaluate(node)` method — type-based dispatch that handles all node types:
-  - `NumberNode` — returns the numeric value (base case)
-  - `IdentifierNode` — looks up variable in symbol table, raises error if undefined
-  - `BinaryOpNode` — recursively evaluates left/right children, applies operator via `binary_op_map`
-  - `UnaryOpNode` — evaluates operand, applies unary operator via `unary_op_map`
-  - `AssignNode` — evaluates expression, stores result in symbol table (mutation enables loops)
-  - `PrintNode` — evaluates expression, prints result to console
-  - `BlockNode` — loops through statements, evaluates each
-  - `ConditionalNode` — evaluates condition, branches to then/else blocks based on truthiness
-  - `WhileNode` — evaluates condition, loops body while truthy, re-evaluates condition each iteration
 
 ### Python vs C++ Dispatch
 The key structural difference: Python uses an `isinstance` chain in `evaluate()`, while C++ uses the visitor pattern with double dispatch. The visitor pattern enforces completeness at compile time — the compiler will error if a new node type is added without a corresponding `visit()` overload. The `isinstance` chain fails silently at runtime.
