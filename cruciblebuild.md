@@ -67,14 +67,16 @@ The constraint is not a setting. It is the product.
 - Filesystem watching requires local installation
 - Claude Code (the closest analogous tool) is npm-installed — precedent is set
 - Feels like a serious developer tool, not consumer ed-tech
-- Install experience: `pip install cruciblebuild` → `cd my-project` → `cruciblebuild init --project lexer`
+- Install experience: `npm install -g cruciblebuild` → `cd my-project` → `cruciblebuild init --project lexer`
 
 ### Tech Stack (MVP)
 
-- Python / FastAPI backend
-- Watchdog for filesystem monitoring
-- Simple React frontend (local web UI)
-- Anthropic API (core intelligence)
+- TypeScript / Node (≥20), ESM, `tsc --strict`
+- `commander` for CLI subcommands (`init`, `chat`)
+- `chokidar` for filesystem watching
+- Terminal-only chat interface — `readline` + `chalk` + `marked` + `marked-terminal`. No web UI for MVP.
+- `@anthropic-ai/sdk` with streaming and prompt caching (core intelligence)
+- `zod` for all structured data; `vitest` for tests; ESLint + Prettier; husky + lint-staged
 - Agent loop with read-only filesystem tools: `read_file`, `list_directory`, `get_recent_changes`, `get_project_phase`
 - No write tools — the agent observes and responds, never acts on the filesystem
 
