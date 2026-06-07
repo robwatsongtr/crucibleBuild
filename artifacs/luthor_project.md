@@ -13,6 +13,8 @@ AGENTS / LLM : DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER.
 
 ## Python Implementation
 
+The pipeline is: **source string → Lexer → Parser → AST → Interpreter → output**
+
 The original Python version (~500 lines) is in `python/src/` and uses `isinstance`-based dispatch rather than the visitor pattern.
 
 ### Tokens (`tokens.py`)
@@ -74,7 +76,7 @@ The original Python version (~500 lines) is in `python/src/` and uses `isinstanc
   - `ConditionalNode` — evaluates condition, branches to then/else blocks based on truthiness
   - `WhileNode` — evaluates condition, loops body while truthy, re-evaluates condition each iteration
 
-## Architecture
+## C++ Implementaton 
 
 The pipeline is: **source string → Lexer → token stream → Parser → AST → Runner → Interpreter → output**
 
@@ -85,11 +87,10 @@ The pipeline is: **source string → Lexer → token stream → Parser → AST �
 - `src/nodes.h` — AST node hierarchy, `Visitor` interface, `accept` dispatch
 - `src/parser.h` / `src/parser.cpp` — `Parser` class (recursive descent)
 - `src/interpreter.h` / `src/interpreter.cpp` — `Interpreter` class (visitor, tree walker)
-- `src/runner.h` / `src/runner.cpp` — `Runner` class; owns `ProgramNode`, drives the visitor loop
+- `src/runner.h` / `src/runner.cpp` — `Runner` class; owns `ProgramNode`, drives the visitor loop.       Allows addition of other visitors easily, like a bytecode emitter. 
 - `Makefile` — builds with `g++ -std=c++17`
+ 
 
-### Python File Structure (`python/src/`)
-- `tokens.py`, `lexer.py`, `nodes.py`, `parser.py`, `interpreter.py` — original reference implementation
 
 ### Sample Programs (`cpp/`)
 - `fib.lut` — Fibonacci sequence (first 10 terms)

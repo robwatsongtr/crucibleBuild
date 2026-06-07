@@ -205,8 +205,6 @@ The Socratic tutoring feature is becoming a commodity — every major AI product
 4. Reach out to creator community (ThePrimeagen adjacents) with a genuine story, not a pitch
 5. The founder's story *is* the marketing: music teacher builds a compiler from scratch in two months using an inverted AI workflow and understood it end to end
 
-The repo already exists. The docs already exist. The CLAUDE.md showing the method is already public. The story is already there.
-
 ---
 
 ## MVP Build Sequence
@@ -245,7 +243,6 @@ Adding a new project (web server, shell, database, etc.) means authoring that bu
 
 ## Open Questions
 
-- Whether to start with pip or npm packaging
 - Exact constraint negotiation UX at project init
 - How proactive vs reactive the file-watching agent should be
 - Pricing model (direct to learner vs B2B bootcamp)
