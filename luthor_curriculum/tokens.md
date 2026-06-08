@@ -2,7 +2,7 @@
 
 ## The Problem
 
-Source code is a string. A string is just characters. Before anything meaningful can happen — before you can parse, before you can evaluate — you need to break that string into units that carry meaning.
+Source code is text, in this case represented as a string. A string is just characters. Before anything meaningful can happen — before you can parse, before you can evaluate — you need to break that string into units that carry meaning.
 
 Consider `know x 10`. To a computer reading it character by character, there is nothing special about the space between `know` and `x`. It is just another character. The computer has no innate sense that `know` is a complete unit, or that it means something different from `x`, or that `10` is a number.
 

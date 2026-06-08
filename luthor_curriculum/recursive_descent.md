@@ -121,6 +121,32 @@ The `*` got resolved inside `factor` before `term` ever finished. That's why it 
 
 ---
 
+## Two Kinds of Grammar Rules
+
+Before translating rules into functions, notice that the Luthor grammar has two fundamentally different kinds of rules. They look similar on the page but are implemented very differently in code.
+
+**Structure rules** — `program`, `statement`, `assignment`, `conditional`, `while_statement`, `print_statement`, `block`:
+
+These describe the shape of the program. They dispatch based on what token they see. `statement` peeks at the current token and routes to `assignment`, `conditional`, `while_statement`, etc. There is no nesting relationship between them that encodes meaning — `conditional` doesn't call `while_statement` because one is "deeper" than the other. It calls it because the current token is `CRIME`.
+
+Implementation: `if/elif` or `switch` on the current token.
+
+**Expression rules** — `expression`, `comparison`, `term`, `factor`, `unary`, `primary`:
+
+These form the precedence chain. Each one calls the next level down **unconditionally** — `term` always calls `factor`, whether or not there's a `*` or `/` anywhere nearby. The nesting relationship between the rules *is* the meaning. The chain encodes precedence purely through structure.
+
+Implementation: each method calls the next method in the chain first, then loops for its own operators.
+
+**The critical difference:**
+
+A structure rule dispatches — it asks "what token do I see?" and routes accordingly.
+
+An expression rule descends — it calls the next rule unconditionally, then handles its own operators if present.
+
+If you try to implement `term` like a dispatcher — only calling `factor` when you see `+` or `-` — precedence breaks entirely. `term` must call `factor` first, always, before checking for its own operators. The descent happens regardless of what tokens are present.
+
+---
+
 ## One Rule, One Function
 
 This is the mechanical translation that makes recursive descent work.

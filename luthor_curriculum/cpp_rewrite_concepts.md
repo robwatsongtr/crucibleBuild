@@ -10,7 +10,6 @@ This rewrite assumes you have a basic understanding of C — specifically:
 
 If those concepts are unfamiliar, learn them in C first before starting the rewrite. The concepts are not complicated, but they are load-bearing — everything in this doc assumes you've felt the pain that C++ is solving.
 
-A good starting point: write a small C program that heap-allocates a struct, passes a pointer to it into a function, and frees it manually. When that feels natural, come back.
 
 ---
 
@@ -31,13 +30,14 @@ A good starting point: write a small C program that heap-allocates a struct, pas
 
 **The caveat:** C++ only works as a teaching tool here *if you understand what it's abstracting*. Smart pointers only make sense if you know raw pointers. `std::move` only makes sense if you understand why copying a pointer creates two owners. Virtual dispatch only makes sense if you understand that a pointer-to-base doesn't carry the concrete type.
 
-C is the prerequisite. C++ is the payoff.
+The downside of C++ is that it is a complicated language and the syntax can be hard to read at times, especially templated classes; that being said, we are using just a specific subset of the language and you can get a grip on it fairly quickly. 
 
 ---
 
 ## The Big Picture
 
-Python hides memory management behind the runtime. C++ makes it explicit.
+Python hides memory management behind the runtime; the Python interpreter itself is written in C. 
+So a C++ makes it explicit.
 Every variable in Python is secretly a pointer to a heap object — C++ just
 makes you write that out. When rewriting Luthor in C++, you're not learning
 new concepts, you're making visible what Python was doing silently.

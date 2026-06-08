@@ -2,7 +2,7 @@
 
 ## The Problem the Lexer Solves
 
-Source code is just a string. Before anything meaningful can happen, that string needs to be broken into pieces the rest of the pipeline can reason about.
+For the Luthor language, source code is just a string, which is essentially what a text file is, and source code is just a text file with an extension that identifies the language. Before anything meaningful can happen, that string needs to be broken into pieces the rest of the pipeline can reason about.
 
 Consider this Luthor program:
 
@@ -49,7 +49,9 @@ The lexer maintains a **cursor** — a position in the source string. It works c
 4. Emit the token
 5. Repeat until end of string
 
-This is a simple **state machine** — at each step, the current character determines what to do next.
+This is a simple **state machine** — at each step, the current character determines what to do next. What language constructs are typically used for state machines?
+
+The classic answer is a `switch` statement (or `match` in Python 3.10+). But `if/elif` chains are equally valid for a lexer of this size — each branch handles one character class, the structure is flat and readable, and there's no meaningful performance difference at this scale. Don't let the word "state machine" make you reach for something more complex than the problem requires.
 
 ### Single-character tokens
 
@@ -115,21 +117,19 @@ Whitespace is consumed and discarded — it's just a separator. The lexer advanc
 
 These three operations are the entire interface the lexer uses to move through the source:
 
-```python
-def peek(self):
-    if self.pos >= len(self.source):
-        return None
-    return self.source[self.pos]
+```
+peek():
+    if position is past end of source → return None
+    return character at current position (do not advance)
 
-def peek_next(self):
-    if self.pos + 1 >= len(self.source):
-        return None
-    return self.source[self.pos + 1]
+peek_next():
+    if position + 1 is past end of source → return None
+    return character at position + 1 (do not advance)
 
-def advance(self):
-    char = self.source[self.pos]
-    self.pos += 1
-    return char
+advance():
+    capture character at current position
+    move position forward by one
+    return the captured character
 ```
 
 The main loop calls `peek()` to decide what kind of token is starting, then calls `advance()` one or more times to consume it. `peek_next()` is only needed for the two-character comparison tokens.

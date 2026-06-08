@@ -10,9 +10,9 @@ It is also Turing complete. Luthor has variables, arithmetic, conditionals, and 
 
 ---
 
-## Why the Keywords Are Themed
+## Keyword Theme 
 
-The core component you will build first is called a **lexer**. A lexer is named after **Lex Luthor** — Superman's villain. The keywords in Luthor are themed around him. This is not arbitrary. It means every time you type `know` or `crime`, you are reminded that you named your language after the thing you built to read it.
+The core component you will build first is called a **lexer**. So Luthor is a pun on **Lex Luthor** — Superman's villain. The keywords in Luthor are themed around him. While these may not be exact words used by Lex Luthor, and I'm definitely not an expert in the Superman movies, they fit the theme of his motives and grandiosity. Crime being a while loop is a nice touch, right?? 
 
 ---
 
@@ -41,6 +41,12 @@ The core component you will build first is called a **lexer**. A lexer is named 
 | `crime` | While loop | `crime x > 0` |
 
 There is no `=` sign. Assignment uses `know`. There are no parentheses around conditions. Blocks end with `end` rather than `}`. The syntax is deliberately minimal — fewer moving parts means the parser is simpler to build.
+
+**One deliberate design decision worth noticing:** there is no opening block delimiter. `suppose` and `crime` implicitly open a block — the keyword itself is the signal. Only `end` is needed to close it.
+
+This is not unusual. Ruby's control flow works the same way — `if`, `while`, and `def` all open blocks implicitly, and `end` closes them. (Ruby's `begin` keyword is a separate, narrower construct for exception handling, not a general block opener.) Python does something similar — `if`, `for`, and `while` are the implicit openers, with `:` as a lightweight separator and indentation as the closer.
+
+The practical effect in Luthor: the parser's `conditional()` method consumes `suppose`, parses the condition, and immediately calls `block()`. There's no opening delimiter to consume. `block()` just collects statements until it sees `end`. Less syntax, simpler parser, same expressive power.
 
 ---
 
