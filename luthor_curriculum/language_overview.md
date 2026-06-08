@@ -140,6 +140,44 @@ Each stage is independent. The lexer does not know about the parser. The parser 
 
 ---
 
+## How You Will Know It Works
+
+You are provided with two test harness files — one for each pass:
+
+- **`python_luthor/main.py`** (Python pass) — runs a hardcoded source string through the full pipeline, printing the output of each stage: token stream, AST, then interpreter output
+- **`cpp_luthor/main.cpp`** (C++ pass) — takes a `.lut` source file as a command line argument and does the same: prints tokens, AST, then output
+
+These are not implementation files — they are scaffolding that calls your code and shows you what it produces. You did not write them and do not need to. Read them before you start each pass. They define the interface you are building toward — what `Lexer` takes, what `tokenize()` returns, how the pipeline connects.
+
+For the Python pass, `main.py` imports from `src/` — so your implementation files go in `python_luthor/src/`:
+
+```
+src/tokens.py
+src/lexer.py
+src/nodes.py
+src/parser.py
+src/interpreter.py
+```
+
+Run them after completing each component. If your lexer is working, the token output will look right. If your parser is working, the AST will look right. You will know immediately which stage is broken and which is not. Each stage is a checkpoint, not a black box.
+
+For the C++ pass, a `Makefile` is provided at `cpp_luthor/Makefile`. Read it before you start — the `SRCS` line tells you exactly which source files you need to create:
+
+```
+src/lexer.cpp
+src/parser.cpp
+src/interpreter.cpp
+src/runner.cpp
+```
+
+To build and run a `.lut` file:
+```
+make
+./luthor source.lut
+```
+
+---
+
 ## What You Are Actually Learning
 
 Luthor is the vehicle. What you are building toward is an understanding of:

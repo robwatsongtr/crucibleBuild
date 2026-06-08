@@ -210,6 +210,8 @@ Deliverables:
   - `cpp_rewrite_concepts.md` — unique_ptr, variant, ownership, RAII; prerequisite before the C++ rewrite
   - `visitor_pattern.md` — double dispatch, two-dispatch diagram, result side-channel, comparison to Python isinstance; teaching doc for the C++ interpreter phase
   - `mentor_charter.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor charter fragment in the static system prompt assembled by `PromptRenderer`
+  - `main.py` — provided test harness for the Python pass; runs a source string through the full pipeline printing tokens, AST, and output at each stage; learner reads this before starting, runs it after each component
+  - `main.cpp` — provided test harness for the C++ pass; takes a `.lut` file as argument, same pipeline output; learner reads this before starting the rewrite
   - `luthor_project.md` — full reference spec for both implementations; component details, design decisions, grammar, token set
 - The system prompt tells the agent these docs exist and instructs it to reach for them when answering questions about architecture, concepts, or what to build next — rather than relying solely on its training knowledge.
 - The agent does not recite the curriculum verbatim; it uses it as reference to give contextual, depth-appropriate answers based on where the learner actually is.
