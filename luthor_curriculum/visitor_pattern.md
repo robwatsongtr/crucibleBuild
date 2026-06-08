@@ -37,58 +37,81 @@ Without both dispatches: `evaluate` would only see `ASTNode&` and have no way to
 
 ## Setup in nodes.h
 
-```cpp
-struct Visitor;  // forward declaration — says "this type exists, defined later"
+The structure requires three things working together:
 
-struct ASTNode {
-    virtual void accept(Visitor& v) = 0;  // every node must implement
-};
+**1. A forward declaration of `Visitor` at the top of `nodes.h`** — tells the compiler the type exists before it's defined, so `ASTNode` can reference it:
 
-struct NumberNode : ASTNode {
-    void accept(Visitor& v) override { v.visit(*this); }  // *this is NumberNode
-};
-
-struct BinaryOpNode : ASTNode {
-    void accept(Visitor& v) override { v.visit(*this); }  // *this is BinaryOpNode
-};
-
-// defined after all node structs so it can reference them
-struct Visitor {
-    virtual void visit(NumberNode& node) = 0;
-    virtual void visit(BinaryOpNode& node) = 0;
-    // ... one per concrete node type
-    virtual ~Visitor() = default;
-};
 ```
+forward declare: struct Visitor
+```
+
+**2. A base `ASTNode` with a pure virtual `accept` method** — every node must implement this:
+
+```
+struct ASTNode:
+    pure virtual: accept(Visitor&)
+    virtual destructor
+```
+
+**3. Each concrete node implements `accept` by calling back into the visitor with its own concrete type:**
+
+```
+struct NumberNode inherits ASTNode:
+    accept(Visitor& v):
+        v.visit(*this)    ← *this is NumberNode, not ASTNode
+
+struct BinaryOpNode inherits ASTNode:
+    accept(Visitor& v):
+        v.visit(*this)    ← *this is BinaryOpNode, not ASTNode
+```
+
+**4. The `Visitor` struct declares a pure virtual `visit` overload for every concrete node type** — defined after all nodes so it can reference them:
+
+```
+struct Visitor:
+    pure virtual: visit(NumberNode&)
+    pure virtual: visit(BinaryOpNode&)
+    pure virtual: visit(AssignNode&)
+    ... one per concrete node type
+    virtual destructor
+```
+
+The compiler enforces completeness: you cannot create a concrete `Visitor` subclass without implementing every `visit` overload.
 
 ---
 
 ## Interpreter structure
 
-```cpp
-// evaluate is the entry point — takes base type, dispatch handles the rest
-void Interpreter::evaluate(ASTNode& node) {
-    node.accept(*this);
-}
+The `Interpreter` inherits from `Visitor` and implements one `visit` method per node type.
 
-// leaf node — no children, just read the value
-void Interpreter::visit(NumberNode& node) {
-    result = node.number;
-}
+The entry point takes the base type — dispatch handles the rest:
 
-// recursive node — evaluate children first, then combine
-void Interpreter::visit(BinaryOpNode& node) {
-    node.left->accept(*this);
-    double left = result;          // capture before next accept overwrites it
-
-    node.right->accept(*this);
-    double right = result;
-
-    // apply operator, store in result
-}
+```
+evaluate(ASTNode& node):
+    node.accept(*this)
 ```
 
-`result` is a member variable on `Interpreter`. Since `visit` returns `void`, it uses `result` as a side channel to pass values back up the call stack. Each `accept` call overwrites `result`, so capture it immediately after each call.
+Each `visit` method does the actual work for that node type. For leaf nodes, no recursion:
+
+```
+visit(NumberNode& node):
+    result ← node.number
+```
+
+For recursive nodes, evaluate children first, capture the result immediately after each call (because the next call will overwrite it), then combine:
+
+```
+visit(BinaryOpNode& node):
+    evaluate(node.left)
+    left ← result          ← capture before next evaluate overwrites result
+
+    evaluate(node.right)
+    right ← result         ← capture before anything overwrites result
+
+    result ← apply operator to left and right
+```
+
+`result` is a member variable on `Interpreter`. Since `visit` returns `void`, it uses `result` as a side channel to pass values back up the call stack.
 
 ---
 
@@ -102,6 +125,7 @@ void Interpreter::visit(BinaryOpNode& node) {
 **The boilerplate enforces completeness**
 - The compiler won't let you create a concrete `Visitor` that ignores any node type
 - If you add a new node, you must add it to `Visitor` and implement `visit` for it — no node falls through silently
+- This is the thing Python's `isinstance` chain cannot do — a missing branch fails silently at runtime
 
 **Visitor is a shadow vtable**
 - The compiler builds a vtable for `Visitor` with all the `visit` overloads

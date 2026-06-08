@@ -7,7 +7,7 @@ CrucibleBuild is a project-based technical mentorship CLI. The learner runs it i
 The repository today is documentation and reference curriculum (Luthor, in `python_luthor/` and `cpp_luthor/`). No app code exists. This plan covers building the MVP from scratch.
 
 **Locked decisions before planning:**
-- **TypeScript / Node stack** (the cruciblebuild.md spec mentioning Python is outdated; `CODING_STANDARDS.MD` is authoritative).
+- **TypeScript / Node stack** 
 - **Core loop only — 5 phases**. Phase synthesis docs and packaging deferred.
 - **Terminal-only chat for MVP**. No web UI, no React, no local server. Audience lives in the terminal (Claude Code is the precedent). Web UI deferred.
 - **One constraint profile for MVP** — the Luthor default the founder actually used. "Profile" is an *internal* architectural concept (schemas + renderer) so multi-profile support is trivial later. The learner does not pick at init — they're shown the contract and must explicitly acknowledge it.
@@ -95,6 +95,24 @@ Schemas in `src/schemas/`:
 - `ConstraintProfileSchema` — composes persona, rules, project.
 - `ProjectConfigSchema` — what `init` writes: `{ profileId, projectSlug, currentPhaseId, contract: { acknowledgedAt, version } }`.
 
+**Luthor curriculum phase order** (sourced from `luthor_curriculum/luthor_project.md`, encoded into `src/profile/luthor.default.ts`):
+
+**Pass 1 — Python**
+1. `python-tokens` — token enum and `Token` class; no dependencies
+2. `python-lexer` — character-by-character traversal; produces tokens
+3. `python-nodes` — AST node types; pure data structures
+4. `python-parser` — recursive descent; consumes tokens, constructs nodes
+5. `python-interpreter` — tree-walking `isinstance` dispatch; evaluates AST
+
+**Pass 2 — C++ Rewrite**
+6. `cpp-tokens` — `enum class TokenType`, `Token` struct; scoped enums
+7. `cpp-lexer` — same logic as Python, explicit memory; `peek()` / `advance()`
+8. `cpp-nodes` — `unique_ptr` children, virtual destructor, `accept(Visitor&)`, `Visitor` struct with pure virtual `visit()` per node type
+9. `cpp-parser` — returns `unique_ptr<ASTNode>`; move semantics; `consume()`, `block()`
+10. `cpp-interpreter` — inherits `Visitor`; `result` side-channel; `std::variant<double, bool>`; `static const` op maps; `Runner` class
+
+Each phase is a `PhaseSchema` entry with its own goals, checkpoints, and concepts introduced. At `init`, the current phase is printed to the terminal and a `CURRICULUM.md` is written into the learner's project dir with the full breakdown. The `/phase` slash command shows current phase + what's next.
+
 Renderer:
 - Static system prompt = persona + rules tables + project + phase catalog + mentor charter. Stable across the session — this is what we cache.
 - Dynamic addendum = current phase, file-tree summary, recent-changes window. Passed as a second system block so it never busts the cache key.
@@ -179,6 +197,24 @@ Deliverables:
 
 **No write tools. No shell-exec. No network fetch.** Architectural — the only path to filesystem mutation is the learner's editor.
 
+**Curriculum reference access:**
+- `luthor_curriculum/` is installed alongside the package and is readable by the agent via `read_file` and `list_directory`.
+- Contains:
+  - `language_overview.md` — learner-facing intro; what Luthor is, keywords, example programs, pipeline; printed at `init`, first thing a learner reads
+  - `tokens.md` — what tokens are, type + lexeme, why enums; teaching doc for the tokens phase
+  - `lexing.md` — state machine model, lookahead, peek/advance pattern, worked trace; teaching doc for the lexer phase
+  - `ast_nodes.md` — why a tree instead of direct evaluation, node types, tree shape encodes structure; teaching doc for the nodes phase
+  - `trees_and_recursion.md` — pure recursion, tree recursion, mutual recursion, call stack intuition; prerequisite before the parser phase
+  - `recursive_descent.md` — EBNF, grammar rules → functions, precedence, worked trace; core teaching doc for the parser phase
+  - `interpreter.md` — tree-walking evaluation, isinstance dispatch, symbol table, operator maps, worked trace; teaching doc for the Python interpreter phase
+  - `cpp_rewrite_concepts.md` — unique_ptr, variant, ownership, RAII; prerequisite before the C++ rewrite
+  - `visitor_pattern.md` — double dispatch, two-dispatch diagram, result side-channel, comparison to Python isinstance; teaching doc for the C++ interpreter phase
+  - `mentor_charter.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor charter fragment in the static system prompt assembled by `PromptRenderer`
+  - `luthor_project.md` — full reference spec for both implementations; component details, design decisions, grammar, token set
+- The system prompt tells the agent these docs exist and instructs it to reach for them when answering questions about architecture, concepts, or what to build next — rather than relying solely on its training knowledge.
+- The agent does not recite the curriculum verbatim; it uses it as reference to give contextual, depth-appropriate answers based on where the learner actually is.
+- **Opening brief**: when `chat` starts, the agent's first turn is pre-populated with current phase + file context, so the learner never faces a blank prompt. The agent opens with a short summary of where they are and what the current goal is.
+
 **Prompt caching strategy:**
 - Static block carries `cache_control: { type: 'ephemeral' }`. Dynamic block does not.
 - Tool definitions stable across the session (any per-turn jitter busts the cache key).
@@ -203,13 +239,33 @@ Verification:
 
 ---
 
+## Curriculum Bundle Pattern
+
+CrucibleBuild is a learning framework. Luthor is the first project. Every project ships as a self-contained curriculum directory — `luthor_curriculum/` is the canonical pattern all future projects follow.
+
+**Required shape for every curriculum directory:**
+
+```
+<project>_curriculum/
+  language_overview.md     # what the learner is building, why, what it can do
+  mentor_charter.md        # constraint rules, phase sequence, file-to-doc mapping, pacing rules
+  project_definition.md    # phases with goals, checkpoints, concepts introduced
+  <concept>.md             # one teaching doc per major concept (as many as needed)
+```
+
+Adding a new project means authoring a new `<project>_curriculum/` directory. The CLI, agent loop, watcher, and TUI are unchanged. The agent reads curriculum docs via `read_file` at runtime — no code changes required to add content.
+
+The `profileId` in `.cruciblebuild/config.json` ties a session to its curriculum bundle. `luthor-default` is the first value. New projects register new ids.
+
+---
+
 ## Deferred to Post-MVP
 
 - Phase synthesis docs (`cruciblebuild.md` step 6).
 - `npm publish` UX (step 7). For MVP, `npm link` is fine.
 - Web UI / local server / React frontend.
-- Multiple constraint profiles, profile picker at init, profile-authoring CLI.
-- Profile-as-JSON on disk (schemas make this trivial to add).
+- Additional curriculum projects beyond Luthor (e.g. web server, shell, database engine).
+- Profile picker at init for multiple registered projects.
 - Any write tools, shell-exec, or network-fetch tools.
 - Proactive nudges from the watcher (watcher feeds context only at MVP; it does not initiate turns).
 - Multi-project / workspace mode.

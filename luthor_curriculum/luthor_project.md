@@ -7,6 +7,8 @@ The goal is to understand the core source-to-output pipeline: lexing, parsing, A
 
 The C++ implementation is ~1k lines, hand-coded, compact, and not over-engineered.
 
+> For a learner-facing introduction to the language — what it is, what it can do, the keyword set, example programs, and the pipeline overview — see [`language_overview.md`](./language_overview.md). This is the first thing a learner should read.
+
 AGENTS / LLM : DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER.
 
 ---
@@ -17,7 +19,18 @@ The pipeline is: **source string → Lexer → Parser → AST → Interpreter �
 
 The original Python version (~500 lines) is in `python/src/` and uses `isinstance`-based dispatch rather than the visitor pattern.
 
+**Build order:**
+
+1. **Tokens** — define the token enum and `Token` struct; no dependencies
+2. **Lexer** — character-by-character traversal; consumes source, produces tokens
+3. **Nodes** — AST node types; pure data structures, no lexer dependency
+4. **Parser** — recursive descent; consumes tokens, constructs AST nodes
+5. **Interpreter** — tree-walking `isinstance` dispatch; evaluates AST nodes
+
 ### Tokens (`tokens.py`)
+
+> For a walkthrough of what tokens are, why you need them, the type + lexeme structure, and why enums are the right tool — see [`tokens.md`](./tokens.md).
+
 - Arithmetic: `PLUS`, `MINUS`, `MULTIPLY`, `DIVIDE`
 - Grouping: `L_PARENS`, `R_PARENS`
 - Comparison: `LESS_THAN`, `GREATER_THAN`, `LESS_THAN_EQUAL`, `GREATER_THAN_EQUAL`, `EQUAL_TO`, `NOT_EQUAL`
@@ -26,13 +39,36 @@ The original Python version (~500 lines) is in `python/src/` and uses `isinstanc
 - `EOF`
 
 ### Lexer (`lexer.py`)
+
+> For a full walkthrough of how lexing works — the state machine model, lookahead, the peek/advance pattern, and a worked trace — see [`lexing.md`](./lexing.md).
+
 - Handles whitespace, single-char tokens via `single_char_map`
 - Multi-character comparison tokens via `peek`/`peek_next` state transition
 - Keywords via `keyword_map`, falls back to `IDENTIFIER`
 - Numeric literals
 - Raises `ValueError` on unexpected characters
 
+### Nodes (`nodes.py`)
+
+> For a walkthrough of why you need a tree instead of evaluating directly, what each node represents, and how the tree shape encodes structure — see [`ast_nodes.md`](./ast_nodes.md).
+
+- `BinaryOpNode(op, left, right)` — binary operations
+- `NumberNode(number)` — numeric literals
+- `IdentifierNode(identifier)` — leaf node for variable references
+- `AssignNode(var_name, expression)` — stores variable name and expression to assign
+- `BlockNode(statements)` — container for a list of statement nodes
+- `ConditionalNode(condition, then_block, else_block)` — conditional branching; `else_block` can be `None`
+- `WhileNode(condition, body_block)` — while loop; re-evaluates condition each iteration
+- `UnaryOpNode(op, operand)` — unary operations; operand is a single child node
+- `PrintNode(expression)` — wraps an expression to print
+- `ProgramNode(statements)` — top-level container for all statements
+
 ### Parser (`parser.py`)
+
+> Before tackling the parser, make sure recursion and trees feel natural — both pure recursion and mutual recursion. See [`trees_and_recursion.md`](./trees_and_recursion.md).
+
+> For a full walkthrough of EBNF notation, how the grammar rules work, and how precedence emerges from nesting, see [`recursive_descent.md`](./recursive_descent.md).
+
 - Recursive descent
 - Precedence chain: `expression → comparison → term → factor → unary → primary`
 - `primary` handles `NUMBER`, `IDENTIFIER`, and parenthesized expressions
@@ -47,19 +83,11 @@ The original Python version (~500 lines) is in `python/src/` and uses `isinstanc
 - `unary` method — checks for leading `-` token; if found consumes it, parses `primary`, returns `UnaryOpNode`; otherwise passes through to `primary`
 - `program` method — entry point; loops collecting statements until EOF, returns `ProgramNode`
 
-### Nodes (`nodes.py`)
-- `BinaryOpNode(op, left, right)` — binary operations
-- `NumberNode(number)` — numeric literals
-- `IdentifierNode(identifier)` — leaf node for variable references
-- `AssignNode(var_name, expression)` — stores variable name and expression to assign
-- `BlockNode(statements)` — container for a list of statement nodes
-- `ConditionalNode(condition, then_block, else_block)` — conditional branching; `else_block` can be `None`
-- `WhileNode(condition, body_block)` — while loop; re-evaluates condition each iteration
-- `UnaryOpNode(op, operand)` — unary operations; operand is a single child node
-- `PrintNode(expression)` — wraps an expression to print
-- `ProgramNode(statements)` — top-level container for all statements
 
 ### Interpreter (`interpreter.py`)
+
+> For a walkthrough of tree-walking evaluation, isinstance dispatch, the symbol table, operator maps, and a full worked trace — see [`interpreter.md`](./interpreter.md).
+
 - Tree walker using `isinstance` dispatch chain
 - `symbol_table` — plain dict for variable storage, initialized in `__init__`
 - `binary_op_map` — maps `TokenType` to Python `operator` functions (arithmetic + comparison operators)
@@ -76,9 +104,21 @@ The original Python version (~500 lines) is in `python/src/` and uses `isinstanc
   - `ConditionalNode` — evaluates condition, branches to then/else blocks based on truthiness
   - `WhileNode` — evaluates condition, loops body while truthy, re-evaluates condition each iteration
 
-## C++ Implementaton 
+## C++ Rewrite
 
 The pipeline is: **source string → Lexer → token stream → Parser → AST → Runner → Interpreter → output**
+
+Same architecture as Python. Every abstraction Python was hiding becomes explicit — memory management, ownership, type representation, dispatch.
+
+**Build order:**
+
+1. **Tokens** — `enum class TokenType`, `Token` struct with `toString()`; scoped enums, no dependencies
+2. **Lexer** — same logic as Python, translated to C++; `peek()` / `peek_next()` / `advance()`
+3. **Nodes** — AST hierarchy with `unique_ptr` children; virtual destructor; `Visitor` forward declaration; `accept(Visitor&)` on every node; `Visitor` struct with pure virtual `visit()` per node type
+4. **Parser** — returns `unique_ptr<ASTNode>` from every method; move semantics throughout; `consume()`, `block()`, recursive descent precedence chain
+5. **Interpreter** — inherits from `Visitor`; one `visit()` per node type; `result` side-channel; `std::variant<double, bool>`; `static const` op maps; `Runner` class owns `ProgramNode` and drives the loop
+
+> For a full walkthrough of the visitor pattern — double dispatch, the two-dispatch diagram, how `result` works as a side-channel, and how this compares to Python's `isinstance` chain — see [`visitor_pattern.md`](./visitor_pattern.md).
 
 ### C++ File Structure (`cpp/`)
 - `main.cpp` — entry point; reads `.lut` source file, runs pipeline, prints each stage

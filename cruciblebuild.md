@@ -225,13 +225,21 @@ The constraint profile prompt engineering is the first and most important task. 
 
 ## Extensibility
 
-Each project is a self-contained bundle:
-- Project definition MD file — what's being built, phases, checkpoints
-- Phase-specific system prompt configuration
-- Constraint profile
-- Reference materials the agent can pull from
+CrucibleBuild is a learning framework. Luthor is the first project. Each project is a self-contained curriculum bundle living in its own directory — `luthor_curriculum/` establishes the pattern.
 
-Adding a new project (web server, shell, database, etc.) means authoring that bundle. The CLI and agent loop don't change. This separation is worth designing toward explicitly from the start even if only one project ships at MVP.
+**Every curriculum directory has the same shape:**
+
+```
+<project>_curriculum/
+  language_overview.md     # or project_overview.md — what the learner is building and why
+  mentor_charter.md        # constraint rules, phase sequence, file-to-doc mapping, pacing rules
+  <concept>.md             # one teaching doc per major concept introduced
+  project_definition.md    # phases, goals, checkpoints, concepts introduced per phase
+```
+
+Adding a new project (web server, shell, database engine, etc.) means authoring that directory. The CLI, agent loop, filesystem watcher, and TUI don't change. The agent reads the curriculum docs via `read_file` — no code changes required to add new content.
+
+The `profileId` field in `.cruciblebuild/config.json` is what ties a project to its curriculum bundle. `luthor-default` is the first value. New projects register new ids.
 
 ---
 
