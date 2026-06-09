@@ -249,7 +249,7 @@ CrucibleBuild is a learning framework. Luthor is the first project. Every projec
 
 ```
 <project>_curriculum/
-  language_overview.md     # what the learner is building, why, what it can do
+  <project>_overview.md     # what the learner is building, why, what it can do
   mentor_charter.md        # constraint rules, phase sequence, file-to-doc mapping, pacing rules
   project_definition.md    # phases with goals, checkpoints, concepts introduced
   <concept>.md             # one teaching doc per major concept (as many as needed)

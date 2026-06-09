@@ -151,7 +151,7 @@ The interpreter will walk this tree top-down, evaluating each node by recursing 
 
 ---
 
-## The Deeper Shape: A Linear Spine With Trees Hanging Off It
+## The Deeper Shape: A Linear Spine With Trees Hanging Off 
 
 Look carefully at the full structure of a Luthor program. `ProgramNode` holds a flat **list** of statements. `BlockNode` holds a flat list of statements. That list is sequential — statement 1, then statement 2, then statement 3. The interpreter walks it with a `for` loop, not recursion.
 
@@ -180,16 +180,13 @@ ProgramNode  ← linear list
 
 The spine is linear. The expressions branching off that spine are trees.
 
-This is not a quirk of Luthor. It is the fundamental shape of every imperative programming language. Python, JavaScript, C++, Rust — all of them have this same duality baked in:
+It is the fundamental shape of every imperative programming language. Python, JavaScript, C++, Rust — all of them have this same duality baked in:
 
 - **The linear spine is sequential execution** — the imperative model. Do this, then this, then this. Statements run in order.
 - **The expression trees are composable values** — the functional model living inside the imperative one. Nestable, recursive, evaluate to a value.
 
-The reason you can write `f(g(x) + h(y) * z)` in any language is because expressions are trees and trees are recursively composable. You can nest arbitrarily deep. The parser handles it naturally because recursive descent mirrors the recursive structure. The interpreter handles it naturally because tree recursion mirrors the tree shape.
+The reason you can write `x * y + z * w - 1` — or nest expressions arbitrarily deeper — is because expressions are trees and trees are recursively composable. The parser handles it naturally because recursive descent mirrors the recursive structure. The interpreter handles it naturally because tree recursion mirrors the tree shape.
 
-This is also what enables higher level languages to build more complex software. When a language gives you lambdas, closures, method chains, or generics — it is giving you more powerful ways to build those expression trees. A lambda is a subtree you can pass around. A method chain is a spine of expression trees. The abstraction keeps compressing more meaning into the expression side while the statement spine stays simple.
-
-You are building this structure from scratch. Most developers work at the top of it their entire careers without ever seeing the shape underneath.
 
 ---
 
@@ -200,4 +197,4 @@ You are building this structure from scratch. Most developers work at the top of
 - **One node type per construct** — each distinct syntactic thing gets its own type with its own fields
 - **Tree shape encodes precedence and structure** — the interpreter doesn't need to re-derive it; the parser already did that work
 - **Separation of parser and interpreter** — the AST is the handoff point; the parser builds it, the interpreter walks it
-- **The AST has a linear spine and expression trees** — statement lists are sequential (the imperative model); expressions are recursively composable trees (the functional model inside the imperative one); every higher level language is built on this same duality
+- **The AST has a linear spine and expression trees** — statement lists are sequential; expressions are recursively composable trees; the parser and interpreter both handle this naturally because their recursion mirrors the tree shape

@@ -91,7 +91,7 @@ Work through these steps in order. Do not skip ahead.
 
 ### Running and testing at each stage
 
-The learner is provided with `python_luthor/main.py` (Python pass) and `cpp_luthor/main.cpp` (C++ pass). These are test harness files — not implementation code. They run the full pipeline and print the output of each stage: token stream, AST, then interpreter output. The learner did not write them and should not modify them.
+The learner is provided with `python_luthor/main.py` (Python pass) and `cpp_luthor/main.cpp` (C++ pass). They run the full pipeline and print the output of each stage: token stream, AST, then interpreter output. The learner did not write them and should not modify them.
 
 A `Makefile` is also provided at `cpp_luthor/Makefile`. Before the learner starts the C++ pass, have them read it — the `SRCS` line reveals the full set of source files they need to create: `src/lexer.cpp`, `src/parser.cpp`, `src/interpreter.cpp`, `src/runner.cpp`. This is deliberate orientation, not a spoiler — knowing the target file list before writing a line of C++ is part of understanding what they're building.
 
