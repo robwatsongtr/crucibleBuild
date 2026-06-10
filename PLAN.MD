@@ -200,7 +200,7 @@ Deliverables:
 **Curriculum reference access:**
 - `luthor_curriculum/` is installed alongside the package and is readable by the agent via `read_file` and `list_directory`.
 - Contains:
-  - `language_overview.md` — learner-facing intro; what Luthor is, keywords, example programs, pipeline; printed at `init`, first thing a learner reads
+  - `luthor_overview.md` — learner-facing intro; what Luthor is, keywords, example programs, pipeline; printed at `init`, first thing a learner reads
   - `tokens.md` — what tokens are, type + lexeme, why enums; teaching doc for the tokens phase
   - `lexing.md` — state machine model, lookahead, peek/advance pattern, worked trace; teaching doc for the lexer phase
   - `ast_nodes.md` — why a tree instead of direct evaluation, node types, tree shape encodes structure; teaching doc for the nodes phase
@@ -210,9 +210,10 @@ Deliverables:
   - `cpp_rewrite_concepts.md` — unique_ptr, variant, ownership, RAII; prerequisite before the C++ rewrite
   - `visitor_pattern.md` — double dispatch, two-dispatch diagram, result side-channel, comparison to Python isinstance; teaching doc for the C++ interpreter phase
   - `mentor_charter.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor charter fragment in the static system prompt assembled by `PromptRenderer`
-  - `main.py` — provided test harness for the Python pass; runs a source string through the full pipeline printing tokens, AST, and output at each stage; learner reads this before starting, runs it after each component
-  - `main.cpp` — provided test harness for the C++ pass; takes a `.lut` file as argument, same pipeline output; learner reads this before starting the rewrite
   - `luthor_project.md` — full reference spec for both implementations; component details, design decisions, grammar, token set
+- Test harnesses live in the reference project dirs, not the curriculum dir:
+  - `python_luthor/main.py` — provided test harness for the Python pass; runs a source string through the full pipeline printing tokens, AST, and output at each stage; learner reads this before starting, runs it after each component
+  - `cpp_luthor/main.cpp` — provided test harness for the C++ pass; takes a `.lut` file as argument, same pipeline output; learner reads this before starting the rewrite
 - The system prompt tells the agent these docs exist and instructs it to reach for them when answering questions about architecture, concepts, or what to build next — rather than relying solely on its training knowledge.
 - The agent does not recite the curriculum verbatim; it uses it as reference to give contextual, depth-appropriate answers based on where the learner actually is.
 - **Opening brief**: when `chat` starts, the agent's first turn is pre-populated with current phase + file context, so the learner never faces a blank prompt. The agent opens with a short summary of where they are and what the current goal is.
@@ -249,9 +250,9 @@ CrucibleBuild is a learning framework. Luthor is the first project. Every projec
 
 ```
 <project>_curriculum/
-  <project>_overview.md     # what the learner is building, why, what it can do
+  <project>_overview.md    # learner-facing intro: what they're building, why, what it can do
+  <project>_project.md     # full reference spec: phases, components, design decisions
   mentor_charter.md        # constraint rules, phase sequence, file-to-doc mapping, pacing rules
-  project_definition.md    # phases with goals, checkpoints, concepts introduced
   <concept>.md             # one teaching doc per major concept (as many as needed)
 ```
 

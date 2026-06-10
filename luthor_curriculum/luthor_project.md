@@ -7,7 +7,7 @@ The goal is to understand the core source-to-output pipeline: lexing, parsing, A
 
 The C++ implementation is ~1k lines, hand-coded, compact, and not over-engineered.
 
-> For a learner-facing introduction to the language — what it is, what it can do, the keyword set, example programs, and the pipeline overview — see [`language_overview.md`](./language_overview.md). This is the first thing a learner should read.
+> For a learner-facing introduction to the language — what it is, what it can do, the keyword set, example programs, and the pipeline overview — see [`luthor_overview.md`](./luthor_overview.md). This is the first thing a learner should read.
 
 AGENTS / LLM : DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER.
 
@@ -17,7 +17,7 @@ AGENTS / LLM : DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER.
 
 The pipeline is: **source string → Lexer → Parser → AST → Interpreter → output**
 
-The original Python version (~500 lines) is in `python/src/` and uses `isinstance`-based dispatch rather than the visitor pattern.
+The original Python version (~500 lines) is in `python_luthor/src/` and uses `isinstance`-based dispatch rather than the visitor pattern.
 
 **Build order:**
 
@@ -120,7 +120,7 @@ Same architecture as Python. Every abstraction Python was hiding becomes explici
 
 > For a full walkthrough of the visitor pattern — double dispatch, the two-dispatch diagram, how `result` works as a side-channel, and how this compares to Python's `isinstance` chain — see [`visitor_pattern.md`](./visitor_pattern.md).
 
-### C++ File Structure (`cpp/`)
+### C++ File Structure (`cpp_luthor/`)
 - `main.cpp` — entry point; reads `.lut` source file, runs pipeline, prints each stage
 - `src/tokens.h` — `enum class TokenType` and `Token` struct with `toString()`
 - `src/lexer.h` / `src/lexer.cpp` — `Lexer` class
@@ -132,7 +132,7 @@ Same architecture as Python. Every abstraction Python was hiding becomes explici
  
 
 
-### Sample Programs (`cpp/`)
+### Sample Programs (`cpp_luthor/`)
 - `fib.lut` — Fibonacci sequence (first 10 terms)
 - `countdown.lut` — countdown from 10 with running total
 - `test_bool.lut` — boolean comparison output
@@ -360,4 +360,4 @@ The key structural difference: Python uses an `isinstance` chain in `evaluate()`
 - The visitor pattern enforces completeness at compile time — adding a node type requires updating `Visitor` and all implementors
 - `ProgramNode` is handled by `Runner`, not `visit(ProgramNode&)` — that overload throws if reached
 - Numbers are stored as `double` throughout; integer display depends on the value
-- The Python version remains in `python/` as a readable reference implementation
+- The Python version remains in `python_luthor/` as a readable reference implementation

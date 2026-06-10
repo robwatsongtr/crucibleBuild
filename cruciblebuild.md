@@ -214,10 +214,10 @@ The Socratic tutoring feature is becoming a commodity — every major AI product
 1. Nail the system prompt / constraint profile — this is the core IP
 2. Basic CLI init and project setup
 3. Filesystem watcher with context loading
-4. Local web UI chat interface
+4. Terminal chat interface (readline REPL, streamed tokens, markdown rendering)
 5. Agent loop with file-aware responses
-6. Phase synthesis document generation
-7. Package and install experience (`pip install cruciblebuild`)
+6. Phase synthesis document generation *(deferred post-MVP)*
+7. Package and install experience (`npm install -g cruciblebuild`) *(deferred post-MVP)*
 
 The constraint profile prompt engineering is the first and most important task. Everything else is scaffolding around it.
 
@@ -231,10 +231,10 @@ CrucibleBuild is a learning framework. Luthor is the first project. Each project
 
 ```
 <project>_curriculum/
-  language_overview.md     # or project_overview.md — what the learner is building and why
+  <project>_overview.md    # learner-facing intro: what they're building, why, what it can do
+  <project>_project.md     # full reference spec: phases, components, design decisions
   mentor_charter.md        # constraint rules, phase sequence, file-to-doc mapping, pacing rules
   <concept>.md             # one teaching doc per major concept introduced
-  project_definition.md    # phases, goals, checkpoints, concepts introduced per phase
 ```
 
 Adding a new project (web server, shell, database engine, etc.) means authoring that directory. The CLI, agent loop, filesystem watcher, and TUI don't change. The agent reads the curriculum docs via `read_file` — no code changes required to add new content.
@@ -247,7 +247,7 @@ The `profileId` field in `.cruciblebuild/config.json` is what ties a project to 
 
 - Domain: `cruciblebuild.dev`
 - CLI: `cruciblebuild`
-- Install: `pip install cruciblebuild`
+- Install: `npm install -g cruciblebuild`
 
 ---
 
