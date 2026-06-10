@@ -1,68 +1,32 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# Dependencies
+node_modules/
 
-# Distribution / packaging
-.Python
-build/
+# Build output
 dist/
-develop-eggs/
-eggs/
-.eggs/
-lib/
-lib64/
-*.egg-info/
-*.egg
-MANIFEST
 
-# Virtual environments
+# CrucibleBuild runtime state (config is committed, state is not)
+.cruciblebuild/state/
+
+# Environment
 .env
-.venv
-env/
-venv/
-ENV/
-
-# Environment variables
 .env.local
 .env.*.local
-
-# Testing
-.tox/
-.coverage
-.coverage.*
-htmlcov/
-.pytest_cache/
-.cache/
-
-# Type checking
-.mypy_cache/
-.dmypy.json
-.pytype/
-
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb_checkpoints
-
-# IDEs
-.idea/
-
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
 
 # Logs
 *.log
 logs/
 
-# C++ build artifacts
-*.o
-*.obj
-*.a
-*.so
-*.dylib
-cpp/luthor
-cpp/src/*.o
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+*.swp
+*.swo
+
+# TypeScript
+*.tsbuildinfo
+
+# Vitest
+coverage/
