@@ -2,15 +2,21 @@
 
 ## Origin
 
-This product concept emerged from a direct personal experience. The founder — a music teacher of 20 years, self-taught backend/frontend developer of 6 years — built a complete interpreted programming language (Luthor) using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, answering questions, giving feedback on code written by the human — but never writing the code itself.
+This product concept emerged from a direct personal experience. The founder — a long time music teacher, self-taught developer of 6 years  — built a complete interpreted programming language (Luthor) using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, answering questions, giving feedback on code written by the human — but never writing the code itself.
 
 The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, visitor pattern, smart pointers, and virtual dispatch than years of conventional learning had produced. The project was built twice: first in Python, then rewritten in C++. The C++ rewrite is where everything "extra clicked."
+
+More importantly, because of the struggle and effort, the result was a leveling up in congnitive ability regarding being able to hold complex code, concepts, and connections in mind. This translates directly to improved code reading comprehension and coding ability. 
 
 This experience is the product.
 
 ---
 
 ## The Core Problem
+
+Until you can implant experience into someone's brain, the only way to get experience is to actually do the task long enough for the proper patterns to get established. There is no other way. You must write programs to understand how to properly use AI to write programs. 
+
+This is a well establish pattern in school: you have computers and calculators that can do Algebra, Trig, and Calculus, but the student still does a large part of it by hand 
 
 People entering software development now face a fundamental paradox:
 
@@ -44,6 +50,36 @@ The key additional elements that made it work:
 - **Contextual feedback**: the AI could read actual files, not just descriptions
 - **Project the learner chose**: intrinsic motivation drove the whole thing
 - **Real checkpoints**: the lexer either tokenizes correctly or it doesn't — comprehension is load-bearing
+
+---
+
+
+## From Insight to System
+
+This constraint profile isn't a loose set of vibes — it's a structured 
+set of rules with a deliberate escalation path for when a learner is 
+genuinely stuck, not just looking for a shortcut.
+
+When help is needed, it's calibrated in stages:
+
+1. **Hints** — a nudge toward the right question to ask
+2. **Explanations** — clarifying a concept without applying it to the 
+   user's code
+3. **Custom documentation** — pointing to reference material
+4. **Pseudocode** — as a last resort, the logic without the 
+   implementation, preserving the translation step where much of 
+   the learning happens
+
+The line is never crossed: the AI does not write the user's code, 
+and it does not hand over solutions. The escalation exists to 
+distinguish *productive struggle* (the kind that builds the patterns 
+this whole product is designed around) from *unproductive friction* 
+(getting stuck on a typo or an undocumented quirk, which teaches 
+nothing and just burns motivation).
+
+The full constraint profile and system prompt design — including how 
+this is enforced and how edge cases are handled — is specified 
+separately.
 
 ---
 

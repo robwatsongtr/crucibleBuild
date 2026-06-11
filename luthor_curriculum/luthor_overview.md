@@ -14,7 +14,9 @@ Luthor is a small interpreted programming language. You are going to build it fr
 
 It is intentionally small. Small enough that you can hold the entire thing in your head. Every piece must work or nothing works — there is no way to fake understanding.
 
-It is also Turing complete. Luthor has variables, arithmetic, conditionals, and loops. That is enough to compute anything computable. The scope is tight not because the language is a toy, but because the goal is deep understanding of the pipeline, not feature breadth.
+It is also Turing complete. Luthor has variables, arithmetic, conditionals, and loops. That is enough to compute anything computable. There are no functions or closures, but those can be built easily with the foundation here (it's just taking the state of the variables as a context and placing that in a stack).
+
+The scope is tight not because the language is a toy, but because the goal is deep understanding of the pipeline, not feature breadth. If you understand how a program stores state, you can extend that later. 
 
 ---
 
