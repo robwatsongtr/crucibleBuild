@@ -1,5 +1,13 @@
 # The Luthor Language
 
+## Prerequisites
+
+**Python pass:** Comfortable writing Python — functions, classes, loops, conditionals, enums. No prior knowledge of compilers or interpreters required.
+
+**C++ rewrite:** A working understanding of C fundamentals — pointers, heap allocation, stack vs heap, manual memory management. Full details in [`cpp_rewrite_concepts.md`](./cpp_rewrite_concepts.md) — read the Prerequisites section there before starting the rewrite.
+
+---
+
 ## What It Is
 
 Luthor is a small interpreted programming language. You are going to build it from scratch — the lexer, the parser, the AST, and the interpreter. When you are done, you will have a complete pipeline that takes source code as a string and produces output.

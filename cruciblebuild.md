@@ -174,6 +174,8 @@ These are real artifacts from the real build, not reconstructed after the fact.
 
 **Primary**: Self-directed adult learners who are aware of the LLM shortcut problem and actively don't want to use it. People who've seen what answer-farming produces and want genuine understanding. The audience that watches ThePrimeagen, TJ DeVries, and similar creators who preach "build hard things, understand the machine."
 
+**Prerequisites for the Luthor project:** Comfortable with Python (functions, classes, loops, enums). For the C++ rewrite: a working understanding of C fundamentals — pointers, heap allocation, stack vs heap. Not C++ experience — C fundamentals. Full details in `luthor_curriculum/cpp_rewrite_concepts.md`.
+
 **Why this audience works:**
 - Motivation is self-supplied — the hardest problem in ed-tech is largely solved
 - Already bought into the philosophy — no convincing required
