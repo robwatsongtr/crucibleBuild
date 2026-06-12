@@ -24,8 +24,9 @@ The repository today is documentation and reference curriculum (Luthor, in `pyth
 - **CLI framework**: `commander` (small, stable, clean subcommands for `init` and `chat`).
 - **Filesystem watcher**: `chokidar` (de-facto Node standard, debounced, cross-platform).
 - **Terminal chat**: `readline` + `chalk` + `marked` + `marked-terminal`. **No Ink** — Ink earns its keep with rich layouts; MVP is a scroll-back REPL with streamed tokens and rendered code blocks, which `readline` does with zero ceremony. Revisit if we add split panes.
+- **Markdown rendering**: `marked` + `marked-terminal` introduced in Phase 2 for `init` output (overview, rules). Reused in Phase 4 for the chat REPL.
 - **Anthropic SDK**: `@anthropic-ai/sdk`, streaming via `client.messages.stream`, tool-use loop driven manually. Use latest Opus model id at build time.
-- **Logger**: stderr-only `Logger` class. No `console.log` anywhere — the TUI owns stdout.
+- **Logger**: stderr-only logger module (`logging/logger.ts`) with plain exported functions (`logInfo`, `logDebug`, etc.). No `console.log` anywhere — the TUI owns stdout.
 
 ---
 
@@ -83,7 +84,7 @@ bin/cruciblebuild           # shebang → dist/cli/index.js
 Deliverables:
 - Zod schemas for every piece of a constraint profile.
 - The Luthor default profile as a typed module in `src/profile/luthor.default.ts` (JSON-on-disk profiles deferred; schemas make adding it trivial).
-- A `PromptRenderer` class that takes a validated `ConstraintProfile` + runtime `LearnerContext` and returns `{ staticSystem, dynamicSystem }`. The split is what makes prompt caching work.
+- A `renderPrompt(profile, context, mentorCharter)` function in `prompt-renderer.ts` that returns `{ staticSystem, dynamicSystem }`. The split is what makes prompt caching work.
 - Vitest snapshot tests.
 
 Schemas in `src/schemas/`:
@@ -127,12 +128,11 @@ Verification:
 Deliverables:
 - `cruciblebuild init` (commander subcommand):
   1. Confirms cwd is a sensible project root (warn if no `.git`).
-  2. Prints the rendered constraint contract (rules tables + persona summary).
-  3. Requires the learner to type a literal acknowledgement phrase (e.g. `I accept`) at a `readline` prompt. No `--yes` bypass at MVP — this is the "negotiation moment" from `constraint_profile.md`.
-  4. Writes `.cruciblebuild/config.json` (validated through `ProjectConfigSchema`) with acknowledgement timestamp + profile version hash.
-  5. Writes `.cruciblebuild/README.md` explaining the directory.
-  6. Updates `.gitignore` to ignore `.cruciblebuild/state/` but commit `config.json`.
-- `ProjectScaffolder` class owns all filesystem writes; CLI command is a thin wrapper.
+  2. Prints the Luthor overview and mentor rules using `marked` + `marked-terminal` for formatted terminal output.
+  3. Writes `.cruciblebuild/config.json` (validated through `ProjectConfigSchema`) with timestamp + profile version hash.
+  4. Writes `.cruciblebuild/README.md` explaining the directory.
+  5. Updates `.gitignore` to ignore `.cruciblebuild/state/` but commit `config.json`.
+- `project-scaffolder.ts` exports plain functions for all filesystem writes; CLI command is a thin wrapper.
 
 Verification:
 - Unit: scaffolder writes into a temp dir; assert file contents and schema validity.
@@ -143,12 +143,12 @@ Verification:
 ## Phase 3 — Filesystem Watcher + Context Store
 
 Deliverables:
-- `FileWatcher` class wrapping `chokidar` — ignores `node_modules`, `.git`, `.cruciblebuild/state`, dotfiles by default. Respects `.cruciblebuildignore` if present.
-- `ContextStore` class maintaining:
+- `FileWatcher` class wrapping `chokidar` — holds a live watcher handle and ring buffer; ignores `node_modules`, `.git`, `.cruciblebuild/state`, dotfiles by default. Respects `.cruciblebuildignore` if present.
+- `ContextStore` class maintaining in-memory state:
   - `fileTree` — lazy-loaded tree, refreshed on `add`/`unlink`, capped depth.
   - `recentChanges` — ring buffer of last 50 events `{ path, kind, at }`, debounced 300ms per path.
   - `currentPhaseId` from `ProjectConfigSchema`.
-- `FsReader` class with sandboxed reads — every path resolved and verified inside project root; symlinks rejected; binaries refused; size capped at 256KB with truncation marker.
+- `fs-reader.ts` exports plain sandboxed-read functions — every path resolved and verified inside project root; symlinks rejected; binaries refused; size capped at 256KB with truncation marker.
 - Pure services with no SDK dependency yet.
 
 Verification:
@@ -161,11 +161,11 @@ Verification:
 
 Deliverables:
 - `cruciblebuild chat` (default verb) starts the REPL after verifying `.cruciblebuild/config.json` exists.
-- `ChatRepl` class on `readline`:
+- `ChatRepl` class on `readline` (holds live readline interface and conversation history):
   - Multiline input via trailing `\` or `:paste` toggle.
   - History via readline's built-in, persisted to `.cruciblebuild/state/history`.
   - Streamed assistant tokens to stdout; spinner on stderr while waiting for first token.
-  - `Renderer` class: markdown → ANSI via `marked` + `marked-terminal`; `chalk` for role labels and code-block borders.
+  - `renderer.ts` exports plain render functions: markdown → ANSI via `marked` + `marked-terminal`; `chalk` for role labels and code-block borders.
   - Slash commands: `/exit`, `/clear`, `/phase`, `/files` (in `tui/keybindings.ts`).
 - **Phase 4 wires to a stub agent** that echoes input plus a canned tool-use turn, so the TUI is exercised before phase 5.
 
@@ -178,10 +178,10 @@ Verification:
 ## Phase 5 — Agent Loop With File-Aware Tools
 
 Deliverables:
-- `AnthropicClient` class — wraps SDK, centralizes model id, max tokens, temperature, cache config.
-- `ToolRegistry` declares the four read-only tools with input schemas.
-- `ToolHandlers` executes each tool against `FsReader` / `ContextStore`. All handler I/O validated through `agent-tool-io.ts` schemas — request *and* response.
-- `AgentLoop` class:
+- `anthropic-client.ts` exports a factory function that returns a configured SDK client; centralizes model id, max tokens, temperature, cache config.
+- `tool-registry.ts` exports the four read-only tool declarations as a plain array.
+- `tool-handlers.ts` exports plain handler functions executed against `fs-reader.ts` / `ContextStore`. All handler I/O validated through `agent-tool-io.ts` schemas — request *and* response.
+- `AgentLoop` class (holds message history across turns):
   1. Build messages array (user turn + history).
   2. Build system as a two-block array: `[{ type: 'text', text: staticSystem, cache_control: { type: 'ephemeral' } }, { type: 'text', text: dynamicSystem }]`.
   3. Stream assistant response.
@@ -209,7 +209,7 @@ Deliverables:
   - `interpreter.md` — tree-walking evaluation, isinstance dispatch, symbol table, operator maps, worked trace; teaching doc for the Python interpreter phase
   - `cpp_rewrite_concepts.md` — unique_ptr, variant, ownership, RAII; prerequisite before the C++ rewrite
   - `visitor_pattern.md` — double dispatch, two-dispatch diagram, result side-channel, comparison to Python isinstance; teaching doc for the C++ interpreter phase
-  - `mentor_charter.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor charter fragment in the static system prompt assembled by `PromptRenderer`
+  - `mentor_charter.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor charter fragment in the static system prompt assembled by `renderPrompt`
   - `luthor_project.md` — full reference spec for both implementations; component details, design decisions, grammar, token set
 - Test harnesses live in the reference project dirs, not the curriculum dir:
   - `python_luthor/main.py` — provided test harness for the Python pass; runs a source string through the full pipeline printing tokens, AST, and output at each stage; learner reads this before starting, runs it after each component

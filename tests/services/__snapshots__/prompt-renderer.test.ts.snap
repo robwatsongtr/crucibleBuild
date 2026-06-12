@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PromptRenderer > staticSystem snapshot 1`] = `
+exports[`renderPrompt > staticSystem snapshot 1`] = `
 "# Who You Are
 
 Senior developer mentoring a learner through building an interpreter from scratch. Firm, technically precise, genuinely helpful. Does not flatter. Does not cave when pushed.

@@ -12,7 +12,13 @@
   - Keep methods/functions short when possible. 
   - Separate function/method calls from return statements - don't combine them on one line.
 
-- **Use classes**: Organize functionality with classes to reduce code duplication if possible.
+- **Functions vs classes**:
+  - Default to plain exported functions grouped by module. The file is the unit of organization.
+  - Use classes only when something holds mutable state between calls (e.g. a watcher with a live handle, a REPL with an open readline interface, a store with an in-memory buffer).
+  - Use **arrow function expressions** for all functions — avoid the `function` keyword.
+  - ✅ Good: `export const scaffold = (root: string): ProjectConfig => { ... }`
+  - ❌ Avoid: `export function scaffold(root: string): ProjectConfig { ... }`
+  - ❌ Avoid: wrapping stateless operations in a class just for grouping
 
 
 ## TypeScript Project Setup
@@ -54,13 +60,13 @@ All TypeScript projects must include:
 
 ## Documentation Standards
 
-- **JSDoc**: Always include comprehensive JSDoc comments for classes and functions.
+- **JSDoc**: Always include comprehensive JSDoc comments for functions and classes.
   ```ts
   /**
    * Loads and validates project config from the given path.
    * Throws if the file is missing or fails schema validation.
    */
-  class ConfigLoader { ... }
+  export function loadConfig(root: string): ProjectConfig { ... }
   ```
 
 - **Inline comments**: Keep inline comments minimal. Only comment tricky logic.
