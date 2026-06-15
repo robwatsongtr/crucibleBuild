@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renderer snapshots > renderError snapshot 1`] = `"Error: file not found"`;
+
+exports[`renderer snapshots > renderMarkdown snapshot 1`] = `
+"[32m[1mSection[22m[39m
+
+Paragraph with [33mcode[39m.
+
+"
+`;

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint src/",
@@ -46,11 +47,12 @@
     "vitest": "^4.1.8"
   },
   "dependencies": {
+    "@types/marked": "^5.0.2",
     "chalk": "^5.6.2",
     "chokidar": "^5.0.0",
     "commander": "^15.0.0",
-    "marked": "^15.0.12",
-    "marked-terminal": "^7.3.0",
+    "marked": "^4.3.0",
+    "marked-terminal": "^5.2.0",
     "zod": "^4.4.3"
   }
 }

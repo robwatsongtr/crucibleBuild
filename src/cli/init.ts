@@ -1,18 +1,14 @@
 import chalk from 'chalk'
-import { marked, type MarkedExtension } from 'marked'
-import TerminalRenderer from 'marked-terminal'
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
+import { renderMarkdown } from '../tui/markdown.js'
 import { luthorDefaultProfile } from '../profile/luthor.default.js'
 import { isInitialised, hasGitRepo, scaffold } from '../services/project-scaffolder.js'
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), '../../../')
 
-// @types/marked-terminal lags the v7 API; cast to satisfy marked.use()
-marked.use(new TerminalRenderer() as unknown as MarkedExtension)
-
-const renderMd = (text: string): string => marked(text) as string
+const renderMd = (text: string): string => renderMarkdown(text)
 
 const buildWelcomeMarkdown = (): string => {
   const overviewPath = resolve(REPO_ROOT, 'luthor_curriculum/luthor_overview.md')

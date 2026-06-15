@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-import '../dist/cli/index.js'
+process.env.FORCE_COLOR = '3'
+import('../dist/cli/index.js')
