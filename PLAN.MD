@@ -177,16 +177,85 @@ Verification:
 
 ## Phase 5 — Agent Loop With File-Aware Tools
 
+### Inference Abstraction Layer
+
+`AgentLoop` depends only on `InferenceClient` — never on a concrete SDK. Swapping providers is one env var.
+
+**`src/agent/inference-client.ts`** — shared interface and normalized types:
+
+```ts
+interface InferenceClient {
+  stream(request: InferenceRequest, onDelta: (text: string) => void): Promise<InferenceResponse>
+}
+
+interface InferenceRequest {
+  staticSystem: string       // stable across session — adapters may cache this
+  dynamicSystem: string      // changes per turn — never cached
+  messages: InferenceMessage[]
+  tools: ToolDefinition[]
+}
+
+interface InferenceMessage {
+  role: 'user' | 'assistant'
+  content: string | ToolCall[] | ToolResult[]
+}
+
+interface InferenceResponse {
+  text: string
+  toolCalls: ToolCall[]
+  usage?: { inputTokens: number; outputTokens: number; cacheReadTokens?: number; cacheWriteTokens?: number }
+}
+
+interface ToolDefinition {
+  name: string
+  description: string
+  inputSchema: Record<string, unknown>  // JSON Schema
+}
+
+interface ToolCall {
+  id: string
+  name: string
+  input: unknown
+}
+
+interface ToolResult {
+  toolCallId: string
+  content: string
+}
+```
+
+**`src/agent/anthropic-client.ts`** — Anthropic adapter:
+- Default model: `claude-sonnet-4-6` (best quality/cost balance for mentorship)
+- Haiku available via `CRUCIBLEBUILD_MODEL=claude-haiku-4-5-20251001` for lower cost
+- Override via `CRUCIBLEBUILD_MODEL` env var
+- Passes `staticSystem` as a cached block (`cache_control: { type: 'ephemeral' }`), `dynamicSystem` as uncached
+- Handles tool_use blocks in the stream, normalizes to `ToolCall[]`
+
+**`src/agent/gemini-client.ts`** — Google Gemini adapter:
+- Uses Gemini free tier by default (`gemini-2.0-flash` or equivalent)
+- Override via `CRUCIBLEBUILD_MODEL` env var
+- No prompt caching (not supported on free tier) — omits cache_control
+- Normalizes Gemini tool calls to the same `ToolCall[]` shape
+
+**`src/agent/create-inference-client.ts`** — factory:
+```ts
+// CRUCIBLEBUILD_PROVIDER=anthropic (default) | gemini
+export const createInferenceClient = (): InferenceClient => { ... }
+```
+
 Deliverables:
-- `anthropic-client.ts` exports a factory function that returns a configured SDK client; centralizes model id, max tokens, temperature, cache config.
+- `inference-client.ts` — shared interface (no SDK dependency)
+- `anthropic-client.ts` — Anthropic adapter, Haiku default
+- `gemini-client.ts` — Gemini adapter, free tier default
+- `create-inference-client.ts` — factory, provider from env var
 - `tool-registry.ts` exports the four read-only tool declarations as a plain array.
 - `tool-handlers.ts` exports plain handler functions executed against `fs-reader.ts` / `ContextStore`. All handler I/O validated through `agent-tool-io.ts` schemas — request *and* response.
 - `AgentLoop` class (holds message history across turns):
   1. Build messages array (user turn + history).
-  2. Build system as a two-block array: `[{ type: 'text', text: staticSystem, cache_control: { type: 'ephemeral' } }, { type: 'text', text: dynamicSystem }]`.
-  3. Stream assistant response.
-  4. On `tool_use` blocks, execute via `ToolHandlers`, append `tool_result`, loop until a plain text turn.
-  5. Hand text deltas to the TUI renderer.
+  2. Call `client.stream(request, onDelta)` — client handles all provider-specific details.
+  3. On `toolCalls` in response, execute via `ToolHandlers`, append `tool_result`, loop until a plain text turn.
+  4. Hand text deltas to the TUI renderer.
+  5. **Error handling**: catch API errors in the turn loop. If the error indicates the context window is exceeded (e.g. `prompt is too long`), print a user-facing message ("Session history is too long — please start a new session with `cruciblebuild chat`") and stop the loop gracefully rather than crashing. All other API errors should be caught, logged to stderr, and surfaced as a readable message in the REPL.
 - Replace phase 4's stub with the real `AgentLoop`.
 
 **Tools (read-only, all schemas in `src/schemas/agent-tool-io.ts`):**
@@ -218,12 +287,13 @@ Deliverables:
 - The agent does not recite the curriculum verbatim; it uses it as reference to give contextual, depth-appropriate answers based on where the learner actually is.
 - **Opening brief**: when `chat` starts, the agent's first turn is pre-populated with current phase + file context, so the learner never faces a blank prompt. The agent opens with a short summary of where they are and what the current goal is.
 
-**Prompt caching strategy:**
+**Prompt caching strategy (Anthropic adapter only):**
 - Static block carries `cache_control: { type: 'ephemeral' }`. Dynamic block does not.
 - Tool definitions stable across the session (any per-turn jitter busts the cache key).
 - Optionally mark the last assistant turn of history with `cache_control` once history grows past a few turns.
 - Log `usage.cache_creation_input_tokens` and `usage.cache_read_input_tokens` per turn to confirm hits.
-- All tuning lives in `config/constants.ts` + `AnthropicClient`.
+- Gemini adapter omits caching entirely — free tier does not support it.
+- All tuning lives in `config/constants.ts` and the respective adapter.
 
 Verification:
 - Unit: `ToolHandlers` against a fixture project; assert sandbox enforcement, truncation, schema validation.

@@ -1,7 +1,7 @@
 import * as readline from 'readline'
 import * as fs from 'fs'
 import { getPaths } from '../config/paths.js'
-import { stubStream } from '../agent/stub-agent.js'
+import { AgentLoop } from '../agent/agent-loop.js'
 import { dispatchSlashCommand, listSlashCommands } from './keybindings.js'
 import {
   renderMarkdown,
@@ -43,13 +43,14 @@ const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', 
 export class ChatRepl {
   private readonly rl: readline.Interface
   private readonly paths: ReturnType<typeof getPaths>
-  private turnIndex = 0
+  private readonly agentLoop: AgentLoop
   private pasteMode = false
   private pasteBuffer: string[] = []
   private spinnerTimer: ReturnType<typeof setInterval> | null = null
   private spinnerFrame = 0
 
-  constructor(projectRoot: string) {
+  constructor(projectRoot: string, agentLoop: AgentLoop) {
+    this.agentLoop = agentLoop
     this.paths = getPaths(projectRoot)
     fs.mkdirSync(this.paths.stateDir, { recursive: true })
 
@@ -158,17 +159,14 @@ export class ChatRepl {
     }
 
     try {
-      // stubStream drives onDelta from a fake word-by-word loop.
-      // In Phase 5 this becomes: agentLoop.stream(input, onDelta)
-      await stubStream(input, this.turnIndex, onDelta)
-      this.turnIndex++
+      await this.agentLoop.chat(input, onDelta)
 
       if (firstDelta) {
         this.stopSpinner()
       }
 
       process.stdout.write('\n\n')
-      logDebug('Turn complete', { turnIndex: this.turnIndex, chars: fullText.length })
+      logDebug('Turn complete', { chars: fullText.length })
     } catch (err) {
       this.stopSpinner()
       process.stdout.write(renderError(err instanceof Error ? err.message : String(err)) + '\n')
@@ -190,16 +188,12 @@ export class ChatRepl {
         break
 
       case '/phase':
-        process.stdout.write(
-          renderStatus(`Current phase: (stub — phase info available in Phase 5)\n`),
-        )
+        process.stdout.write(renderStatus(`Current phase: ${this.agentLoop.currentPhaseId()}\n`))
         this.prompt()
         break
 
       case '/files':
-        process.stdout.write(
-          renderStatus(`File tree: (stub — file listing available in Phase 5)\n`),
-        )
+        process.stdout.write(renderStatus(`${this.agentLoop.fileTree()}\n`))
         this.prompt()
         break
 

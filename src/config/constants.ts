@@ -15,7 +15,19 @@ export const RING_BUFFER_SIZE = 50
 export const FILE_SIZE_CAP_BYTES = 256 * 1024
 export const FILE_TREE_MAX_DEPTH = 3
 
-export const MODEL_ID = 'claude-opus-4-7'
+// Provider: CRUCIBLEBUILD_PROVIDER=anthropic (default) | gemini
+export const DEFAULT_PROVIDER = 'anthropic'
+
+// Anthropic models — override with CRUCIBLEBUILD_MODEL
+export const ANTHROPIC_MODEL_SONNET = 'claude-sonnet-4-6' // default
+export const ANTHROPIC_MODEL_HAIKU = 'claude-haiku-4-5-20251001'
+
+// Gemini models — override with CRUCIBLEBUILD_MODEL
+export const GEMINI_MODEL_FLASH = 'gemini-2.0-flash' // free tier default
+
+export const DEFAULT_MODEL_ANTHROPIC = ANTHROPIC_MODEL_SONNET
+export const DEFAULT_MODEL_GEMINI = GEMINI_MODEL_FLASH
+
 export const MAX_TOKENS = 4096
 export const TEMPERATURE = 0.7
 
