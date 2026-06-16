@@ -15,6 +15,7 @@ marked.setOptions({
     codespan: c.yellow,
     code: c.yellow,
     blockquote: c.gray.italic,
+    hr: () => '\n',
   }) as never,
 })
 
