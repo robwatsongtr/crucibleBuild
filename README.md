@@ -1,4 +1,4 @@
-# CrucibleBuild: Programming mentorship app
+# CrucibleBuild - Programming Mentorship App
 
 A project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
