@@ -18,8 +18,6 @@ This experience is the product.
 
 Until you can implant experience into someone's brain, the only way to get experience is to actually do the task long enough for the proper patterns to get established. There is no other way. You must write programs to understand how to properly use AI to write programs. 
 
-This is a well establish pattern in school: you have computers and calculators that can do Algebra, Trig, and Calculus, but the student still does a large part of it by hand 
-
 People entering software development now face a fundamental paradox:
 
 - LLMs can write code for you instantly
@@ -27,9 +25,11 @@ People entering software development now face a fundamental paradox:
 - You need experience to steer a nondeterministic model effectively
 - But LLMs short-circuit the process of getting that experience
 
-The result is a generation of developers who can generate code they don't understand, can't debug when it breaks, can't evaluate whether it's good, and can't steer the model when it goes wrong.
+The result is developers who can generate code they don't understand, can't debug when it breaks, can't evaluate whether it's good, and can't steer the model when it goes wrong.
 
-The people who are aware of this problem — and there are many — have no structured solution. They know they need to struggle. They don't have a tool designed around that need.
+The people who are aware of this problem have no structured solution. They know they need to struggle. They don't have a tool designed around that need.
+
+For more experienced developers, it's important to maintain deliberate practice writing code and working through problems by hand. A regular Leetcode practice is a good way to accomplish this, but those problems are small in scope. Building a language, a web server, or a database engine is a much more in depth and fun way to keep your chops up. 
 
 ---
 

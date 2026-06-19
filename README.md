@@ -2,11 +2,13 @@
 
 A project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
+The first and flagship project is Luthor — a complete interpreted programming language, Turing complete, built in two passes. The app developer was able to implement all features in Python in roughly 600 lines, and the C++ version in about 1000 lines. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. 
+
 ---
 
 ## Why This Exists
 
-The founder — a music teacher and developer — built a complete interpreted programming language using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
+The app developer — a music teacher and developer — built a complete interpreted programming language using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
 
 The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, the visitor pattern, smart pointers, and virtual dispatch than years of conventional learning had produced. More importantly, the struggle produced a genuine leveling-up in the ability to hold complex code and concepts in mind — which translates directly to better code comprehension and more effective use of AI tools.
 
@@ -18,8 +20,6 @@ This experience is the product.
 
 Until you can implant experience into someone's brain, the only way to get experience is to actually do the task long enough for the proper patterns to get established. There is no other way. You must write programs to understand how to properly use AI to write programs. 
 
-This is a well established pattern in school: you have computers and calculators that can do Algebra, Trig, and Calculus, but the student still does a large part of it by hand 
-
 People entering software development now face a fundamental paradox:
 
 - LLMs can write code for you instantly
@@ -30,6 +30,8 @@ People entering software development now face a fundamental paradox:
 The result is developers who can generate code they don't understand, can't debug when it breaks, can't evaluate whether it's good, and can't steer the model when it goes wrong.
 
 The people who are aware of this problem have no structured solution. They know they need to struggle. They don't have a tool designed around that need.
+
+For more experienced developers, it's important to maintain deliberate practice writing code and working through problems by hand. A regular Leetcode practice is a good way to accomplish this, but those problems are small in scope. Building a language, a web server, or a database engine is a much more in depth and fun way to keep your chops up. 
 
 ---
 
@@ -54,8 +56,7 @@ When you're genuinely stuck, help is calibrated in stages: hints → explanation
 
 ## The Curriculum: Luthor
 
-The first and flagship project is **Luthor** — a complete interpreted programming language, Turing complete, built in two passes. The founder was able to implement all features in Python in arojnd 600 lines, and the
-C++ version in about 1000 lines. 
+As mentioed above, the first and flagship project is **Luthor** — a complete interpreted programming language, Turing complete, built in two passes. 
 
 **Pass 1: Python**
 Build the full pipeline: lexer, parser (recursive descent), AST nodes, and a tree-walking interpreter. Python lets you focus on the concepts without fighting the language.
