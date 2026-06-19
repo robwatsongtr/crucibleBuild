@@ -57,6 +57,19 @@ All TypeScript projects must include:
   - Run format with: `prettier --write src/`
   - Configure in `.eslintrc.json` and `.prettierrc`
 
+- **dotenv**: Environment variable management for API keys and secrets
+  - Install: `npm install dotenv`
+  - Import once at the top of the CLI entry point: `import 'dotenv/config'`
+  - Store secrets in a `.env` file at the project root — never commit it
+  - Always add `.env` to `.gitignore`
+  - Use commented-out keys in `.env` to document available options:
+    ```
+    ANTHROPIC_API_KEY=sk-...
+    # CRUCIBLEBUILD_PROVIDER=gemini
+    # GEMINI_API_KEY=your-key-here
+    ```
+  - The app reads secrets from `process.env` — no manual `source .env` needed
+
 
 ## Documentation Standards
 
