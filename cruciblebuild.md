@@ -1,4 +1,6 @@
-# CrucibleBuild — Product Foundation Document
+# CrucibleBuild - Programming Mentorship App
+
+## Foundation Document
 
 ## Origin
 
