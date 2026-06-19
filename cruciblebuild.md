@@ -2,7 +2,7 @@
 
 ## Origin
 
-This product concept emerged from a direct personal experience. The founder — a long time music teacher, self-taught developer of 6 years  — built a complete interpreted programming language (Luthor) using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, answering questions, giving feedback on code written by the human — but never writing the code itself.
+This product concept emerged from a direct personal experience. The founder — a music teacher and developer  — built a complete interpreted programming language (Luthor) using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, answering questions, giving feedback on code written by the human — but never writing the code itself.
 
 The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, visitor pattern, smart pointers, and virtual dispatch than years of conventional learning had produced. The project was built twice: first in Python, then rewritten in C++. The C++ rewrite is where everything "extra clicked."
 
@@ -90,12 +90,10 @@ A **project-based technical mentorship tool** — a CLI application that:
 1. Is initialized in a project directory
 2. Watches the filesystem in real time (using watchdog or equivalent)
 3. Maintains live context of what the learner has actually written
-4. Pairs that with a chat interface (lightweight local web UI served locally)
+4. Pairs that with a chat interface 
 5. Has the constraint profile baked in architecturally — it cannot give code, by design
 6. Reacts to file changes intelligently — sometimes proactively, mostly waiting for the learner to engage
-7. Generates a synthesis document at the end of each phase capturing decisions made and concepts understood
 
-The constraint is not a setting. It is the product.
 
 ### Why CLI, not web app
 
@@ -138,7 +136,7 @@ The first and flagship curriculum project is the **Luthor Language** — a compl
 The Python pass teaches concepts without fighting the language. The C++ pass makes every abstraction Python was hiding viscerally concrete. The rewrite is where deep understanding crystallizes.
 
 **Why this scope is correct:**
-- ~600 lines Python, ~1000 lines C++ — comprehensible end to end
+- The founder was able to implement in ~600 lines Python, ~1000 lines C++ — comprehensible end to end
 - Turing complete: variables, conditionals, loops, arithmetic
 - Not overwhelming — the learner can hold the whole thing in their head
 - Every piece must work or nothing works — can't fake understanding
