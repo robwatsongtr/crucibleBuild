@@ -3,12 +3,20 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { renderMarkdown } from '../tui/markdown.js'
+import { spawnSync } from 'child_process'    
 import { luthorDefaultProfile } from '../profile/luthor.default.js'
 import { isInitialised, hasGitRepo, scaffold } from '../services/project-scaffolder.js'
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), '../../../')
 
 const renderMd = (text: string): string => renderMarkdown(text)
+
+const paginate = (text: string): void => {
+  spawnSync('less', ['-R'], {
+    input: text,
+    stdio: ['pipe', 'inherit', 'inherit']
+  })
+}
 
 const buildWelcomeMarkdown = (): string => {
   const overviewPath = resolve(REPO_ROOT, 'luthor_curriculum/luthor_overview.md')
@@ -48,7 +56,7 @@ export const runInit = async (): Promise<void> => {
   }
 
   console.log('\n' + chalk.bold.cyan('=== CrucibleBuild ===') + '\n')
-  console.log(renderMd(buildWelcomeMarkdown()))
+  paginate(renderMd(buildWelcomeMarkdown()) + '\n\nPress q to continue.\n')
 
   const config = scaffold(new Date().toISOString(), cwd)
 

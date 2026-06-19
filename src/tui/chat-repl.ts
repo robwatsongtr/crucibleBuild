@@ -143,29 +143,19 @@ export class ChatRepl {
 
     this.startSpinner()
 
-    let firstDelta = true
     let fullText = ''
 
-    // onDelta is the receive side: called once per streamed chunk.
-    // Stops the spinner on the first chunk so it doesn't overlap with text.
+    // Accumulate chunks silently — spinner stays up until the full response arrives.
+    // Markdown is rendered once on the complete text after streaming finishes.
     const onDelta = (chunk: string): void => {
-      if (firstDelta) {
-        this.stopSpinner()
-        firstDelta = false
-      }
-
-      process.stdout.write(chunk)
       fullText += chunk
     }
 
     try {
       await this.agentLoop.chat(input, onDelta)
 
-      if (firstDelta) {
-        this.stopSpinner()
-      }
-
-      process.stdout.write('\n\n')
+      this.stopSpinner()
+      process.stdout.write(renderMarkdown(fullText))
       logDebug('Turn complete', { chars: fullText.length })
     } catch (err) {
       this.stopSpinner()
@@ -205,7 +195,7 @@ export class ChatRepl {
 
   private prompt(): void {
     const label = renderUserLabel()
-    this.rl.setPrompt(`\n${label} > `)
+    this.rl.setPrompt(`${label} > `)
     this.rl.prompt()
   }
 

@@ -1,7 +1,12 @@
-import 'dotenv/config'
+import { config } from 'dotenv'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import { Command } from 'commander'
 import { runInit } from './init.js'
 import { runChat } from './chat.js'
+
+const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
+config({ path: resolve(packageRoot, '.env') })
 
 // CLI entry point — wires commander subcommands and routes to handlers.
 //

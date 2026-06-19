@@ -233,10 +233,9 @@ Luthor is the vehicle. What you are building toward is an understanding of:
 
 - How a program is represented at each stage of compilation
 - How recursive descent parsing works and why it produces correct precedence
-  without special cases
 - How a tree-walking interpreter evaluates expressions bottom-up
-- In the C++ rewrite: how ownership, virtual dispatch, and the visitor pattern
-  work at a mechanical level
+- In the C++ rewrite: how ownership, virtual dispatch, and the visitor
+  pattern work at a mechanical level
 
 These are not abstract concepts. By the time you finish, you will have felt
 them — through the code you wrote, the bugs you fixed, and the moment the

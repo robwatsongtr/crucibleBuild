@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import { existsSync, readFileSync } from 'fs'
-import { resolve } from 'path'
+import { resolve, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import { getPaths } from '../config/paths.js'
 import { ProjectConfigSchema } from '../schemas/project-config.js'
 import { luthorDefaultProfile } from '../profile/luthor.default.js'
@@ -27,8 +28,9 @@ export const runChat = async (): Promise<void> => {
   // Only Luthor profile supported at MVP
   const profile = luthorDefaultProfile
 
-  // Load the mentor charter from the curriculum directory
-  const curriculumRoot = resolve(cwd, 'luthor_curriculum')
+  // Curriculum lives at the package root, not the learner's cwd
+  const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
+  const curriculumRoot = resolve(packageRoot, 'luthor_curriculum')
   const mentorCharter = readFileSync(resolve(curriculumRoot, 'mentor_charter.md'), 'utf-8')
 
   // ContextStore and FileWatcher are wired together — watcher pushes events into the store
