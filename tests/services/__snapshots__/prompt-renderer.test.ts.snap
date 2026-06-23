@@ -66,7 +66,6 @@ Build a complete interpreted programming language twice — first in Python, the
 
 # Phase Catalog
 
-**Pass 1 — Python:**
 1. **python-tokens** — Python — Tokens
    Concepts: enums, token type vs lexeme, data classes
 2. **python-lexer** — Python — Lexer
@@ -77,8 +76,6 @@ Build a complete interpreted programming language twice — first in Python, the
    Concepts: recursive descent, operator precedence via nesting, EBNF grammar, mutual recursion
 5. **python-interpreter** — Python — Interpreter
    Concepts: tree-walking evaluation, isinstance dispatch, symbol table, operator maps
-
-**Pass 2 — C++ Rewrite:**
 6. **cpp-tokens** — C++ — Tokens
    Concepts: enum class, scoped enums, structs vs classes in C++
 7. **cpp-lexer** — C++ — Lexer

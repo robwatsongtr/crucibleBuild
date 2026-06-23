@@ -147,9 +147,10 @@ export class ChatRepl {
       fullText += chunk
     }
 
-    const onToolCall = (name: string, toolInput: unknown): void => {
+    const onToolCall = (name: string, toolInput: Record<string, unknown>): void => {
       if (name == 'read_file') {
-        process.stdout.write(renderStatus(`⚙ ${name}  ${toolInput}\n`))
+        const path = toolInput['path'] as string
+        process.stdout.write(renderStatus(`⚙ ${name}  ${path}\n`))
       } else {
         process.stdout.write(renderStatus(`⚙ ${name}\n`))
       }

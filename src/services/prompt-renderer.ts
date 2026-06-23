@@ -73,16 +73,13 @@ const renderProjectSummary = (profile: ConstraintProfile): string => {
 
 const renderPhaseCatalog = (profile: ConstraintProfile): string => {
   const phases = profile.project.phases
-  const pythonPhases = phases.filter((p) => p.id.startsWith('python'))
-  const cppPhases = phases.filter((p) => p.id.startsWith('cpp'))
 
   const renderPhaseRow = (p: Phase, index: number): string =>
     `${index + 1}. **${p.id}** — ${p.title}\n   Concepts: ${p.conceptsIntroduced.join(', ')}`
 
-  const pythonRows = pythonPhases.map((p, i) => renderPhaseRow(p, i)).join('\n')
-  const cppRows = cppPhases.map((p, i) => renderPhaseRow(p, i + 5)).join('\n')
+  const rows = phases.map((p, i) => renderPhaseRow(p, i)).join('\n')
 
-  return `# Phase Catalog\n\n**Pass 1 — Python:**\n${pythonRows}\n\n**Pass 2 — C++ Rewrite:**\n${cppRows}`
+  return `# Phase Catalog\n\n${rows}`
 }
 
 const renderCurrentPhase = (profile: ConstraintProfile, context: LearnerContext): string => {

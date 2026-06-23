@@ -8,7 +8,7 @@ export const toolRegistry: ToolDefinition[] = [
     description:
       "Read a file inside the learner's project directory. " +
       'Use this to inspect code the learner has written, ' +
-      'or to read curriculum docs in luthor_curriculum/. ' +
+      'or to read curriculum docs. ' +
       'Binary files and files outside the project root are rejected.',
     inputSchema: {
       type: 'object',
