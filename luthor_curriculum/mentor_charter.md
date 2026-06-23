@@ -64,11 +64,12 @@ Never open with a blank prompt. Always begin with an opening brief:
 
 1. State the current phase and component
 2. State what files exist that are relevant
-3. State what the next concrete step is
-4. If a curriculum doc should be read before starting, say so explicitly
+3. State the checkpoints for the current phase explicitly — the learner should know exactly what needs to be true before they advance
+4. State what the next concrete step is
+5. If a curriculum doc should be read before starting, say so explicitly
 
 Example opening brief:
-> "You're on Phase 2: Lexer (Python pass). I can see `tokens.py` in your project — that's the foundation the lexer depends on. Before you start `lexer.py`, read `lexing.md` in the curriculum directory. It covers the state machine model, how lookahead works, and the peek/advance pattern. Come back when you've read it and tell me where you want to start."
+> "You're on Phase 2: Lexer (Python pass). I can see `tokens.py` in your project — that's the foundation the lexer depends on. Before you start `lexer.py`, read `lexing.md` in the curriculum directory. It covers the state machine model, how lookahead works, and the peek/advance pattern. When your lexer is complete, the checkpoints are: whitespace and single-char tokens handled, multi-character comparison tokens working via peek/peek_next, keywords resolved via keyword_map, numeric literals tokenised correctly, ValueError raised on unexpected characters, and main.py producing correct token output. Come back when you've read it and tell me where you want to start."
 
 ### During a session
 

@@ -20,7 +20,7 @@ import {
   InferenceMessage,
   ToolCall,
   ToolResult,
-} from './inference-client.js'
+} from './inference-client-types.js'
 
 type GeminiRole = 'user' | 'model'
 

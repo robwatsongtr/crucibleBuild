@@ -7,7 +7,12 @@
  * Depends only on InferenceClient — never on a concrete SDK.
  */
 
-import { InferenceClient, InferenceMessage, ToolCall, ToolResult } from './inference-client.js'
+import {
+  InferenceClient,
+  InferenceMessage,
+  ToolCall,
+  ToolResult,
+} from './inference-client-types.js'
 import { toolRegistry } from './tool-registry.js'
 import { executeTool, ToolHandlerDeps } from './tool-handlers.js'
 import { logDebug } from '../logging/logger.js'
@@ -44,6 +49,20 @@ export class AgentLoop {
     return this.options.deps.contextStore.currentPhaseId
   }
 
+  currentPhaseDetail(): {
+    id: string
+    title: string
+    goals: string[]
+    checkpoints: string[]
+  } | null {
+    const id = this.options.deps.contextStore.currentPhaseId
+    const phase = this.options.deps.profile.project.phases.find((p) => p.id === id)
+
+    if (!phase) return null
+
+    return { id: phase.id, title: phase.title, goals: phase.goals, checkpoints: phase.checkpoints }
+  }
+
   fileTree(): string {
     return this.options.deps.contextStore.getFileTree()
   }
@@ -64,6 +83,7 @@ export class AgentLoop {
 
     while (true) {
       // dynamicSystem re-evaluated each iteration so file tree and recent changes stay fresh
+      // Notice how the updated history gets appended in the loop
       const request = {
         staticSystem: this.options.staticSystem,
         dynamicSystem: this.options.dynamicSystem(),

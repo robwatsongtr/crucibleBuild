@@ -62,11 +62,10 @@ export class ChatRepl {
   }
 
   /** Starts the REPL loop. Resolves when the user exits. */
-  start(): Promise<void> {
+  async start(): Promise<void> {
+    this.printWelcome()
+    await this.orientLearner()
     return new Promise((resolve) => {
-      this.printWelcome()
-      this.prompt()
-
       this.rl.on('line', async (line) => {
         await this.handleLine(line)
       })
@@ -129,11 +128,11 @@ export class ChatRepl {
     await this.sendMessage(trimmed)
   }
 
-  /**
+  /*************************************************************************
    * PASSES INPUT TO AGENT and renders the response.
    * onDelta accumulates chunks into fullText while the spinner runs.
    * Markdown is rendered once on the complete text after streaming finishes.
-   */
+   **************************************************************************/
   private async sendMessage(input: string): Promise<void> {
     process.stdout.write(`\n${renderMentorLabel()}\n`)
 
@@ -148,12 +147,14 @@ export class ChatRepl {
     }
 
     const onToolCall = (name: string, toolInput: Record<string, unknown>): void => {
-      if (name == 'read_file') {
+      this.stopSpinner()
+      if (name === 'read_file') {
         const path = toolInput['path'] as string
-        process.stdout.write(renderStatus(`⚙ ${name}  ${path}\n`))
+        process.stdout.write(renderStatus(`⚙ ${name}: ${path}\n`))
       } else {
         process.stdout.write(renderStatus(`⚙ ${name}\n`))
       }
+      this.startSpinner()
     }
 
     try {
@@ -182,10 +183,22 @@ export class ChatRepl {
         this.prompt()
         break
 
-      case '/phase':
-        process.stdout.write(renderStatus(`Current phase: ${this.agentLoop.currentPhaseId()}\n`))
+      case '/phase': {
+        const phase = this.agentLoop.currentPhaseDetail()
+        if (phase) {
+          const checkpoints = phase.checkpoints.map((c) => `  - ${c}`).join('\n')
+          const goals = phase.goals.map((g) => `  - ${g}`).join('\n')
+          process.stdout.write(
+            renderStatus(
+              `Phase: ${phase.id} — ${phase.title}\n\nGoals:\n${goals}\n\nCheckpoints (all must be met to advance):\n${checkpoints}\n`,
+            ),
+          )
+        } else {
+          process.stdout.write(renderStatus(`Current phase: ${this.agentLoop.currentPhaseId()}\n`))
+        }
         this.prompt()
         break
+      }
 
       case '/files':
         process.stdout.write(renderStatus(`${this.agentLoop.fileTree()}\n`))
@@ -198,16 +211,20 @@ export class ChatRepl {
     }
   }
 
+  private async orientLearner(): Promise<void> {
+    await this.sendMessage('Session started. Give the student an opening brief')
+  }
+
   private prompt(): void {
     const label = renderUserLabel()
-    this.rl.setPrompt(`${label} > `)
+    this.rl.setPrompt(`\n${label} > `)
     this.rl.prompt()
   }
 
   private printWelcome(): void {
     const commands = listSlashCommands().join('  ')
     process.stdout.write(
-      renderMarkdown(`# CrucibleBuild — Mentor Session\n\nSlash commands: ${commands}\n`),
+      renderMarkdown(`# CrucibleBuild — Mentor Session\n\nSlash commands: ${commands}`),
     )
   }
 

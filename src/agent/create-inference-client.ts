@@ -6,7 +6,7 @@
  * Set CRUCIBLEBUILD_PROVIDER=gemini to use the Gemini free tier.
  */
 
-import { InferenceClient } from './inference-client.js'
+import { InferenceClient } from './inference-client-types.js'
 import { AnthropicClient } from './anthropic-client.js'
 import { GeminiClient } from './gemini-client.js'
 import { DEFAULT_PROVIDER } from '../config/constants.js'

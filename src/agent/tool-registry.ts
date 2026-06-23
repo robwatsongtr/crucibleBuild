@@ -1,6 +1,6 @@
 /** Tool declarations sent to the LLM — names, descriptions, and JSON Schema for each input. */
 
-import { ToolDefinition } from './inference-client.js'
+import { ToolDefinition } from './inference-client-types.js'
 
 export const toolRegistry: ToolDefinition[] = [
   {

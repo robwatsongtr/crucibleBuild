@@ -227,6 +227,28 @@ make
 
 ---
 
+## Phases and How Progress Works
+
+The build is structured into ten phases — five for the Python pass, five for
+the C++ rewrite. Each phase maps to one component: tokens, lexer, nodes,
+parser, interpreter.
+
+The mentor tracks which phase you are on. Each phase has a set of
+**checkpoints** — specific things that must be working before you move on.
+When the mentor is satisfied that all checkpoints are met and you have
+confirmed the output is correct by running `main.py` or `main.cpp`, it
+advances you to the next phase automatically.
+
+You can see your current phase and its checkpoints at any time by typing
+`/phase` in the chat. This shows exactly what the mentor is looking for before
+it will advance you. If you are unsure whether you are ready to move on, run
+`/phase` and check the list.
+
+The mentor will not advance you on a broken implementation. If your output
+looks wrong, fix it first. Every phase is a foundation for the next one.
+
+---
+
 ## What You Are Actually Learning
 
 Luthor is the vehicle. What you are building toward is an understanding of:

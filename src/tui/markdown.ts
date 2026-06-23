@@ -24,6 +24,7 @@ marked.setOptions({
 export const renderMarkdown = (text: string): string => {
   const width = Math.min(process.stdout.columns ?? 80, 100)
   const rendered = marked(text) as string
+  const collapsed = rendered.replace(/\n{3,}/g, '\n\n')
 
-  return wrapAnsi(rendered, width, { hard: false, trim: false })
+  return wrapAnsi(collapsed, width, { hard: false, trim: false })
 }

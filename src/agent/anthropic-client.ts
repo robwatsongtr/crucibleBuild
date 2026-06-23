@@ -24,7 +24,7 @@ import {
   InferenceResponse,
   InferenceMessage,
   ToolCall,
-} from './inference-client.js'
+} from './inference-client-types.js'
 
 const toAnthropicMessages = (messages: InferenceMessage[]): Anthropic.Messages.MessageParam[] => {
   return messages.map((m, i) => {
