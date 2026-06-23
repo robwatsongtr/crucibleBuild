@@ -73,4 +73,17 @@ export const toolRegistry: ToolDefinition[] = [
       required: [],
     },
   },
+  {
+    name: 'advance_phase',
+    description:
+      'Advance the learner to the next phase. ' +
+      'Only call this when all checkpoints for the current phase are satisfied and ' +
+      'the learner has confirmed the output is correct by running the relevant main. ' +
+      'This updates config.json and takes effect immediately.',
+    inputSchema: {
+      type: 'object',
+      properties: {},
+      required: [],
+    },
+  },
 ]

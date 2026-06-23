@@ -9,10 +9,6 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
 config({ path: resolve(packageRoot, '.env') })
 
 // CLI entry point — wires commander subcommands and routes to handlers.
-//
-// Execution chain:
-//   cruciblebuild init → runInit → project-scaffolder, prompt-renderer
-//   cruciblebuild chat → runChat → ChatRepl → stubStream (Phase 4) / AgentLoop (Phase 5)
 
 const program = new Command()
 

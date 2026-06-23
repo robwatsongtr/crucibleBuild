@@ -16,22 +16,18 @@ import { logDebug } from '../logging/logger.js'
 const SPINNER_FRAMES = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
 
 /**
- * Terminal chat REPL. Holds a live readline interface and conversation history.
- * Supports multiline input (trailing \), slash commands, and streamed responses.
+ * Terminal chat REPL. A thin terminal wrapper around AgentLoop — handles input,
+ * output rendering, and the readline lifecycle. Has no knowledge of the LLM or
+ * filesystem beyond the agentLoop reference it receives.
  *
  * ## Send / Receive mechanism
  *
- * SEND: The user types a message and hits enter. readline fires a 'line' event,
- * which routes to handleLine() → sendMessage(input). The input string is passed
- * to the agent (currently stubStream; AgentLoop in Phase 5).
+ * SEND: The user types a message and hits Enter. readline fires a 'line' event,
+ * which routes to handleLine() → sendMessage(input).
  *
- * RECEIVE: The agent does NOT return a full string. Instead it calls onDelta(chunk)
- * repeatedly as each piece of text is ready. onDelta writes each chunk directly to
- * stdout as it arrives — this produces the typewriter/streaming effect.
- * The agent call resolves only when the full response is done.
- *
- * In Phase 5, stubStream is replaced by agentLoop.stream(input, onDelta).
- * The TUI does not change — only what is on the other end of the callback changes.
+ * RECEIVE: onDelta accumulates streamed chunks silently into fullText while the
+ * spinner runs. Once agentLoop.chat() resolves, the full response is rendered
+ * as markdown in one shot. This avoids partial markdown artifacts mid-stream.
  *
  * ## REPL loop
  *
@@ -54,13 +50,14 @@ export class ChatRepl {
     this.paths = getPaths(projectRoot)
     fs.mkdirSync(this.paths.stateDir, { recursive: true })
 
+    // this creates an instance of the Node readline interfacve
     this.rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
       terminal: true,
       historySize: 200,
     })
-
+    // readline input history
     this.loadHistory()
   }
 
@@ -133,10 +130,9 @@ export class ChatRepl {
   }
 
   /**
-   * SEND: passes input to the agent.
-   * RECEIVE: onDelta is the callback the agent calls for each streamed chunk.
-   * Each chunk is written to stdout immediately — no buffering, no waiting
-   * for the full response before printing.
+   * PASSES INPUT TO AGENT and renders the response.
+   * onDelta accumulates chunks into fullText while the spinner runs.
+   * Markdown is rendered once on the complete text after streaming finishes.
    */
   private async sendMessage(input: string): Promise<void> {
     process.stdout.write(`\n${renderMentorLabel()}\n`)
@@ -151,8 +147,16 @@ export class ChatRepl {
       fullText += chunk
     }
 
+    const onToolCall = (name: string, toolInput: unknown): void => {
+      if (name == 'read_file') {
+        process.stdout.write(renderStatus(`⚙ ${name}  ${toolInput}\n`))
+      } else {
+        process.stdout.write(renderStatus(`⚙ ${name}\n`))
+      }
+    }
+
     try {
-      await this.agentLoop.chat(input, onDelta)
+      await this.agentLoop.chat(input, onDelta, onToolCall)
 
       this.stopSpinner()
       process.stdout.write(renderMarkdown(fullText))

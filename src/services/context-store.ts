@@ -1,5 +1,8 @@
+import { writeFileSync } from 'fs'
 import { RING_BUFFER_SIZE, FILE_TREE_MAX_DEPTH } from '../config/constants.js'
+import { getPaths } from '../config/paths.js'
 import { listDirectory } from './fs-reader.js'
+import { ProjectConfig } from '../models/index.js'
 
 export type ChangeKind = 'add' | 'change' | 'unlink'
 
@@ -12,6 +15,8 @@ export interface FileChange {
 /**
  * Holds in-memory project context for the agent: file tree snapshot and
  * a ring buffer of recent file changes. Updated by FileWatcher events.
+ *
+ * Context store is a singleton for the session
  */
 export class ContextStore {
   private fileTreeSnapshot: string = ''
@@ -63,5 +68,26 @@ export class ContextStore {
   /** Clears the recent changes buffer. */
   clearChanges(): void {
     this.changes = []
+  }
+
+  /**
+   * Advances to the next phase in the ordered phase list.
+   * Returns the new phaseId on success, or null if already on the last phase.
+   * Persists the change to config.json immediately.
+   */
+  advancePhase(orderedPhaseIds: string[], config: ProjectConfig): string | null {
+    const idx = orderedPhaseIds.indexOf(this.currentPhaseId)
+
+    if (idx === -1 || idx === orderedPhaseIds.length - 1) {
+      return null
+    }
+
+    this.currentPhaseId = orderedPhaseIds[idx + 1]
+
+    const paths = getPaths(this.projectRoot)
+    const updated = { ...config, currentPhaseId: this.currentPhaseId }
+    writeFileSync(paths.configFile, JSON.stringify(updated, null, 2) + '\n', 'utf-8')
+
+    return this.currentPhaseId
   }
 }

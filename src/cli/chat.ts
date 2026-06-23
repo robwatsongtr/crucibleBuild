@@ -12,7 +12,9 @@ import { createInferenceClient } from '../agent/create-inference-client.js'
 import { AgentLoop } from '../agent/agent-loop.js'
 import { ChatRepl } from '../tui/chat-repl.js'
 
-/** Runs cruciblebuild chat in the current working directory. */
+//************************************************************* */
+/** Runs cruciblebuild chat in the current working directory.   */
+// ************************************************************ */
 export const runChat = async (): Promise<void> => {
   const cwd = process.cwd()
   const paths = getPaths(cwd)
@@ -29,11 +31,14 @@ export const runChat = async (): Promise<void> => {
   const profile = luthorDefaultProfile
 
   // Curriculum lives at the package root, not the learner's cwd
+  // this resolves from the compilation location which is dist/cli hece the .. / ..
   const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
   const curriculumRoot = resolve(packageRoot, 'luthor_curriculum')
   const mentorCharter = readFileSync(resolve(curriculumRoot, 'mentor_charter.md'), 'utf-8')
 
+  //
   // ContextStore and FileWatcher are wired together — watcher pushes events into the store
+  //
   const contextStore = new ContextStore(cwd, config.currentPhaseId)
   contextStore.refreshFileTree()
 
@@ -54,6 +59,7 @@ export const runChat = async (): Promise<void> => {
   )
 
   // Dynamic system prompt re-evaluated per turn so file tree and recent changes stay fresh
+  // This works because it's a closure over contextStore
   const dynamicSystem = (): string => {
     const { dynamicSystem: ds } = renderPrompt(
       profile,
@@ -79,6 +85,7 @@ export const runChat = async (): Promise<void> => {
       projectRoot: cwd,
       contextStore,
       profile,
+      config,
     },
   })
 

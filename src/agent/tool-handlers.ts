@@ -4,7 +4,7 @@
  * and returns a JSON string result to be appended to the messages array.
  */
 
-import { ConstraintProfile } from '../models/index.js'
+import { ConstraintProfile, ProjectConfig } from '../models/index.js'
 import { ContextStore } from '../services/context-store.js'
 import { readFile, listDirectory } from '../services/fs-reader.js'
 import {
@@ -12,6 +12,7 @@ import {
   ListDirectoryInputSchema,
   GetRecentChangesInputSchema,
   GetProjectPhaseInputSchema,
+  AdvancePhaseInputSchema,
 } from '../schemas/agent-tool-io.js'
 
 /**
@@ -29,6 +30,7 @@ export interface ToolHandlerDeps {
   projectRoot: string
   contextStore: ContextStore
   profile: ConstraintProfile
+  config: ProjectConfig
 }
 
 const handleReadFile = (input: unknown, deps: ToolHandlerDeps): string => {
@@ -79,11 +81,26 @@ const handleGetProjectPhase = (input: unknown, deps: ToolHandlerDeps): string =>
   })
 }
 
+const handleAdvancePhase = (input: unknown, deps: ToolHandlerDeps): string => {
+  AdvancePhaseInputSchema.parse(input)
+
+  const orderedPhaseIds = deps.profile.project.phases.map((p) => p.id)
+  const previousPhaseId = deps.contextStore.currentPhaseId
+  const newPhaseId = deps.contextStore.advancePhase(orderedPhaseIds, deps.config)
+
+  if (newPhaseId === null) {
+    return JSON.stringify({ error: 'Already on the final phase.' })
+  }
+
+  return JSON.stringify({ previousPhaseId, currentPhaseId: newPhaseId })
+}
+
 const handlers: Record<string, (input: unknown, deps: ToolHandlerDeps) => string> = {
   read_file: handleReadFile,
   list_directory: handleListDirectory,
   get_recent_changes: handleGetRecentChanges,
   get_project_phase: handleGetProjectPhase,
+  advance_phase: handleAdvancePhase,
 }
 
 /**

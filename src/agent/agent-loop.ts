@@ -1,7 +1,8 @@
 /**
  * AgentLoop drives the streaming turn cycle: user message → LLM → tool calls
- * (if any) → tool results → LLM → text response. Maintains message history
- * across the session.
+ * (if any) → tool results → LLM → text response.
+ *
+ * Maintains message history across the session.
  *
  * Depends only on InferenceClient — never on a concrete SDK.
  */
@@ -54,7 +55,11 @@ export class AgentLoop {
    *
    * Throws a user-facing Error if the context window is exceeded.
    */
-  async chat(userMessage: string, onDelta: (chunk: string) => void): Promise<void> {
+  async chat(
+    userMessage: string,
+    onDelta: (chunk: string) => void,
+    onToolCall: (name: string, toolInput: Record<string, unknown>) => void = () => {},
+  ): Promise<void> {
     this.history.push({ role: 'user', content: userMessage })
 
     while (true) {
@@ -94,7 +99,8 @@ export class AgentLoop {
 
       const toolResults: ToolResult[] = response.toolCalls.map((tc: ToolCall) => {
         logDebug(`Tool call: ${tc.name}`, { input: tc.input })
-
+        // prints tool call to repl
+        onToolCall(tc.name, tc.input as Record<string, unknown>)
         let content: string
 
         try {

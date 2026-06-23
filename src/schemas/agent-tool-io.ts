@@ -53,3 +53,5 @@ export const GetProjectPhaseOutputSchema = z.object({
     conceptsIntroduced: z.array(z.string()),
   }),
 })
+
+export const AdvancePhaseInputSchema = z.object({})

@@ -23,7 +23,7 @@ Some tokens need their lexeme because the value matters:
 | `42` | `NUMBER` | `"42"` |
 | `3.14` | `NUMBER` | `"3.14"` |
 
-Others don't need a lexeme because the type says everything:
+Others don't need a lexeme because the type says everything. That being said, for simplicity, the token class below will store the lexeme for types that don't need it.:
 
 | Source | Type | Lexeme needed? |
 |---|---|---|
@@ -67,6 +67,16 @@ enum class TokenType {
 ```
 
 The enum is the shared vocabulary of the entire pipeline. The lexer produces `TokenType` values. The parser consumes them. They never pass raw strings between each other — only token types and lexemes.
+
+---
+
+## The Token Class
+
+The enum is convenient. The `Token` class is necessary.
+
+A `TokenType` alone isn't enough to pass around — you also need the lexeme. The `Token` class bundles these two fields into a single unit that the pipeline can actually work with. The lexer builds a list of them. The parser walks through that list. Every stage that touches tokens is touching `Token` objects, not bare `TokenType` values.
+
+The enum defines the vocabulary. The `Token` class is the unit that carries it through the pipeline.
 
 ---
 
