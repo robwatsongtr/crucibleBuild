@@ -237,61 +237,42 @@ The Socratic tutoring feature is becoming a commodity — every major AI product
 
 ---
 
-## Go To Market (MVP)
-
-1. Build the CLI tool and refine the Luthor curriculum against it
-2. Dogfood: run another person through the project while observing closely
-3. Document the experience — what worked, what the moments of breakthrough were
-4. Reach out to creator community (ThePrimeagen adjacents) with a genuine story, not a pitch
-5. The founder's story *is* the marketing: music teacher builds a compiler from scratch in two months using an inverted AI workflow and understood it end to end
-
----
-
-## MVP Build Sequence
-
-1. Nail the system prompt / constraint profile — this is the core IP
-2. Basic CLI init and project setup
-3. Filesystem watcher with context loading
-4. Terminal chat interface (readline REPL, streamed tokens, markdown rendering)
-5. Agent loop with file-aware responses
-6. Phase synthesis document generation *(deferred post-MVP)*
-7. Package and install experience (`npm install -g cruciblebuild`) *(deferred post-MVP)*
-
-The constraint profile prompt engineering is the first and most important task. Everything else is scaffolding around it.
-
----
-
 ## Extensibility
 
-CrucibleBuild is a learning framework. Luthor is the first project. Each project is a self-contained curriculum bundle living in its own directory — `luthor_curriculum/` establishes the pattern.
+CrucibleBuild is a learning framework. Luthor is the first project. Adding a new curriculum — say, a web server or a shell — requires authoring content, not writing code. The CLI, agent loop, filesystem watcher, and TUI are unchanged.
 
-**Every curriculum directory has the same shape:**
+### What gets reused across every project
+
+The constraint profile mechanics are shared infrastructure. Every project inherits:
+
+- The mentor persona (firm, technically precise, not a lobotomized refuser)
+- The constraint rules (✅ architecture, concepts, feedback / ❌ code, solutions)
+- The graduated escalation path (hint → explanation → reference → pseudocode)
+- The system prompt renderer that assembles static and dynamic blocks
+- All CLI plumbing: `init`, `chat`, file watching, slash commands, the agent loop
+
+None of this changes per project. The constraint profile is the same contract regardless of what the learner is building.
+
+### What gets authored per project
+
+Each project is a self-contained **curriculum bundle** — a directory of markdown files the agent reads at runtime. No code changes required to add one.
 
 ```
 <project>_curriculum/
-  <project>_overview.md    # learner-facing intro: what they're building, why, what it can do
+  <project>_overview.md    # learner-facing intro: what it is, what it can do, example output
   <project>_project.md     # full reference spec: phases, components, design decisions
-  mentor_charter.md        # constraint rules, phase sequence, file-to-doc mapping, pacing rules
+  mentor_charter.md        # phase sequence, file-to-doc mapping, pacing rules, progress inference
   <concept>.md             # one teaching doc per major concept introduced
 ```
 
-Adding a new project (web server, shell, database engine, etc.) means authoring that directory. The CLI, agent loop, filesystem watcher, and TUI don't change. The agent reads the curriculum docs via `read_file` — no code changes required to add new content.
+**For a web server project, this would mean authoring:**
+- `webserver_overview.md` — what the learner is building (HTTP/1.1 server from scratch), what it can do (serve static files, handle routes, parse headers), example request/response
+- `webserver_project.md` — full reference: TCP sockets, HTTP parsing, request routing, response encoding; design decisions and build order
+- `mentor_charter.md` — phase sequence (e.g. raw TCP → HTTP parsing → routing → static file serving → concurrent connections), file-to-doc mapping, what the mentor looks for at each checkpoint
+- Concept docs: `tcp_sockets.md`, `http_protocol.md`, `request_parsing.md`, `concurrency.md`, etc.
 
-The `profileId` field in `.cruciblebuild/config.json` is what ties a project to its curriculum bundle. `luthor-default` is the first value. New projects register new ids.
+**One code addition is required:** a new profile module (e.g. `src/profile/webserver.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative in the curriculum docs. It's what drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template — the structure is self-evident and the Zod types guide the rest.
 
----
-
-## Domain & Identity
-
-- Domain: `cruciblebuild.dev`
-- CLI: `cruciblebuild`
-- Install: `npm install -g cruciblebuild`
+The `profileId` field in `.cruciblebuild/config.json` ties a session to its curriculum bundle. `luthor-default` is the first value. New projects register new ids.
 
 ---
-
-## Open Questions
-
-- Exact constraint negotiation UX at project init
-- How proactive vs reactive the file-watching agent should be
-- Pricing model (direct to learner vs B2B bootcamp)
-- Whether the Luthor project ships as open curriculum or gated content

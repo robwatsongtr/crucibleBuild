@@ -158,4 +158,24 @@ Pre-commit hooks run lint-staged, typecheck, and the full test suite automatical
 
 ## Extensibility
 
-CrucibleBuild is a learning framework. Luthor is the first project. Each project is a self-contained curriculum bundle in its own directory — `luthor_curriculum/` establishes the pattern. Adding a new project (web server, shell, database engine) means authoring that directory. The CLI, agent loop, watcher, and TUI don't change.
+CrucibleBuild is a learning framework. Luthor is the first project. Adding a new curriculum — a web server, a shell, a database engine — requires authoring content, not writing code.
+
+### What gets reused
+
+The constraint profile mechanics, mentor persona, graduated escalation path, and all CLI plumbing (init, chat, file watching, agent loop) are shared across every project. The "no code, no solutions" constraint is the same contract regardless of what the learner is building.
+
+### What gets authored per project
+
+Each project is a self-contained **curriculum bundle** — a directory of markdown files the agent reads at runtime via `read_file`. No code changes required to add one.
+
+```
+<project>_curriculum/
+  <project>_overview.md    # learner-facing intro: what it is, example output
+  <project>_project.md     # full reference spec: phases, components, design decisions
+  mentor_charter.md        # phase sequence, file-to-doc mapping, pacing rules
+  <concept>.md             # one teaching doc per major concept introduced
+```
+
+One code addition is also required: a profile module (`src/profile/<project>.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative curriculum docs and drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template.
+
+`luthor_curriculum/` is the canonical example of the full bundle pattern.
