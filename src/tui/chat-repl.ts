@@ -5,7 +5,7 @@ import { AgentLoop } from '../agent/agent-loop.js'
 import { dispatchSlashCommand, listSlashCommands } from './keybindings.js'
 import {
   renderMarkdown,
-  renderUserLabel,
+  //renderUserLabel,
   renderMentorLabel,
   renderError,
   renderStatus,
@@ -63,6 +63,7 @@ export class ChatRepl {
 
   /** Starts the REPL loop. Resolves when the user exits. */
   async start(): Promise<void> {
+    this.clearTerminal()
     this.printWelcome()
     await this.orientLearner()
     return new Promise((resolve) => {
@@ -216,8 +217,9 @@ export class ChatRepl {
   }
 
   private prompt(): void {
-    const label = renderUserLabel()
-    this.rl.setPrompt(`\n${label} > `)
+    // const label = renderUserLabel()
+    // this.rl.setPrompt(`\n${label} > `)
+    this.rl.setPrompt(`\n> `)
     this.rl.prompt()
   }
 
@@ -226,6 +228,10 @@ export class ChatRepl {
     process.stdout.write(
       renderMarkdown(`# CrucibleBuild — Mentor Session\n\nSlash commands: ${commands}`),
     )
+  }
+
+  private clearTerminal(): void {
+    process.stdout.write('\x1B[2J\x1B[0f')
   }
 
   private startSpinner(): void {
