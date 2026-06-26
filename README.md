@@ -87,9 +87,10 @@ npm link
 Copy `.env.example` to `.env` and add your API key:
 
 ```
-ANTHROPIC_API_KEY=sk-...
+ANTHROPIC_API_KEY=your-key-here
 # CRUCIBLEBUILD_PROVIDER=gemini
 # GEMINI_API_KEY=your-key-here
+# CRUCIBLEBUILD_MODEL=claude-haiku-4-5-20251001
 ```
 
 By default the Anthropic provider is used. Set `CRUCIBLEBUILD_PROVIDER=gemini` to use Gemini instead.
