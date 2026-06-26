@@ -79,9 +79,7 @@ this whole product is designed around) from *unproductive friction*
 (getting stuck on a typo or an undocumented quirk, which teaches 
 nothing and just burns motivation).
 
-The full constraint profile and system prompt design — including how 
-this is enforced and how edge cases are handled — is specified 
-separately.
+The full constraint profile and system prompt design — including how this is enforced and how edge cases are handled — is defined in `luthor_curriculum/mentor_charter.md`.
 
 ---
 
@@ -90,7 +88,7 @@ separately.
 A **project-based technical mentorship tool** — a CLI application that:
 
 1. Is initialized in a project directory
-2. Watches the filesystem in real time (using watchdog or equivalent)
+2. Watches the filesystem in real time (using chokidar)
 3. Maintains live context of what the learner has actually written
 4. Pairs that with a chat interface 
 5. Has the constraint profile baked in architecturally — it cannot give code, by design
@@ -195,17 +193,6 @@ The visitor pattern enforces completeness at **compile time** — add a node typ
 
 ---
 
-### Existing Curriculum Artifacts (from the real build)
-- `luthor_project.md` — full architecture, design decisions, complete component breakdown for both Python and C++
-- `cpp_rewrite_concepts.md` — C++ specific concepts introduced in the rewrite
-- `visitor_pattern.md` — deep dive on the pattern as implemented in this codebase
-- Python and C++ source as reference implementations (~600 and ~1000 lines respectively)
-- the actual constraint profile used during the build from the original CLAUDE.MD: `"DO NOT GIVE CODE, JUST GUIDANCE LIKE A TEACHER"`
-
-These are real artifacts from the real build, not reconstructed after the fact.
-
----
-
 ## Target Audience
 
 **Primary**: Self-directed adult learners who are aware of the LLM shortcut problem and actively don't want to use it. People who've seen what answer-farming produces and want genuine understanding. The audience that watches ThePrimeagen, TJ DeVries, and similar creators who preach "build hard things, understand the machine."
@@ -255,7 +242,7 @@ None of this changes per project. The constraint profile is the same contract re
 
 ### What gets authored per project
 
-Each project is a self-contained **curriculum bundle** — a directory of markdown files the agent reads at runtime. No code changes required to add one.
+Each project is a self-contained **curriculum bundle** — a directory of markdown files the agent reads at runtime. 
 
 ```
 <project>_curriculum/
@@ -273,6 +260,13 @@ Each project is a self-contained **curriculum bundle** — a directory of markdo
 
 **One code addition is required:** a new profile module (e.g. `src/profile/webserver.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative in the curriculum docs. It's what drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template — the structure is self-evident and the Zod types guide the rest.
 
+`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_charter.md` — the parts that are largely the same across every project.
+
 The `profileId` field in `.cruciblebuild/config.json` ties a session to its curriculum bundle. `luthor-default` is the first value. New projects register new ids.
+
+**Wiring a new profile into the app** requires two small code changes:
+
+1. Add the new `profileId` to the profile selection logic in `src/cli/chat.ts` — currently `const profile = luthorDefaultProfile` is hardcoded. Add a branch for the new id that imports and returns the new profile module.
+2. Register the new `profileId` as a valid value in `ProjectConfigSchema` in `src/schemas/project-config.ts` so `init` and `chat` accept it without a validation error.
 
 ---

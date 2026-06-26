@@ -1,16 +1,16 @@
 # CrucibleBuild - Programming Mentorship App
 
-A project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
+CrucibleBuild is a project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
-The first and flagship project is Luthor — a complete interpreted programming language, Turing complete, built in two passes. The app developer was able to implement all features in Python in roughly 600 lines, and the C++ version in about 1000 lines. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. 
+The first and flagship project is Luthor — a complete interpreted programming language, Turing complete, built in two passes. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. 
 
 ---
 
 ## Why This Exists
 
-The app developer — a music teacher and developer — built a complete interpreted programming language using an inverted AI workflow. Instead of asking Claude to write code, Claude was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
+The app developer — a music teacher and developer — built a complete interpreted programming language using an 'inverted AI workflow'. Instead of asking Claude Code to write code, Claud Code was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
 
-The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, the visitor pattern, smart pointers, and virtual dispatch than years of conventional learning had produced. More importantly, the struggle produced a genuine leveling-up in the ability to hold complex code and concepts in mind — which translates directly to better code comprehension and more effective use of AI tools.
+The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, the visitor pattern, smart pointers, and virtual dispatch than a class or texbook could have produced. More importantly, the struggle produced a genuine leveling-up in the ability to hold complex code and concepts in mind — which translates directly to better code comprehension and more effective use of AI tools.
 
 This experience is the product.
 
@@ -67,19 +67,21 @@ Rewrite the same project in C++. Every abstraction Python was hiding becomes vis
 
 ---
 
-## Prerequisites
+## Using CrucibleBuild
+
+### Prerequisites
 
 - Node >= 20
 - An Anthropic API key (or Google Gemini API key for the free-tier Gemini provider)
 - For the Python pass: comfortable with Python (functions, classes, loops, enums)
-- For the C++ rewrite: C fundamentals (pointers, heap allocation, stack vs heap) 
+- For the C++ rewrite: C fundamentals (pointers, heap allocation, stack vs heap)
 
----
-
-## Setup
+### Setup
 
 ```bash
 npm install
+npm run build
+npm link
 ```
 
 Copy `.env.example` to `.env` and add your API key:
@@ -92,29 +94,7 @@ ANTHROPIC_API_KEY=sk-...
 
 By default the Anthropic provider is used. Set `CRUCIBLEBUILD_PROVIDER=gemini` to use Gemini instead.
 
-## Build
-
-```bash
-npm run build
-```
-
-To watch for changes during development:
-
-```bash
-npm run dev
-```
-
-## Link the CLI globally
-
-```bash
-npm link
-```
-
-This makes the `cruciblebuild` command available system-wide.
-
----
-
-## Usage
+### Running
 
 Navigate to a project directory (e.g. `python_luthor/`) and run:
 
@@ -143,7 +123,16 @@ The mentor opens with a summary of your current phase and what you should be wor
 
 ---
 
-## Development
+## Developing CrucibleBuild
+
+### Build
+
+```bash
+npm run build       # compile TypeScript to dist/
+npm run dev         # watch mode — recompiles on change
+```
+
+### Checks
 
 ```bash
 npm run typecheck   # tsc --noEmit
@@ -158,16 +147,15 @@ Pre-commit hooks run lint-staged, typecheck, and the full test suite automatical
 
 ## Extensibility
 
-CrucibleBuild is a learning framework. Luthor is the first project. Adding a new curriculum — a web server, a shell, a database engine — requires authoring content, not writing code.
+CrucibleBuild is a learning framework. Luthor is the first project. Adding a new curriculum — a web server, a shell, a database engine — requires authoring content and a profile module schema. 
 
 ### What gets reused
 
-The constraint profile mechanics, mentor persona, graduated escalation path, and all CLI plumbing (init, chat, file watching, agent loop) are shared across every project. The "no code, no solutions" constraint is the same contract regardless of what the learner is building.
+The constraint profile mechanics, mentor persona, graduated escalation path, and all CLI plumbing (init, chat, file watching, agent loop) are shared across every project. 
 
 ### What gets authored per project
 
-Each project is a self-contained **curriculum bundle** — a directory of markdown files the agent reads at runtime via `read_file`. No code changes required to add one.
-
+Each project is a self-contained **curriculum bundle** — a directory of markdown files the agent reads at runtime via `read_file`. 
 ```
 <project>_curriculum/
   <project>_overview.md    # learner-facing intro: what it is, example output
@@ -178,4 +166,9 @@ Each project is a self-contained **curriculum bundle** — a directory of markdo
 
 One code addition is also required: a profile module (`src/profile/<project>.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative curriculum docs and drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template.
 
-`luthor_curriculum/` is the canonical example of the full bundle pattern.
+`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_charter.md`. `luthor_curriculum/` is the canonical example of the full bundle pattern.
+
+**Wiring a new profile into the app** requires two small code changes:
+
+1. Add the new `profileId` to the profile selection logic in `src/cli/chat.ts` — currently `const profile = luthorDefaultProfile` is hardcoded. Add a branch for the new id that imports and returns the new profile module.
+2. Register the new `profileId` as a valid value in `ProjectConfigSchema` in `src/schemas/project-config.ts` so `init` and `chat` accept it without a validation error.
