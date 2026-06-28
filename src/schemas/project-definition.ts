@@ -15,4 +15,5 @@ export const ProjectDefinitionSchema = z.object({
   language: z.enum(['python', 'cpp', 'multi']),
   phases: z.array(PhaseSchema),
   referenceArtifacts: z.array(z.string()),
+  watchPaths: z.array(z.string()).optional(),
 })

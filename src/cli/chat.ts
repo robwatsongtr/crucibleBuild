@@ -42,7 +42,7 @@ export const runChat = async (): Promise<void> => {
   const contextStore = new ContextStore(cwd, config.currentPhaseId)
   contextStore.refreshFileTree()
 
-  const watcher = new FileWatcher(cwd, contextStore)
+  const watcher = new FileWatcher(cwd, contextStore, profile.project.watchPaths)
   watcher.start()
 
   // Static system prompt built once — stable across the session for caching

@@ -182,9 +182,9 @@ structures between them — tokens and AST nodes. You will build these too.
 
 You are provided with two test harness files — one for each pass:
 
-- **`python_luthor/main.py`** (Python pass) — runs a hardcoded source string
+- **`my_luthor/python_luthor/main.py`** (Python pass) — runs a hardcoded source string
   through the full pipeline, printing tokens, AST, then interpreter output
-- **`cpp_luthor/main.cpp`** (C++ pass) — takes a `.lut` source file as a
+- **`my_luthor/cpp_luthor/main.cpp`** (C++ pass) — takes a `.lut` source file as a
   command line argument and does the same: prints tokens, AST, then output
 
 These are not implementation files — they are scaffolding that calls your code
@@ -194,7 +194,7 @@ toward — what `Lexer` takes, what `tokenize()` returns, how the pipeline
 connects.
 
 For the Python pass, `main.py` imports from `src/` — so your implementation
-files go in `python_luthor/src/`:
+files go in `my_luthor/python_luthor/src/`:
 
 ```
 src/tokens.py
@@ -208,7 +208,7 @@ Run them after completing each component. If your lexer is working, the token
 output will look right. If your parser is working, the AST will look right. You
 will know immediately which stage is broken and which is not.
 
-For the C++ pass, a `Makefile` is provided at `cpp_luthor/Makefile`. Read it
+For the C++ pass, a `Makefile` is provided at `my_luthor/cpp_luthor/Makefile`. Read it
 before you start — the `SRCS` line tells you exactly which source files you
 need to create:
 

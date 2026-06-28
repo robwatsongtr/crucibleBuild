@@ -4,12 +4,7 @@ import { resolve } from 'path'
 import { DEBOUNCE_MS } from '../config/constants.js'
 import { ContextStore, ChangeKind } from './context-store.js'
 
-const DEFAULT_IGNORED = [
-  '**/node_modules/**',
-  '**/.git/**',
-  '**/.cruciblebuild/state/**',
-  '**/.*',
-]
+const DEFAULT_IGNORED = ['**/node_modules/**', '**/.git/**', '**/.cruciblebuild/state/**', '**/.*']
 
 /**
  * Wraps chokidar with debouncing and feeds file events into ContextStore.
@@ -22,13 +17,17 @@ export class FileWatcher {
   constructor(
     private readonly projectRoot: string,
     private readonly store: ContextStore,
+    private readonly watchPaths?: string[],
   ) {}
 
-  /** Starts watching the project root. Refreshes file tree once watcher is ready. */
+  /** Starts watching. If watchPaths are specified, watches those subdirs only. Otherwise watches the project root. */
   start(): void {
     const ignored = this.buildIgnoreList()
+    const targets = this.watchPaths
+      ? this.watchPaths.map((p) => resolve(this.projectRoot, p))
+      : [this.projectRoot]
 
-    this.watcher = chokidar.watch(this.projectRoot, {
+    this.watcher = chokidar.watch(targets, {
       ignored,
       ignoreInitial: false,
       persistent: true,

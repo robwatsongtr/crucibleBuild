@@ -4,7 +4,7 @@
 
 CrucibleBuild is a project-based technical mentorship CLI. The learner runs it in a project directory; it watches files, holds context of what they've written, and chats with them in the terminal. The mentor is constrained by a **constraint profile** — architecturally, it cannot write code or give solutions. It can give architecture, point at concepts, answer questions, give feedback on code the learner wrote, and look up syntax.
 
-The repository today is documentation and reference curriculum (Luthor, in `python_luthor/` and `cpp_luthor/`). No app code exists. This plan covers building the MVP from scratch.
+The repository today is documentation and reference curriculum (Luthor, in `my_luthor/python_luthor/` and `my_luthor/cpp_luthor/`). No app code exists. This plan covers building the MVP from scratch.
 
 **Locked decisions before planning:**
 - **TypeScript / Node stack** 
@@ -281,8 +281,8 @@ Deliverables:
   - `mentor_charter.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor charter fragment in the static system prompt assembled by `renderPrompt`
   - `luthor_project.md` — full reference spec for both implementations; component details, design decisions, grammar, token set
 - Test harnesses live in the reference project dirs, not the curriculum dir:
-  - `python_luthor/main.py` — provided test harness for the Python pass; runs a source string through the full pipeline printing tokens, AST, and output at each stage; learner reads this before starting, runs it after each component
-  - `cpp_luthor/main.cpp` — provided test harness for the C++ pass; takes a `.lut` file as argument, same pipeline output; learner reads this before starting the rewrite
+  - `my_luthor/python_luthor/main.py` — provided test harness for the Python pass; runs a source string through the full pipeline printing tokens, AST, and output at each stage; learner reads this before starting, runs it after each component
+  - `my_luthor/cpp_luthor/main.cpp` — provided test harness for the C++ pass; takes a `.lut` file as argument, same pipeline output; learner reads this before starting the rewrite
 - The system prompt tells the agent these docs exist and instructs it to reach for them when answering questions about architecture, concepts, or what to build next — rather than relying solely on its training knowledge.
 - The agent does not recite the curriculum verbatim; it uses it as reference to give contextual, depth-appropriate answers based on where the learner actually is.
 - **Opening brief**: when `chat` starts, the agent's first turn is pre-populated with current phase + file context, so the learner never faces a blank prompt. The agent opens with a short summary of where they are and what the current goal is.
@@ -298,7 +298,7 @@ Deliverables:
 Verification:
 - Unit: `ToolHandlers` against a fixture project; assert sandbox enforcement, truncation, schema validation.
 - Unit: `AgentLoop` against a mocked SDK replaying a canned tool-use → tool-result → text sequence.
-- Manual: run inside the bundled `python_luthor/` and `cpp_luthor/` reference dirs; confirm the model never produces solution code.
+- Manual: run inside the bundled `my_luthor/python_luthor/` and `my_luthor/cpp_luthor/` reference dirs; confirm the model never produces solution code.
 - Observability: log cache hit rates per turn.
 
 ---

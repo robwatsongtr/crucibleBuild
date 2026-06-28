@@ -97,13 +97,15 @@ By default the Anthropic provider is used. Set `CRUCIBLEBUILD_PROVIDER=gemini` t
 
 ### Running
 
-Navigate to a project directory (e.g. `python_luthor/`) and run:
+`my_luthor/` is your working directory for the entire Luthor curriculum — both the Python pass and the C++ rewrite. Initialize a git repo there to save your work, then run `init`:
 
 ```bash
+cd my_luthor
+git init
 cruciblebuild init
 ```
 
-This prints the Luthor overview and writes `.cruciblebuild/config.json` into the project directory.
+This prints the Luthor overview and writes `.cruciblebuild/config.json` into `my_luthor/`.
 
 Then start a chat session:
 
@@ -111,7 +113,7 @@ Then start a chat session:
 cruciblebuild chat
 ```
 
-The mentor opens with a summary of your current phase and what you should be working on. Edit files in your project — the watcher picks up changes and the mentor can read them with `read_file` and `list_directory`.
+The mentor opens with a summary of your current phase and what you should be working on. Write your code in `python_luthor/src/` (Python pass) or `cpp_luthor/src/` (C++ pass) — the watcher picks up changes and the mentor can read them.
 
 ### Slash commands
 

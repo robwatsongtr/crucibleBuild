@@ -286,8 +286,9 @@ export const luthorDefaultProfile: ConstraintProfile = {
       'luthor_curriculum/interpreter.md',
       'luthor_curriculum/cpp_rewrite_concepts.md',
       'luthor_curriculum/visitor_pattern.md',
-      'python_luthor/main.py',
-      'cpp_luthor/main.cpp',
+      'my_luthor/python_luthor/main.py',
+      'my_luthor/cpp_luthor/main.cpp',
     ],
+    watchPaths: ['my_luthor/python_luthor/src', 'my_luthor/cpp_luthor/src'],
   },
 }
