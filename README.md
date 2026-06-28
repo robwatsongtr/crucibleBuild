@@ -113,7 +113,7 @@ Then start a chat session:
 cruciblebuild chat
 ```
 
-The mentor opens with a summary of your current phase and what you should be working on. Write your code in `python_luthor/src/` (Python pass) or `cpp_luthor/src/` (C++ pass) — the watcher picks up changes and the mentor can read them.
+The mentor opens with a summary of your current phase and what you should be working on. Write your code in `my_luthor/python_luthor/src/` (Python pass) or `my_luthor/cpp_luthor/src/` (C++ pass) — the watcher picks up changes and the mentor can read them.
 
 ### Slash commands
 
