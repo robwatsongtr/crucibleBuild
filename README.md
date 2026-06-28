@@ -2,15 +2,15 @@
 
 CrucibleBuild is a project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
-The first and flagship project is Luthor — a complete interpreted programming language, Turing complete, built in two passes. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. 
+The first and flagship project is Luthor — a Turing complete interpreted programming language built in two passes. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. 
 
 ---
 
 ## Why This Exists
 
-The app developer — a music teacher and developer — built a complete interpreted programming language using an 'inverted AI workflow'. Instead of asking Claude Code to write code, Claud Code was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
+The app developer — a music teacher and developer — built a Turing complete interpreted programming language using an 'inverted AI workflow'. Instead of asking Claude Code to write code, Claude Code was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
 
-The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, the visitor pattern, smart pointers, and virtual dispatch than a class or texbook could have produced. More importantly, the struggle produced a genuine leveling-up in the ability to hold complex code and concepts in mind — which translates directly to better code comprehension and more effective use of AI tools.
+The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, and interpreter tree walking. More importantly, the struggle produced a genuine leveling-up in the ability to hold code and concepts in mind — which translates directly to better code comprehension and more effective use of AI tools.
 
 This experience is the product.
 
@@ -29,9 +29,9 @@ People entering software development now face a fundamental paradox:
 
 The result is developers who can generate code they don't understand, can't debug when it breaks, can't evaluate whether it's good, and can't steer the model when it goes wrong.
 
-The people who are aware of this problem have no structured solution. They know they need to struggle. They don't have a tool designed around that need.
+The people who are aware of this problem have no structured solution. They know they need to struggle. They don't have a tool designed around that need. CrucibleBuild aims to be a tool that provides a framework to learn classic deep systems: interpreters / compilers, servers, databases, and the like. By building deep systems from scratch you gain fundamental programming skills. 
 
-For more experienced developers, it's important to maintain deliberate practice writing code and working through problems by hand. A regular Leetcode practice is a good way to accomplish this, but those problems are small in scope. Building a language, a web server, or a database engine is a much more in depth and fun way to keep your chops up. 
+For more experienced developers, it's important to maintain deliberate practice writing code and working through problems by hand. A regular Leetcode practice is a good way to accomplish this, but those problems are small in scope. Building a language, a web server, or a database engine is a much more in-depth and fun way to keep your chops up. 
 
 ---
 
