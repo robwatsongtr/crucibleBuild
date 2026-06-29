@@ -21,8 +21,12 @@ const CONTEXT_WINDOW_ERROR_PHRASES = ['prompt is too long', 'context length', 'm
 
 const isContextWindowError = (err: unknown): boolean => {
   const msg = err instanceof Error ? err.message.toLowerCase() : String(err).toLowerCase()
-
   return CONTEXT_WINDOW_ERROR_PHRASES.some((phrase) => msg.includes(phrase))
+}
+
+const isRateLimitOrBillingError = (err: unknown): boolean => {
+  const status = (err as { status?: number })?.status
+  return status === 429 || status === 403
 }
 
 export interface AgentLoopOptions {
@@ -99,6 +103,12 @@ export class AgentLoop {
         if (isContextWindowError(err)) {
           throw new Error(
             'Session history is too long. Start a new session with `cruciblebuild chat`.',
+          )
+        }
+
+        if (isRateLimitOrBillingError(err)) {
+          throw new Error(
+            "API rate limit or out of token credits. Check your billing at your provider's console.",
           )
         }
 
