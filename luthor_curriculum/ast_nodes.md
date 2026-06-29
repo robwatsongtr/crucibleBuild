@@ -190,6 +190,16 @@ The reason you can write `x * y + z * w - 1` — or nest expressions arbitrarily
 
 ---
 
+## Printing the AST
+
+The pipeline needs to be observable at each stage. `main.py` prints the AST after parsing — `print(f"root: {tree}")`. For this to work, every node class needs a `__repr__` method that returns a readable string showing the node type and its children.
+
+In C++, `main.cpp` calls `ast->toString()` on the root node. Every node needs a `toString()` method that returns a `std::string`, recursively including its children.
+
+Both should produce output that makes the tree structure visible — enough to verify the parser built the right AST before moving to the interpreter.
+
+---
+
 ## Key Insights Summary
 
 - **You can't always evaluate immediately** — conditionals and loops need their bodies stored for later; the AST is that storage

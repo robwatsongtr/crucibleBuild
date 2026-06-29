@@ -110,6 +110,16 @@ The enum defines the vocabulary. The `Token` class is the unit that carries it t
 
 ---
 
+## Printing Tokens
+
+The pipeline needs to be observable at each stage. `main.py` prints every token after lexing using a simple loop — `print(f"  {token}")`. For this to work, your `Token` class needs a `__repr__` method that returns a readable string.
+
+In C++, `main.cpp` calls `tok.toString()` on each token. Your `Token` struct needs a `toString()` method that returns a `std::string`.
+
+Both should produce output that shows the type and lexeme clearly — enough to verify the lexer is producing the right tokens before moving to the parser.
+
+---
+
 ## Tokens Are the Contract
 
 The token definitions are the contract between the lexer and the parser. The lexer promises to produce only valid `TokenType` values. The parser promises to handle all of them. If you add a new token type, both sides need to know about it.

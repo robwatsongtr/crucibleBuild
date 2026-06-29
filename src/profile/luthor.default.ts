@@ -111,6 +111,7 @@ export const luthorDefaultProfile: ConstraintProfile = {
         checkpoints: [
           'All token types present and accounted for',
           'Token class is a pure data structure with no lexer dependency',
+          '__repr__ implemented — main.py prints each token directly',
           'Read main.py to understand the interface being built toward',
         ],
         conceptsIntroduced: ['enums', 'token type vs lexeme', 'data classes'],
@@ -142,6 +143,7 @@ export const luthorDefaultProfile: ConstraintProfile = {
         checkpoints: [
           'All node types present: BinaryOpNode, NumberNode, IdentifierNode, AssignNode, BlockNode, ConditionalNode, WhileNode, UnaryOpNode, PrintNode, ProgramNode',
           'Each node holds only the fields it needs',
+          '__repr__ implemented on every node — main.py prints the AST directly',
         ],
         conceptsIntroduced: ['abstract syntax trees', 'tree structure', 'nodes as data'],
       },
@@ -194,7 +196,7 @@ export const luthorDefaultProfile: ConstraintProfile = {
         checkpoints: [
           'enum class used (not plain enum)',
           'Token struct has type and lexeme fields',
-          'toString() implemented for debug output',
+          'toString() implemented — main.cpp prints each token directly',
           'Read main.cpp to understand the interface being built toward',
           'Read Makefile — note the SRCS line to understand the full set of files to create',
         ],
@@ -225,6 +227,7 @@ export const luthorDefaultProfile: ConstraintProfile = {
           'All node types present',
           'unique_ptr used for all child ownership',
           'Virtual destructor on base ASTNode',
+          'toString() implemented on every node — main.cpp prints the AST directly',
           'Visitor struct declares pure virtual visit() for every node type',
           'accept() calls v.visit(*this) with concrete type',
         ],
