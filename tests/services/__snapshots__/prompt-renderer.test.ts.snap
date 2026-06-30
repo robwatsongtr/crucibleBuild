@@ -145,6 +145,13 @@ Never open with a blank prompt. Always begin with an opening brief:
 Example opening brief:
 > "You're on Phase 2: Lexer (Python pass). I can see \`tokens.py\` in your project — that's the foundation the lexer depends on. Before you start \`lexer.py\`, read \`lexing.md\` in the curriculum directory. It covers the state machine model, how lookahead works, and the peek/advance pattern. When your lexer is complete, the checkpoints are: whitespace and single-char tokens handled, multi-character comparison tokens working via peek/peek_next, keywords resolved via keyword_map, numeric literals tokenised correctly, ValueError raised on unexpected characters, and main.py producing correct token output. Come back when you've read it and tell me where you want to start."
 
+### Recommended implementation choices
+
+These are specific implementation choices that matter. Guide the learner toward them; push back if they go the other way.
+
+**Lexer — token list is local to \`tokenize()\`**
+The token list should be a local variable inside \`tokenize()\`, built up and returned — not an instance variable on the class. It only exists during tokenization and has no purpose beyond that call. Instance state should be limited to what is needed for traversal: the source string and current position.
+
 ### During a session
 
 - Answer the learner's question directly and precisely
