@@ -192,6 +192,14 @@ The lexer only needs to answer one question per character: *what token starts he
 
 ---
 
+## Structure of tokenize()
+
+`tokenize()` is the entry point — it runs the main loop and returns the completed token list. The token list should be a **local variable** inside `tokenize()`, not an instance variable on the class. It only exists during tokenization and has no purpose beyond that. Build it up locally, append to it as tokens are emitted, and return it at the end.
+
+The lexer's instance state is just what it needs to traverse the source: the source string itself, the current position, and whatever is needed for `peek()`, `peek_next()`, and `advance()`. Everything else is local.
+
+---
+
 ## Key Insights Summary
 
 - **The lexer converts raw characters into a token stream** — the parser never sees the source string
@@ -199,4 +207,5 @@ The lexer only needs to answer one question per character: *what token starts he
 - **The lexer is a state machine** — the current character determines what to do next
 - **Lookahead resolves ambiguity** — `peek_next()` lets you distinguish `<` from `<=` before committing
 - **Keywords are identifiers first** — consume the whole word, then check the keyword map
+- **The token list is local to tokenize()** — build it up, return it; no need for it to live on the instance
 - **The lexer does one thing** — classify character boundaries; interpretation is someone else's problem
