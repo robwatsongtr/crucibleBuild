@@ -49,6 +49,10 @@ export class AgentLoop {
     this.options = options
   }
 
+  modelId(): string {
+    return this.client.modelId()
+  }
+
   currentPhaseId(): string {
     return this.options.deps.contextStore.currentPhaseId
   }

@@ -225,8 +225,11 @@ export class ChatRepl {
 
   private printWelcome(): void {
     const commands = listSlashCommands().join('  ')
+    const model = this.agentLoop.modelId()
     process.stdout.write(
-      renderMarkdown(`# CrucibleBuild — Mentor Session\n\nSlash commands: ${commands}`),
+      renderMarkdown(
+        `# CrucibleBuild — Mentor Session\n\nModel: ${model}\n\nSlash commands: ${commands}\n\nTo paste multi-line text, type \`:paste\` to enter paste mode, paste your text, then type \`:paste\` again to send.`,
+      ),
     )
   }
 

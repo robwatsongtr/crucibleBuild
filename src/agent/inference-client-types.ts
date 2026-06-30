@@ -2,6 +2,7 @@
 
 export interface InferenceClient {
   stream(request: InferenceRequest, onDelta: (text: string) => void): Promise<InferenceResponse>
+  modelId(): string
 }
 
 export interface InferenceRequest {

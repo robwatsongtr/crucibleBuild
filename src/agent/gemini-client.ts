@@ -80,6 +80,10 @@ export class GeminiClient implements InferenceClient {
     this.model = process.env.CRUCIBLEBUILD_MODEL ?? DEFAULT_MODEL_GEMINI
   }
 
+  modelId(): string {
+    return this.model
+  }
+
   async stream(
     request: InferenceRequest,
     onDelta: (text: string) => void,

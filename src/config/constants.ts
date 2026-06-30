@@ -5,7 +5,6 @@ export const CONFIG_FILE = 'config.json'
 export const STATE_DIR = 'state'
 export const README_FILE = 'README.md'
 
-export const CONTRACT_ACKNOWLEDGEMENT_PHRASE = 'I accept'
 export const PROFILE_VERSION = '1.0.0'
 export const DEFAULT_PROFILE_ID = 'luthor-default'
 export const DEFAULT_PHASE_ID = 'python-tokens'

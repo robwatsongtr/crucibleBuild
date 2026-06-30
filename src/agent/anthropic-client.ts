@@ -79,6 +79,10 @@ export class AnthropicClient implements InferenceClient {
     this.model = process.env.CRUCIBLEBUILD_MODEL ?? DEFAULT_MODEL_ANTHROPIC
   }
 
+  modelId(): string {
+    return this.model
+  }
+
   async stream(
     request: InferenceRequest,
     onDelta: (text: string) => void,
