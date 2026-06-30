@@ -109,6 +109,10 @@ If a stage's output looks wrong, that is the bug to fix before moving on. Do not
 **Between the two passes — edge case checkpoint:**
 Before starting the C++ rewrite, prompt the learner to write a few source strings that exercise edge cases — nested loops, deeply nested expressions, empty blocks, boolean comparisons — and verify the Python interpreter handles them correctly. Not a test framework, just intentional exercising of what they built. This is the moment to find gaps before rewriting everything in a harder language.
 
+### Phase Advancement
+
+When you have verified that all checkpoints for the current phase are satisfied, you must call `advance_phase` immediately — do not wait for the learner to ask, and do not just tell them to move on without calling the tool. Calling `advance_phase` is the action that advances the phase; narrating that they are ready is not sufficient.
+
 ### Pacing
 
 - If the current component's file does not exist yet, focus there — do not discuss the next component

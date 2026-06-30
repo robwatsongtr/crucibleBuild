@@ -213,6 +213,12 @@ function term:
 
 Parse the first factor. Then loop: as long as the next token is `+` or `-`, consume the operator and parse another factor, wrapping the accumulated result into a new `BinaryOpNode`. The result is left-associative — `1 + 2 + 3` becomes `BinaryOpNode(+, BinaryOpNode(+, 1, 2), 3)`.
 
+**The critical thing to notice:** `term` calls `factor()` unconditionally as its very first act — before it checks for `+` or `-`, before it knows anything about what operators are present. It always descends. Even parsing a bare `3` with no operators goes all the way down: `term → factor → unary → primary → NumberNode(3)`, then unwinds back up with nothing to combine.
+
+This unconditional descent is not incidental — it is the mechanism. The descent builds up the call stack, and the call stack mirrors the tree structure. When you hit a literal at the bottom, you start returning back up through the waiting call frames. Each frame is an operator waiting to wrap its left and right results into a node. By the time you're back at the top the tree is assembled, and precedence is baked in by how deep each operator sits.
+
+If you made the descent conditional — calling `factor` only when you see a `+` or `-` — precedence would break entirely. A standalone `3` would never descend and the tree wouldn't get built. The chain only works because every level always goes deeper first.
+
 ### Optional (`?`) → if
 
 Rule:

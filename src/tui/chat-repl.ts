@@ -213,7 +213,12 @@ export class ChatRepl {
   }
 
   private async orientLearner(): Promise<void> {
-    await this.sendMessage('Session started. Give the student an opening brief')
+    await this.sendMessage(
+      "Session started. Use read_file and list_directory to read the learner's current phase files. " +
+        'Base your assessment only on what the code actually shows — not on what the learner has said. ' +
+        'If the code satisfies all checkpoints for the current phase, call advance_phase immediately. ' +
+        'Then give the opening brief for wherever the learner actually is.',
+    )
   }
 
   private prompt(): void {

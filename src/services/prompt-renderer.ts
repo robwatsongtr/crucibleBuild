@@ -66,9 +66,8 @@ const renderRules = (profile: ConstraintProfile): string => {
 
 const renderProjectSummary = (profile: ConstraintProfile): string => {
   const { project } = profile
-  const artifacts = project.referenceArtifacts.map((a) => `- ${a}`).join('\n')
 
-  return `# Project: ${project.title}\n\n${project.summary}\n\n**Reference artifacts available via read_file:**\n${artifacts}`
+  return `# Project: ${project.title}\n\n${project.summary}`
 }
 
 const renderPhaseCatalog = (profile: ConstraintProfile): string => {

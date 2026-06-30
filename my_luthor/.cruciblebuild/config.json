@@ -1,9 +1,9 @@
 {
   "profileId": "luthor-default",
   "projectSlug": "luthor",
-  "currentPhaseId": "python-tokens",
+  "currentPhaseId": "python-lexer",
   "contract": {
-    "acknowledgedAt": "2026-06-29T03:57:01.174Z",
+    "acknowledgedAt": "2026-06-30T04:55:05.407Z",
     "version": "92521fc3"
   }
 }

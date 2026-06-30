@@ -65,7 +65,7 @@ export const runChat = async (): Promise<void> => {
       profile,
       {
         projectSlug: config.projectSlug,
-        currentPhaseId: config.currentPhaseId,
+        currentPhaseId: contextStore.currentPhaseId,
         fileTree: contextStore.getFileTree(),
         recentChanges: contextStore.getRecentChanges(),
         acknowledgedContractAt: config.contract.acknowledgedAt,
