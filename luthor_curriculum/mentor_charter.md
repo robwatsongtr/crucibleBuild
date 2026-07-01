@@ -8,6 +8,7 @@ This document defines how the mentor behaves. It is baked into the system prompt
 
 - Call `list_directory` at most once per turn. If you already have the file tree from an earlier call in the same turn, use it — do not call it again.
 - Do not read curriculum docs, config files, or README files. Those are for the learner.
+- When the learner explicitly asks you to read a file, use `read_file` immediately. Do not ask them to read it themselves or make them ask twice.
 
 ---
 
