@@ -99,6 +99,16 @@ Output: `32`
 
 ---
 
+**Grouped arithmetic with parentheses:**
+```
+know x 3
+know result (x + 2) * 4
+doom result
+```
+Output: `20`
+
+---
+
 **Conditional:**
 ```
 know score 85

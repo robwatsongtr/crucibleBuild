@@ -24,9 +24,11 @@ def main():
     source = """
 
     know x 3
+    know result (x + 2) * 4
+    doom result
+    
     suppose x > 5
         doom 100
-    end
     otherwise
         doom 200
     end
@@ -44,12 +46,12 @@ def main():
     """
 
 
-    print(f"Program: {quadratic}")
+    print(f"Program: {source}")
     print()
 
     print("Step 1: Lexical Analysis (Tokenization)")
     print()
-    lexer = Lexer(quadratic)
+    lexer = Lexer(source)
     tokens = lexer.tokenize()
 
     for token in tokens:

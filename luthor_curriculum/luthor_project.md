@@ -309,6 +309,14 @@ crime count > 0
 end
 ```
 
+**Grouped arithmetic with parentheses:**
+```
+know x 3
+know result (x + 2) * 4
+doom result
+```
+Output: `20`
+
 **Boolean output:**
 ```
 know x 5
