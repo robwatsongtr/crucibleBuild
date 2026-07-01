@@ -134,6 +134,8 @@ advance():
 
 The main loop calls `peek()` to decide what kind of token is starting, then calls `advance()` one or more times to consume it. `peek_next()` is only needed for the two-character comparison tokens.
 
+`peek()` returning `None` and the `tokenize()` loop checking for `None` are two halves of the same design. `peek()` doesn't need a special EOF sentinel — it just returns `None` when the position is past the end of the source. The first check in `tokenize()`'s `while True` loop is `if self.peek() is None`: append `Token(TokenType.EOF, '')` and return. That's the entire EOF handling. No additional guard logic needed in `peek()` itself.
+
 ---
 
 ## Worked Example: `know x <= 10`
