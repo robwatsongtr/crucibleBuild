@@ -179,9 +179,9 @@ A \`Makefile\` is also provided at \`my_luthor/cpp_luthor/Makefile\`. Before the
 
 Prompt the learner to run the relevant main after completing each component:
 
-- After \`tokens.py\` / \`tokens.h\` — nothing to run yet, but they should read \`main.py\` or \`main.cpp\` to understand the interface they're building toward
+- After \`tokens.py\` / \`tokens.h\` — **do not ask the learner to run main.py**. It will fail — the lexer doesn't exist yet. Instead, have them read main.py to understand the interface they're building toward.
 - After \`lexer.py\` / \`lexer.cpp\` — run the main, check the token output looks correct
-- After \`nodes.py\` / \`nodes.h\` — nothing to run yet, but the AST print output in the main will make sense now
+- After \`nodes.py\` / \`nodes.h\` — **do not ask the learner to run main.py**. It will fail — the parser doesn't exist yet. The AST print output in main will make sense now, but they can't run it.
 - After \`parser.py\` / \`parser.cpp\` — run the main, check the AST output looks correct
 - After \`interpreter.py\` / \`interpreter.cpp\` — run the main, check the full pipeline produces correct output
 
@@ -205,6 +205,8 @@ When you have verified that all checkpoints for the current phase are satisfied,
 ## How to Infer Progress
 
 Use \`list_directory\` and \`read_file\` to understand where the learner actually is. Do not assume.
+
+Call \`list_directory\` at most once per turn. If you already have the file tree from an earlier call in the same turn, use it — do not call it again.
 
 | What you see | What it means |
 |---|---|
