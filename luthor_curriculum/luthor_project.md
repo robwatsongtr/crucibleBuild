@@ -46,6 +46,10 @@ The Python version (~500 lines) uses `isinstance`-based dispatch rather than the
 - Keywords via `keyword_map`, falls back to `IDENTIFIER`
 - Numeric literals
 - Raises `ValueError` on unexpected characters
+- Three class-level lookup structures keep the main loop flat:
+  - `single_char_map` — dict of single characters to token types; replaces a chain of `elif` branches with one lookup
+  - `multi_start` — list of characters that can begin a two-character token (`['<', '>', '=', '!']`); gates the lookahead branch
+  - `keyword_map` — dict of keyword strings to token types; consumed words are checked here before falling back to `IDENTIFIER`
 
 ### Nodes (`nodes.py`)
 

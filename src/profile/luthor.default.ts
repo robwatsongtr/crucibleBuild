@@ -124,9 +124,9 @@ export const luthorDefaultProfile: ConstraintProfile = {
           'Produce a flat list of Token objects from a source string',
         ],
         checkpoints: [
-          'Handles whitespace and single-char tokens',
-          'Handles multi-character comparison tokens via peek/peek_next',
-          'Keywords resolved via keyword_map, falls back to IDENTIFIER',
+          'Handles whitespace and single-char tokens via single_char_map (dict of char → TokenType)',
+          'Handles multi-character comparison tokens via peek/peek_next, gated by multi_start list',
+          'Keywords resolved via keyword_map (dict of word → TokenType), falls back to IDENTIFIER',
           'Numeric literals tokenised correctly',
           'Raises ValueError on unexpected characters',
           'Run main.py and verify token output',

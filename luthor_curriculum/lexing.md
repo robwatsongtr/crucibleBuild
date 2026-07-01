@@ -200,6 +200,28 @@ The lexer's instance state is just what it needs to traverse the source: the sou
 
 ---
 
+## The Three Lookup Structures
+
+The lexer uses three class-level data structures to keep the main loop clean. They are static — defined on the class, not in `__init__` — because they never change between instances.
+
+### `single_char_map`
+
+A dict mapping single characters to their token type. The main loop checks `peek() in single_char_map` — if it matches, look up the type, emit the token, advance once. No branching needed — the map replaces eight `elif` branches with a single lookup.
+
+Note that `<` and `>` are in `single_char_map`. They are valid single-character tokens on their own. The multi-character check runs *before* the single-character check, so `<=` is caught first and `<` alone is only reached when the next character is not `=`.
+
+### `multi_start`
+
+A list of characters that could begin a two-character token: `['<', '>', '=', '!']`. This is the gate for the lookahead branch — when `peek()` is in `multi_start` *and* `peek_next()` is `=`, you have a two-character token. Without this list, you'd need four separate `elif` branches just to enter the lookahead check.
+
+### `keyword_map`
+
+A dict mapping keyword strings to their token type. Used after consuming a full word — if the word is in `keyword_map`, emit the keyword token; if not, it's an `IDENTIFIER`. This is the mechanism that makes keywords reserved: a variable named `know` is impossible because `know` always matches the map first.
+
+Together, the three structures mean the main loop stays flat and readable. Each branch handles one character class; the maps do the classification work inside.
+
+---
+
 ## Key Insights Summary
 
 - **The lexer converts raw characters into a token stream** — the parser never sees the source string
