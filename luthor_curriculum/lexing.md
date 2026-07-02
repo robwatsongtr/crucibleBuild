@@ -87,6 +87,18 @@ The lexer needs two operations for this:
 
 Most of the lexer is just `peek()` to decide, `advance()` to consume.
 
+**The multi-char check must come before the single-char check.** If you check `single_char_map` first, `<` gets consumed as `LESS_THAN` before you ever look at the next character — `<=` becomes impossible. The correct ordering in the `tokenize()` loop is:
+
+1. EOF check
+2. Whitespace
+3. Multi-char operators (`multi_start` + lookahead)
+4. Single-char tokens (`single_char_map`)
+5. Identifiers and keywords
+6. Numbers
+7. Error
+
+Single-char handles `<` and `>` as the fallback — if the multi-char check ran and the next character wasn't `=`, the character falls through to `single_char_map` naturally.
+
 ### Identifiers and keywords
 
 When the lexer sees a letter, it doesn't know yet whether it's looking at a keyword (`know`, `suppose`, `crime`) or a variable name (`x`, `count`, `total`). It can't tell until it's consumed the whole word.
@@ -134,7 +146,7 @@ advance():
 
 The main loop calls `peek()` to decide what kind of token is starting, then calls `advance()` one or more times to consume it. `peek_next()` is only needed for the two-character comparison tokens.
 
-`peek()` returning `None` and the `tokenize()` loop checking for `None` are two halves of the same design. `peek()` doesn't need a special EOF sentinel — it just returns `None` when the position is past the end of the source. The first check in `tokenize()`'s `while True` loop is `if self.peek() is None`: append `Token(TokenType.EOF, '')` and return. That's the entire EOF handling. No additional guard logic needed in `peek()` itself.
+`peek()` returning `None` and the `tokenize()` loop checking for `None` are two halves of the same design. `peek()` doesn't need a special EOF sentinel — it just returns `None` when the position is past the end of the source. The first check in `tokenize()`'s `while True` loop is to check if we're at end of the source, if so append the EOF token and return the array of tokens. That's the entire EOF handling. No additional guard logic needed in `peek()` itself.
 
 ---
 

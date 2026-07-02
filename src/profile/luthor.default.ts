@@ -124,8 +124,11 @@ export const luthorDefaultProfile: ConstraintProfile = {
           'Produce a flat list of Token objects from a source string',
         ],
         checkpoints: [
-          'peek() returns None at end of source; tokenize() checks None first in the while loop and emits EOF — no other sentinel needed',
-          'Handles whitespace and single-char tokens via single_char_map (dict of char → TokenType)',
+          'tokenize() loop order: EOF check → whitespace → multi-char operators → single-char tokens → identifiers → numbers → error',
+          'peek() returns None at end of source; tokenize() checks None first and emits EOF — no other sentinel needed',
+          'Multi-char check (multi_start + peek_next()) comes before single_char_map — otherwise < is consumed before <= can be detected',
+          'Handles whitespace — advance and skip, no token emitted',
+          'Handles single-char tokens via single_char_map (dict of char → TokenType)',
           'Handles multi-character comparison tokens via peek/peek_next, gated by multi_start list',
           'Keywords resolved via keyword_map (dict of word → TokenType), falls back to IDENTIFIER',
           'Numeric literals tokenised correctly',
