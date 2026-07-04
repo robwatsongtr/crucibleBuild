@@ -165,6 +165,10 @@ The token list should be a local variable inside \`tokenize()\`, built up and re
 **Lexer — multi-char check before single-char**
 The multi-char operator check (\`multi_start\` + \`peek_next()\`) must come before the \`single_char_map\` check. If single-char runs first, \`<\` is consumed as \`LESS_THAN\` before lookahead can run — \`<=\` becomes unreachable. The correct order: EOF → whitespace → multi-char → single-char → identifiers → numbers → error.
 
+Guide the learner to build the branches in this order from the start. Do not suggest building single-char first and inserting multi-char later — that produces the wrong order and requires a refactor to fix.
+
+When introducing the tokenize loop, suggest the learner think through single-char tokens first — they are simpler and establish the pattern. Then have them write multi-char in the file before single-char, since it must appear first in the code. Understanding and writing order are not the same thing.
+
 ### During a session
 
 - Answer the learner's question directly and precisely
@@ -187,6 +191,8 @@ Work through these steps in order. Do not skip ahead.
 ### Running and testing at each stage
 
 The learner is provided with \`my_luthor/python_luthor/main.py\` (Python pass) and \`my_luthor/cpp_luthor/main.cpp\` (C++ pass). They run the full pipeline and print the output of each stage: token stream, AST, then interpreter output. The learner did not write them and should not modify them.
+
+\`main.py\` starts with the parser and interpreter imports commented out, and those pipeline stages commented out in the body. This is intentional — the learner uncomments each section as they complete the corresponding component. After the lexer is done, only the token output section runs. After the parser is done, the AST section is uncommented. After the interpreter is done, the full pipeline runs. Do not flag the commented sections as broken or incomplete — they are the intended starting state.
 
 A \`Makefile\` is also provided at \`my_luthor/cpp_luthor/Makefile\`. Before the learner starts the C++ pass, have them read it — the \`SRCS\` line reveals the full set of source files they need to create: \`src/lexer.cpp\`, \`src/parser.cpp\`, \`src/interpreter.cpp\`, \`src/runner.cpp\`. This is deliberate orientation, not a spoiler — knowing the target file list before writing a line of C++ is part of understanding what they're building.
 

@@ -1,6 +1,6 @@
 from src.lexer import Lexer
-from src.parser import Parser
-from src.interpreter import Interpreter
+# from src.parser import Parser
+# from src.interpreter import Interpreter
 # from fixtures.lexer_examples import lex_examples
 
 
@@ -58,17 +58,17 @@ def main():
         print(f"  {token}")
     print()
 
-    print("Step 2: Syntax Analysis (Parsing)")
-    parser = Parser(tokens)
-    tree = parser.program()
-    print(f"root: {tree}")
-    print()
+    # print("Step 2: Syntax Analysis (Parsing)")
+    # parser = Parser(tokens)
+    # tree = parser.program()
+    # print(f"root: {tree}")
+    # print()
 
-    print("Step 3: Evaluation (Interpretation)")
-    interpreter = Interpreter(tree)
-    output = interpreter.run()
-    print(output)
-    print()
+    # print("Step 3: Evaluation (Interpretation)")
+    # interpreter = Interpreter(tree)
+    # output = interpreter.run()
+    # print(output)
+    # print()
 
 
 if __name__ == '__main__':
