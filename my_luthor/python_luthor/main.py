@@ -6,6 +6,30 @@ from src.lexer import Lexer
 
 def main():
 
+    source = """
+
+    know x 3
+    know result (x + 2) * 4
+    doom result
+    
+    suppose x > 5
+        doom 100
+    otherwise
+        doom 200
+    end
+    
+    """
+
+    source2 = """
+
+    know x 0
+    crime x < 5
+      doom x
+      know x x + 1
+    end
+
+    """
+
     quadratic = """
     
     know i 0
@@ -20,31 +44,6 @@ def main():
     doom i
 
     """
-
-    source = """
-
-    know x 3
-    know result (x + 2) * 4
-    doom result
-    
-    suppose x > 5
-        doom 100
-    otherwise
-        doom 200
-    end
-
-    """
-
-    source2 = """
-
-    know x 0
-    crime x < 5
-      doom x
-      know x x + 1
-    end
-
-    """
-
 
     print(f"Program: {source}")
     print()

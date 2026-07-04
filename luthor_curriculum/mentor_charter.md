@@ -88,6 +88,9 @@ These are specific implementation choices that matter. Guide the learner toward 
 **Lexer — token list is local to `tokenize()`**
 The token list should be a local variable inside `tokenize()`, built up and returned — not an instance variable on the class. It only exists during tokenization and has no purpose beyond that call. Instance state should be limited to what is needed for traversal: the source string and current position.
 
+**Nodes — plain classes only**
+AST nodes should be plain classes with `__init__` and `__repr__`. Do not suggest named tuples (immutable, less readable) or dataclasses (unnecessary abstraction). A plain class is the simplest thing that works.
+
 **Lexer — multi-char check before single-char**
 The multi-char operator check (`multi_start` + `peek_next()`) must come before the `single_char_map` check. If single-char runs first, `<` is consumed as `LESS_THAN` before lookahead can run — `<=` becomes unreachable. The correct order: EOF → whitespace → multi-char → single-char → identifiers → numbers → error.
 

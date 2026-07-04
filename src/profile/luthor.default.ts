@@ -145,7 +145,9 @@ export const luthorDefaultProfile: ConstraintProfile = {
           'No lexer or parser dependency',
         ],
         checkpoints: [
+          'Learner has read ast_nodes.md before starting',
           'All node types present: BinaryOpNode, NumberNode, IdentifierNode, AssignNode, BlockNode, ConditionalNode, WhileNode, UnaryOpNode, PrintNode, ProgramNode',
+          'Each node is a plain class with __init__ and __repr__ — not a named tuple or dataclass',
           'Each node holds only the fields it needs',
           '__repr__ implemented on every node — main.py prints the AST directly',
         ],
