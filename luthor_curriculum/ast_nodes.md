@@ -21,6 +21,14 @@ The same problem applies to loops. The body of a `crime` loop needs to be execut
 
 **The parser's job is to understand structure. The interpreter's job is to evaluate it.** An AST is how the parser hands its understanding to the interpreter.
 
+### A historical aside: single-pass compilation
+
+Some compilers skip the AST entirely and emit code directly during parsing — a single pass through the source, no intermediate representation. Turbo Pascal did this, which is why it felt nearly instant on 1980s hardware.
+
+The tradeoff is severe: without an AST you have no visibility into the whole program. You can't look ahead or back across the tree, which rules out most optimizations and makes multi-pass analysis impossible. The language itself has to be designed around this constraint — Pascal requires forward declarations precisely because the compiler has already passed the point where a function is called by the time it reaches the definition. C has the same constraint, which is why header files exist: they are forward declarations that tell the compiler "these things exist and have these shapes" before the definitions appear.
+
+Building an AST costs memory and a second pass, but it buys you the ability to analyze and transform the full program. Every modern compiler — and Luthor's interpreter — takes this trade.
+
 ---
 
 ## What an AST Is
@@ -183,7 +191,7 @@ The spine is linear. The expressions branching off that spine are trees.
 It is the fundamental shape of every imperative programming language. Python, JavaScript, C++, Rust — all of them have this same duality baked in:
 
 - **The linear spine is sequential execution** — the imperative model. Do this, then this, then this. Statements run in order.
-- **The expression trees are composable values** — the functional model living inside the imperative one. Nestable, recursive, evaluate to a value.
+- **The expression trees are composable values** — Nestable, recursive, evaluate to a value.
 
 The reason you can write `x * y + z * w - 1` — or nest expressions arbitrarily deeper — is because expressions are trees and trees are recursively composable. The parser handles it naturally because recursive descent mirrors the recursive structure. The interpreter handles it naturally because tree recursion mirrors the tree shape.
 
