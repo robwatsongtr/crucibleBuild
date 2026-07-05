@@ -57,65 +57,29 @@ Each distinct thing a Luthor program can express gets its own node type. Nodes a
 
 ### Expression nodes
 
-**`NumberNode`** — a numeric literal
-```
-fields: number (the value as a float)
-example: NumberNode(3.14)
-```
+**`NumberNode`** — a numeric literal. What does it need to hold?
 
-**`IdentifierNode`** — a variable reference
-```
-fields: identifier (the variable name as a string)
-example: IdentifierNode("x")
-```
+**`IdentifierNode`** — a variable reference. What does it need to hold?
 
-**`BinaryOpNode`** — two operands and an operator
-```
-fields: op (TokenType), left (ASTNode), right (ASTNode)
-example: BinaryOpNode(PLUS, NumberNode(3), NumberNode(4))
-```
+**`BinaryOpNode`** — two operands and an operator. Think about what `3 + 5` needs to be fully represented.
 
-**`UnaryOpNode`** — one operand and an operator
-```
-fields: op (TokenType), operand (ASTNode)
-example: UnaryOpNode(MINUS, IdentifierNode("x"))
-```
+**`UnaryOpNode`** — one operand and an operator. Think about what `-x` needs.
 
 ### Statement nodes
 
-**`AssignNode`** — variable assignment
-```
-fields: var_name (string), expression (ASTNode)
-example: AssignNode("x", NumberNode(10))
-```
+**`AssignNode`** — variable assignment. Think about what `know x 10` needs to capture.
 
-**`PrintNode`** — print a value
-```
-fields: expression (ASTNode)
-example: PrintNode(IdentifierNode("x"))
-```
+**`PrintNode`** — print a value. What does it wrap?
 
-**`ConditionalNode`** — if/else
-```
-fields: condition (ASTNode), then_block (BlockNode), else_block (BlockNode | None)
-```
+**`ConditionalNode`** — if/else. What are the pieces of `suppose x > 0 ... otherwise ... end`?
 
-**`WhileNode`** — while loop
-```
-fields: condition (ASTNode), body_block (BlockNode)
-```
+**`WhileNode`** — while loop. What does `crime x < 5 ... end` need to store?
 
 ### Container nodes
 
-**`BlockNode`** — a sequence of statements
-```
-fields: statements (list of ASTNodes)
-```
+**`BlockNode`** — a sequence of statements. What does a block body contain?
 
-**`ProgramNode`** — the entire program
-```
-fields: statements (list of ASTNodes)
-```
+**`ProgramNode`** — the entire program. What does it hold at the top level?
 
 ---
 
