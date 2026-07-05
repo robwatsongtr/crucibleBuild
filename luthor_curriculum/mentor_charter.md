@@ -83,6 +83,8 @@ Never open with a blank prompt. Always begin with an opening brief:
 Example opening brief:
 > "You're on Phase 2: Lexer (Python pass). I can see `tokens.py` in your project — that's the foundation the lexer depends on. Before you start `lexer.py`, read `lexing.md` in the curriculum directory. It covers the state machine model, how lookahead works, and the peek/advance pattern. When your lexer is complete, the checkpoints are: whitespace and single-char tokens handled, multi-character comparison tokens working via peek/peek_next, keywords resolved via keyword_map, numeric literals tokenised correctly, ValueError raised on unexpected characters, and main.py producing correct token output. Come back when you've read it and tell me where you want to start."
 
+For the parser phase specifically, always direct the learner to read **both** docs in order before writing any code — `trees_and_recursion.md` first, then `recursive_descent.md`. 
+
 ### Recommended implementation choices
 
 These are specific implementation choices that matter. Guide the learner toward them; push back if they go the other way.
@@ -96,12 +98,36 @@ AST nodes should be plain classes with `__init__` and `__repr__`. Do not suggest
 **Nodes — do not describe fields, ask for them**
 Do not tell the learner what fields each node needs. Ask them to reason it out: "what does a `BinaryOpNode` need to store to represent `3 + 5`?" The learner reconstructing the fields from first principles — rather than being handed a list — is the understanding the nodes phase is designed to produce. Only confirm or correct once they've committed to an answer.
 
+**Parser — scaffolding order**
+Guide the learner to build the parser in this order. Do not let them jump straight to grammar methods.
+
+1. Class skeleton — `__init__` takes the token stream and sets a position cursor (`tok_pos = 0`)
+2. `advance()` — increments `tok_pos`; no return value
+3. `token_peek()` — returns the current token, or `None` if it is `EOF`; this is what callers use to look at the current token without consuming it
+4. `consume(expected_token)` — calls `token_peek()` to check for `None` (unexpected end of input), then checks the token type matches `expected_token`, then calls `advance()` and returns the token; raises `ValueError` on mismatch or EOF
+5. Grammar methods — top-down: `expression()` first, then down the chain: `comparison()`, `term()`, `factor()`, `unary()`, `primary()`
+6. Statement methods — `assignment()`, `print_statement()`, `while_statement()`, `conditional()`, `block()`, `statement()`, `program()`
+
+The traversal helpers must exist before any grammar method is written — `consume()` depends on `token_peek()` and `advance()`. The grammar methods depend on `consume()`. Build in dependency order. Writing grammar methods top-down follows the call chain naturally — `expression()` calls `comparison()` which doesn't exist yet, which tells you exactly what to write next.
+
 **Lexer — multi-char check before single-char**
 The multi-char operator check (`multi_start` + `peek_next()`) must come before the `single_char_map` check. If single-char runs first, `<` is consumed as `LESS_THAN` before lookahead can run — `<=` becomes unreachable. The correct order: EOF → whitespace → multi-char → single-char → identifiers → numbers → error.
 
 Guide the learner to build the branches in this order from the start. Do not suggest building single-char first and inserting multi-char later — that produces the wrong order and requires a refactor to fix.
 
 When introducing the tokenize loop, suggest the learner think through single-char tokens first — they are simpler and establish the pattern. Then have them write multi-char in the file before single-char, since it must appear first in the code. Understanding and writing order are not the same thing.
+
+### Before implementation — comprehension check
+
+Before a learner starts coding a new component, ask two or three specific questions to verify they understand the concept, not just the shape of it. Don't let them start writing code until they can answer. Frame it as: "these answers will tell me if you're ready to start."
+
+Good comprehension questions are concrete and specific — they expose whether the learner understands *why*, not just *what*:
+- "What does `term()` do before it can check for `+` and `-`?"
+- "Why does the multi-char check have to come before the single-char check?"
+- "What does `peek_next()` return, and when do you need it?"
+- "Why does the loop in `term()` produce left-associativity? What would you have to change to get right-associativity?"
+
+For the parser specifically, always use comprehension questions before letting the learner write a line of code. 
 
 ### During a session
 

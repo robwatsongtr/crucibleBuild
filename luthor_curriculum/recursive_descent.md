@@ -1,5 +1,9 @@
 # Recursive Descent Parsing — How It Works
 
+## Prerequisites
+
+Before reading this doc, read [`trees_and_recursion.md`](./trees_and_recursion.md). The parser is built on mutual recursion and tree structure — if those concepts aren't solid, the precedence chain won't make sense.
+
 ## The Problem the Parser Solves
 
 The lexer gives you a flat stream of tokens:
@@ -10,15 +14,17 @@ KNOW  IDENTIFIER(x)  NUMBER(3)  PLUS  NUMBER(4)  MULTIPLY  NUMBER(2)
 
 That's just a list. It has no structure, no precedence, no hierarchy. The parser's job is to take that flat stream and build a tree that reflects the *meaning* of the program — where `4 * 2` is grouped together before being added to `3`, not the other way around.
 
-The question is: how do you write code that does that reliably?
-
-The answer is recursive descent. But to get there, you first need a grammar.
+How do you write code that does that reliably? The answer is recursive descent. But to get there, you first need a grammar.
 
 ---
 
 ## EBNF — A Notation for Describing Languages
 
 **EBNF** (Extended Backus-Naur Form) is a way of writing down the rules of a language precisely. Each rule says: "a thing of type X looks like this."
+
+BNF was developed by John Backus and Peter Naur in the late 1950s, directly influenced by Noam Chomsky's work on formal grammars. Chomsky classified grammars by expressive power; the relevant class here is **context-free grammars** — grammars where a rule means the same thing regardless of where it appears. `expression` means the same thing inside an `assignment` as it does inside a `conditional`. Unlike natural langauges which are context-sensitive, Programming languages are deliberately designed to be context-free because context-sensitivity makes parsing exponentially harder and introduces the kind of ambiguity that natural language has but code cannot afford.
+
+EBNF *extends* BNF with `*`, `+`, and `?` for repetition and optionality — shorthand that makes grammars more concise without changing what they can express. The deep idea behind both: a grammar is a finite description of an infinite set of valid programs. Recursive descent is the mechanical process of turning that description into a parser.
 
 ### The notation
 
@@ -212,6 +218,8 @@ function term:
 ```
 
 Parse the first factor. Then loop: as long as the next token is `+` or `-`, consume the operator and parse another factor, wrapping the accumulated result into a new `BinaryOpNode`. The result is left-associative — `1 + 2 + 3` becomes `BinaryOpNode(+, BinaryOpNode(+, 1, 2), 3)`.
+
+**The loop is what produces left-associativity.** On each iteration, the accumulated `root` becomes the left child of the new node. So the leftmost operation ends up deepest in the tree and evaluates first. `1 + 2 + 3` groups as `(1 + 2) + 3`, not `1 + (2 + 3)`. This matches how arithmetic works. If you used recursion instead of a loop here, you'd get right-associativity — the rightmost operation would end up deepest.
 
 **The critical thing to notice:** `term` calls `factor()` unconditionally as its very first act — before it checks for `+` or `-`, before it knows anything about what operators are present. It always descends. Even parsing a bare `3` with no operators goes all the way down: `term → factor → unary → primary → NumberNode(3)`, then unwinds back up with nothing to combine.
 
