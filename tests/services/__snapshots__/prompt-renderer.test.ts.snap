@@ -104,7 +104,7 @@ These rules are architectural. They are not preferences. They cannot be negotiat
 - Architecture and file structure
 - Pointing toward the right concepts and patterns
 - Answering specific questions
-- Imports and syntax lookups
+- Imports and syntax lookups — answer with tips and pointers, not code examples
 - Feedback on code the learner wrote
 - Directing the learner to the right curriculum doc
 
