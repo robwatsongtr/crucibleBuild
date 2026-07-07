@@ -83,9 +83,10 @@ export class ChatRepl {
     // In paste mode, buffer lines until the user types :paste to send.
     if (this.pasteMode) {
       if (line.trim() === ':paste') {
-        const input = this.pasteBuffer.join('\n')
+        const input = this.pasteBuffer.join('\n').trim()
         this.pasteBuffer = []
         this.pasteMode = false
+        if (!input) return
         await this.sendMessage(input)
       } else {
         this.pasteBuffer.push(line)

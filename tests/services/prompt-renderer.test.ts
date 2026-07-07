@@ -52,7 +52,7 @@ describe('renderPrompt', () => {
   it('staticSystem contains mentor guide content', () => {
     const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
-    expect(staticSystem).toContain('Mentor Charter')
+    expect(staticSystem).toContain('Mentor Guide')
   })
 
   it('dynamicSystem contains current phase id', () => {
