@@ -79,7 +79,7 @@ this whole product is designed around) from *unproductive friction*
 (getting stuck on a typo or an undocumented quirk, which teaches 
 nothing and just burns motivation).
 
-The full constraint profile and system prompt design — including how this is enforced and how edge cases are handled — is defined in `luthor_curriculum/mentor_charter.md`.
+The full constraint profile and system prompt design — including how this is enforced and how edge cases are handled — is defined in `luthor_curriculum/mentor_guide.md`.
 
 ---
 
@@ -248,19 +248,19 @@ Each project is a self-contained **curriculum bundle** — a directory of markdo
 <project>_curriculum/
   <project>_overview.md    # learner-facing intro: what it is, what it can do, example output
   <project>_project.md     # full reference spec: phases, components, design decisions
-  mentor_charter.md        # phase sequence, file-to-doc mapping, pacing rules, progress inference
+  mentor_guide.md        # behavioral spec: constraint rules, escalation ladder, scaffolding order, phase sequence, pacing
   <concept>.md             # one teaching doc per major concept introduced
 ```
 
 **For a web server project, this would mean authoring:**
 - `webserver_overview.md` — what the learner is building (HTTP/1.1 server from scratch), what it can do (serve static files, handle routes, parse headers), example request/response
 - `webserver_project.md` — full reference: TCP sockets, HTTP parsing, request routing, response encoding; design decisions and build order
-- `mentor_charter.md` — phase sequence (e.g. raw TCP → HTTP parsing → routing → static file serving → concurrent connections), file-to-doc mapping, what the mentor looks for at each checkpoint
+- `mentor_guide.md` — behavioral spec: constraint rules, escalation ladder, scaffolding order for each component, phase sequence, file-to-doc mapping, pacing rules, what the mentor looks for at each checkpoint
 - Concept docs: `tcp_sockets.md`, `http_protocol.md`, `request_parsing.md`, `concurrency.md`, etc.
 
 **One code addition is required:** a new profile module (e.g. `src/profile/webserver.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative in the curriculum docs. It's what drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template — the structure is self-evident and the Zod types guide the rest.
 
-`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_charter.md` — the parts that are largely the same across every project.
+`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_guide.md` — the parts that are largely the same across every project.
 
 The `profileId` field in `.cruciblebuild/config.json` ties a session to its curriculum bundle. `luthor-default` is the first value. New projects register new ids.
 

@@ -27,7 +27,7 @@ Sets the stage. The model treats system instructions with more authority than an
 - The constraint rules table (✅/❌)
 - Project summary and reference artifact list
 - Full phase catalog (all 10 phases)
-- Pointer to mentor_charter.md
+- Pointer to mentor_guide.md
 
 This content never changes during a session. It carries `cache_control: { type: 'ephemeral' }`.
 

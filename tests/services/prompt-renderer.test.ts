@@ -8,10 +8,10 @@ import { LearnerContext } from '../../src/models/index.js'
 
 const repoRoot = resolve(fileURLToPath(import.meta.url), '../../../')
 
-let mentorCharter: string
+let mentorGuide: string
 
 beforeAll(() => {
-  mentorCharter = readFileSync(resolve(repoRoot, 'luthor_curriculum/mentor_charter.md'), 'utf-8')
+  mentorGuide = readFileSync(resolve(repoRoot, 'luthor_curriculum/mentor_guide.md'), 'utf-8')
 })
 
 const baseContext: LearnerContext = {
@@ -24,17 +24,17 @@ const baseContext: LearnerContext = {
 
 describe('renderPrompt', () => {
   it('renders without throwing', () => {
-    expect(() => renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)).not.toThrow()
+    expect(() => renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)).not.toThrow()
   })
 
   it('staticSystem contains persona voice', () => {
-    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     expect(staticSystem).toContain(luthorDefaultProfile.persona.voice)
   })
 
   it('staticSystem contains all rule labels', () => {
-    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     for (const rule of luthorDefaultProfile.rules) {
       expect(staticSystem).toContain(rule.label)
@@ -42,33 +42,33 @@ describe('renderPrompt', () => {
   })
 
   it('staticSystem contains all phase ids', () => {
-    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     for (const phase of luthorDefaultProfile.project.phases) {
       expect(staticSystem).toContain(phase.id)
     }
   })
 
-  it('staticSystem contains mentor charter content', () => {
-    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+  it('staticSystem contains mentor guide content', () => {
+    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     expect(staticSystem).toContain('Mentor Charter')
   })
 
   it('dynamicSystem contains current phase id', () => {
-    const { dynamicSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+    const { dynamicSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     expect(dynamicSystem).toContain('python-tokens')
   })
 
   it('dynamicSystem contains file tree', () => {
-    const { dynamicSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+    const { dynamicSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     expect(dynamicSystem).toContain('tokens.py')
   })
 
   it('dynamicSystem contains recent changes', () => {
-    const { dynamicSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+    const { dynamicSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     expect(dynamicSystem).toContain('src/tokens.py')
   })
@@ -88,8 +88,8 @@ describe('renderPrompt', () => {
       recentChanges: [{ path: 'src/lexer.py', kind: 'add', at: '2026-06-10T11:00:00Z' }],
     }
 
-    const { staticSystem: staticA } = renderPrompt(luthorDefaultProfile, contextA, mentorCharter)
-    const { staticSystem: staticB } = renderPrompt(luthorDefaultProfile, contextB, mentorCharter)
+    const { staticSystem: staticA } = renderPrompt(luthorDefaultProfile, contextA, mentorGuide)
+    const { staticSystem: staticB } = renderPrompt(luthorDefaultProfile, contextB, mentorGuide)
 
     expect(staticA).toBe(staticB)
   })
@@ -107,8 +107,8 @@ describe('renderPrompt', () => {
       fileTree: 'src/\n  tokens.py\n  lexer.py',
     }
 
-    const { dynamicSystem: dynamicA } = renderPrompt(luthorDefaultProfile, contextA, mentorCharter)
-    const { dynamicSystem: dynamicB } = renderPrompt(luthorDefaultProfile, contextB, mentorCharter)
+    const { dynamicSystem: dynamicA } = renderPrompt(luthorDefaultProfile, contextA, mentorGuide)
+    const { dynamicSystem: dynamicB } = renderPrompt(luthorDefaultProfile, contextB, mentorGuide)
 
     expect(dynamicA).not.toBe(dynamicB)
   })
@@ -117,7 +117,7 @@ describe('renderPrompt', () => {
     const { dynamicSystem } = renderPrompt(
       luthorDefaultProfile,
       { ...baseContext, recentChanges: [] },
-      mentorCharter,
+      mentorGuide,
     )
 
     expect(dynamicSystem).toContain('No recent file changes')
@@ -127,14 +127,14 @@ describe('renderPrompt', () => {
     const { dynamicSystem } = renderPrompt(
       luthorDefaultProfile,
       { ...baseContext, currentPhaseId: 'not-a-phase' },
-      mentorCharter,
+      mentorGuide,
     )
 
     expect(dynamicSystem).toContain('unknown')
   })
 
   it('staticSystem snapshot', () => {
-    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorCharter)
+    const { staticSystem } = renderPrompt(luthorDefaultProfile, baseContext, mentorGuide)
 
     expect(staticSystem).toMatchSnapshot()
   })

@@ -7,9 +7,9 @@ export interface RenderedPrompt {
 
 /**
  * Assembles the two-part system prompt from a ConstraintProfile, runtime LearnerContext,
- * and the mentor charter string.
+ * and the mentor guide string.
  *
- * staticSystem  — persona + rules + project + phase catalog + mentor charter.
+ * staticSystem  — persona + rules + project + phase catalog + mentor guide.
  *                 Stable across the session; this block carries cache_control.
  * dynamicSystem — current phase detail + file tree + recent changes.
  *                 Changes per turn; never busts the static cache key.
@@ -17,14 +17,14 @@ export interface RenderedPrompt {
 export const renderPrompt = (
   profile: ConstraintProfile,
   context: LearnerContext,
-  mentorCharter: string,
+  mentorGuide: string,
 ): RenderedPrompt => {
   const staticSystem = [
     renderPersona(profile),
     renderRules(profile),
     renderProjectSummary(profile),
     renderPhaseCatalog(profile),
-    mentorCharter,
+    mentorGuide,
   ].join('\n\n')
 
   const dynamicSystem = [

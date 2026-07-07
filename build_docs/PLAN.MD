@@ -84,7 +84,7 @@ bin/cruciblebuild           # shebang → dist/cli/index.js
 Deliverables:
 - Zod schemas for every piece of a constraint profile.
 - The Luthor default profile as a typed module in `src/profile/luthor.default.ts` (JSON-on-disk profiles deferred; schemas make adding it trivial).
-- A `renderPrompt(profile, context, mentorCharter)` function in `prompt-renderer.ts` that returns `{ staticSystem, dynamicSystem }`. The split is what makes prompt caching work.
+- A `renderPrompt(profile, context, mentorGuide)` function in `prompt-renderer.ts` that returns `{ staticSystem, dynamicSystem }`. The split is what makes prompt caching work.
 - Vitest snapshot tests.
 
 Schemas in `src/schemas/`:
@@ -115,7 +115,7 @@ Schemas in `src/schemas/`:
 Each phase is a `PhaseSchema` entry with its own goals, checkpoints, and concepts introduced. At `init`, the current phase is printed to the terminal and a `CURRICULUM.md` is written into the learner's project dir with the full breakdown. The `/phase` slash command shows current phase + what's next.
 
 Renderer:
-- Static system prompt = persona + rules tables + project + phase catalog + mentor charter. Stable across the session — this is what we cache.
+- Static system prompt = persona + rules tables + project + phase catalog + mentor guide. Stable across the session — this is what we cache.
 - Dynamic addendum = current phase, file-tree summary, recent-changes window. Passed as a second system block so it never busts the cache key.
 
 Verification:
@@ -278,7 +278,7 @@ Deliverables:
   - `interpreter.md` — tree-walking evaluation, isinstance dispatch, symbol table, operator maps, worked trace; teaching doc for the Python interpreter phase
   - `cpp_rewrite_concepts.md` — unique_ptr, variant, ownership, RAII; prerequisite before the C++ rewrite
   - `visitor_pattern.md` — double dispatch, two-dispatch diagram, result side-channel, comparison to Python isinstance; teaching doc for the C++ interpreter phase
-  - `mentor_charter.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor charter fragment in the static system prompt assembled by `renderPrompt`
+  - `mentor_guide.md` — the mentor's behavioural spec: constraint rules, curriculum sequence with file-to-doc mapping, opening brief behaviour, progress inference from filesystem, pacing rules, tone; this becomes the mentor guide fragment in the static system prompt assembled by `renderPrompt`
   - `luthor_project.md` — full reference spec for both implementations; component details, design decisions, grammar, token set
 - Test harnesses live in the reference project dirs, not the curriculum dir:
   - `my_luthor/python_luthor/main.py` — provided test harness for the Python pass; runs a source string through the full pipeline printing tokens, AST, and output at each stage; learner reads this before starting, runs it after each component
@@ -322,7 +322,7 @@ CrucibleBuild is a learning framework. Luthor is the first project. Every projec
 <project>_curriculum/
   <project>_overview.md    # learner-facing intro: what they're building, why, what it can do
   <project>_project.md     # full reference spec: phases, components, design decisions
-  mentor_charter.md        # constraint rules, phase sequence, file-to-doc mapping, pacing rules
+  mentor_guide.md        # behavioral spec: constraint rules, escalation ladder, scaffolding order, phase sequence, pacing
   <concept>.md             # one teaching doc per major concept (as many as needed)
 ```
 

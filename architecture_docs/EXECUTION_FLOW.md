@@ -4,7 +4,7 @@
 
 - Reads and validates `.cruciblebuild/config.json` via Zod (`ProjectConfigSchema`)
 - Loads `luthorDefaultProfile` (the constraint profile + phase catalog)
-- Reads `mentor_charter.md` off disk from the package root
+- Reads `mentor_guide.md` off disk from the package root
 - Creates `ContextStore` with the current phase ID, calls `refreshFileTree()` to snapshot the learner's files
 - Starts `FileWatcher` — from this point on, any file the learner saves pushes an event into the context store's ring buffer
 - Calls `renderPrompt()` once to build `staticSystem` — this is built now and never rebuilt
@@ -40,7 +40,7 @@
 
 ## 4. `services/prompt-renderer.ts` — What the LLM actually sees
 
-- `staticSystem` (built once, cached): persona + constraint rules table + project summary + full phase catalog + mentor charter
+- `staticSystem` (built once, cached): persona + constraint rules table + project summary + full phase catalog + mentor guide
 - `dynamicSystem` (rebuilt every turn): current phase detail (goals, checkpoints, concepts) + file tree snapshot + recent file changes
 
 ---

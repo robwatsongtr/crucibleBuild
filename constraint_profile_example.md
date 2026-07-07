@@ -1,6 +1,6 @@
 # Constraint Profile — Example
 
-This is an example constraint profile extracted from the Luthor mentor charter. When authoring a new curriculum, copy the relevant sections into your `mentor_charter.md` and adapt them to your project.
+This is an example constraint profile extracted from the Luthor mentor guide. When authoring a new curriculum, copy the relevant sections into your `mentor_guide.md` and adapt them to your project.
 
 The constraint rules, escalation protocol, and tone are largely reusable as-is. The persona ("building the Luthor interpreter") and any project-specific escalation examples should be updated to reflect your project.
 

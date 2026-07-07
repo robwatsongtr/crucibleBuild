@@ -34,7 +34,7 @@ export const runChat = async (): Promise<void> => {
   // this resolves from the compilation location which is dist/cli hece the .. / ..
   const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
   const curriculumRoot = resolve(packageRoot, 'luthor_curriculum')
-  const mentorCharter = readFileSync(resolve(curriculumRoot, 'mentor_charter.md'), 'utf-8')
+  const mentorGuide = readFileSync(resolve(curriculumRoot, 'mentor_guide.md'), 'utf-8')
 
   //
   // ContextStore and FileWatcher are wired together — watcher pushes events into the store
@@ -55,7 +55,7 @@ export const runChat = async (): Promise<void> => {
       recentChanges: contextStore.getRecentChanges(),
       acknowledgedContractAt: config.contract.acknowledgedAt,
     },
-    mentorCharter,
+    mentorGuide,
   )
 
   // Dynamic system prompt re-evaluated per turn so file tree and recent changes stay fresh
@@ -70,7 +70,7 @@ export const runChat = async (): Promise<void> => {
         recentChanges: contextStore.getRecentChanges(),
         acknowledgedContractAt: config.contract.acknowledgedAt,
       },
-      mentorCharter,
+      mentorGuide,
     )
 
     return ds

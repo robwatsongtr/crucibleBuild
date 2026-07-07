@@ -286,7 +286,7 @@ export const luthorDefaultProfile: ConstraintProfile = {
     referenceArtifacts: [
       'luthor_curriculum/luthor_overview.md',
       'luthor_curriculum/luthor_project.md',
-      'luthor_curriculum/mentor_charter.md',
+      'luthor_curriculum/mentor_guide.md',
       'luthor_curriculum/tokens.md',
       'luthor_curriculum/lexing.md',
       'luthor_curriculum/ast_nodes.md',

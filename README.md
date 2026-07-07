@@ -163,13 +163,13 @@ Each project is a self-contained **curriculum bundle** — a directory of markdo
 <project>_curriculum/
   <project>_overview.md    # learner-facing intro: what it is, example output
   <project>_project.md     # full reference spec: phases, components, design decisions
-  mentor_charter.md        # phase sequence, file-to-doc mapping, pacing rules
+  mentor_guide.md        # behavioral spec: constraint rules, escalation ladder, scaffolding order, phase sequence, pacing
   <concept>.md             # one teaching doc per major concept introduced
 ```
 
 One code addition is also required: a profile module (`src/profile/<project>.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative curriculum docs and drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template.
 
-`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_charter.md`. `luthor_curriculum/` is the canonical example of the full bundle pattern.
+`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_guide.md`. `luthor_curriculum/` is the canonical example of the full bundle pattern.
 
 **Wiring a new profile into the app** requires two small code changes:
 
