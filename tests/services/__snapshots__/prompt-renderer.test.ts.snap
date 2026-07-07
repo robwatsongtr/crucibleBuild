@@ -166,6 +166,13 @@ These are specific implementation choices that matter. Guide the learner toward 
 **Lexer — token list is local to \`tokenize()\`**
 The token list should be a local variable inside \`tokenize()\`, built up and returned — not an instance variable on the class. It only exists during tokenization and has no purpose beyond that call. Instance state should be limited to what is needed for traversal: the source string and current position.
 
+**Lexer — multi-char check before single-char**
+The multi-char operator check (\`multi_start\` + \`peek_next()\`) must come before the \`single_char_map\` check. If single-char runs first, \`<\` is consumed as \`LESS_THAN\` before lookahead can run — \`<=\` becomes unreachable. The correct order: EOF → whitespace → multi-char → single-char → identifiers → numbers → error.
+
+Guide the learner to build the branches in this order from the start. Do not suggest building single-char first and inserting multi-char later — that produces the wrong order and requires a refactor to fix.
+
+When introducing the tokenize loop, suggest the learner think through single-char tokens first — they are simpler and establish the pattern. Then have them write multi-char in the file before single-char, since it must appear first in the code. Understanding and writing order are not the same thing.
+
 **Nodes — plain classes only**
 AST nodes should be plain classes with \`__init__\` and \`__repr__\`. Do not suggest named tuples (immutable, less readable) or dataclasses (unnecessary abstraction). A plain class is the simplest thing that works.
 
@@ -175,7 +182,7 @@ Do not tell the learner what fields each node needs. Ask them to reason it out: 
 **Parser — scaffolding order**
 Guide the learner to build the parser in this order. Do not let them jump straight to grammar methods.
 
-1. Class skeleton — \`__init__\` takes the token stream and sets a position cursor (\`tok_pos = 0\`)
+1. Class skeleton — \`__init__\` takes the token stream and sets a position cursor. Remind learner to import the nodes as they will be used by the parser. 
 2. \`advance()\` — increments \`tok_pos\`; no return value
 3. \`token_peek()\` — returns the current token, or \`None\` if it is \`EOF\`; this is what callers use to look at the current token without consuming it
 4. \`consume(expected_token)\` — calls \`token_peek()\` to check for \`None\` (unexpected end of input), then checks the token type matches \`expected_token\`, then calls \`advance()\` and returns the token; raises \`ValueError\` on mismatch or EOF
@@ -184,12 +191,9 @@ Guide the learner to build the parser in this order. Do not let them jump straig
 
 The traversal helpers must exist before any grammar method is written — \`consume()\` depends on \`token_peek()\` and \`advance()\`. The grammar methods depend on \`consume()\`. Build in dependency order. Writing grammar methods top-down follows the call chain naturally — \`expression()\` calls \`comparison()\` which doesn't exist yet, which tells you exactly what to write next.
 
-**Lexer — multi-char check before single-char**
-The multi-char operator check (\`multi_start\` + \`peek_next()\`) must come before the \`single_char_map\` check. If single-char runs first, \`<\` is consumed as \`LESS_THAN\` before lookahead can run — \`<=\` becomes unreachable. The correct order: EOF → whitespace → multi-char → single-char → identifiers → numbers → error.
+**Parser — \`comparison_tokens\` class-level list**
+The \`comparison()\` method handles all six comparison operators. Guide the learner to define a class-level list \`comparison_tokens\` containing all six \`TokenType\` values, then check \`token_peek().token_type in comparison_tokens\` in the while loop. This keeps the method clean and puts the operator set in one place — the same pattern as \`single_char_map\` and \`keyword_map\` in the lexer.
 
-Guide the learner to build the branches in this order from the start. Do not suggest building single-char first and inserting multi-char later — that produces the wrong order and requires a refactor to fix.
-
-When introducing the tokenize loop, suggest the learner think through single-char tokens first — they are simpler and establish the pattern. Then have them write multi-char in the file before single-char, since it must appear first in the code. Understanding and writing order are not the same thing.
 
 ### Before implementation — comprehension check
 
