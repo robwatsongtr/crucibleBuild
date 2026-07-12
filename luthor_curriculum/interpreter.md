@@ -122,7 +122,7 @@ The Python interpreter uses `isinstance` to dispatch — one `evaluate()` method
 
 The reason: C++ is statically typed. You can't switch on runtime type cleanly without casts. The visitor pattern solves this using virtual dispatch on the node and overload resolution on the visitor — two dispatches that together route execution to the right handler without any `isinstance` equivalent.
 
-The logic is identical. The dispatch mechanism is different. When you build the C++ interpreter, you will feel exactly why the visitor pattern exists — it solves a problem you just lived with in Python.
+When you build the C++ interpreter, you will feel exactly why the visitor pattern exists — it solves a problem you just lived with in Python.
 
 See [`visitor_pattern.md`](./visitor_pattern.md) for the full explanation.
 
