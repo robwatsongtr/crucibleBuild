@@ -10,6 +10,7 @@ The problem is that you can't always evaluate immediately. Consider:
 know x 10
 suppose x > 5
     doom x * 2
+end
 otherwise
     doom x
 end

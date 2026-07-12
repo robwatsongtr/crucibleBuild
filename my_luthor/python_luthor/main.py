@@ -1,7 +1,6 @@
 from src.lexer import Lexer
-# from src.parser import Parser
+from src.parser import Parser
 # from src.interpreter import Interpreter
-# from fixtures.lexer_examples import lex_examples
 
 
 def main():
@@ -14,6 +13,7 @@ def main():
     
     suppose x > 5
         doom 100
+    end 
     otherwise
         doom 200
     end
@@ -57,11 +57,11 @@ def main():
         print(f"  {token}")
     print()
 
-    # print("Step 2: Syntax Analysis (Parsing)")
-    # parser = Parser(tokens)
-    # tree = parser.program()
-    # print(f"root: {tree}")
-    # print()
+    print("Step 2: Syntax Analysis (Parsing)")
+    parser = Parser(tokens)
+    tree = parser.program()
+    print(f"root: {tree}")
+    print()
 
     # print("Step 3: Evaluation (Interpretation)")
     # interpreter = Interpreter(tree)

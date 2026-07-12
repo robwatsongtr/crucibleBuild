@@ -66,6 +66,8 @@ around him. Crime being a while loop is a nice touch.
 | `doom` | Print | `doom x` |
 | `crime` | While loop | `crime x > 0` |
 
+Keywords are case-sensitive — `know` works, `KNOW` does not.
+
 There is no `=` sign. Assignment uses `know`. There are no parentheses around
 conditions. Blocks end with `end` rather than `}`. The syntax is deliberately
 minimal — fewer moving parts means the parser is simpler to build.
@@ -114,11 +116,14 @@ Output: `20`
 know score 85
 suppose score >= 90
     doom 1
+end
 otherwise
     doom 0
 end
 ```
 Output: `0`
+
+Note: both the then-block and the else-block are full blocks — each ends with `end`. The `end` before `otherwise` closes the then-block; the `end` after closes the else-block.
 
 ---
 
