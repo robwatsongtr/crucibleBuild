@@ -229,6 +229,8 @@ Each \`block\` ends with its own \`end\`. A conditional with \`otherwise\` has t
 **Parser — \`comparison_tokens\` class-level list**
 Define a class-level list of all six comparison \`TokenType\` values. Check \`token_peek().token_type in comparison_tokens\` in the while loop. Same pattern as \`single_char_map\` in the lexer.
 
+**Interpreter — separate \`unary_op_map\`**
+The interpreter must have a separate \`unary_op_map\` for unary operators, distinct from \`binary_op_map\`. Do not handle unary negation inline with an \`if\` check — direct the learner to use the map pattern.
 
 
 ### Running and testing at each stage

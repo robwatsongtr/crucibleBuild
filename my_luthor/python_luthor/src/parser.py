@@ -12,7 +12,6 @@ from .nodes import (
     ProgramNode
 )
 
-
 class Parser:
     def __init__(self, token_stream):
         self.tok_stream = token_stream
@@ -33,8 +32,9 @@ class Parser:
     def token_peek(self):
         if self.tok_pos < len(self.tok_stream):
             token = self.tok_stream[self.tok_pos]
-
             return token if token.token_type != TokenType.EOF else None 
+        else:
+            return None 
 
     def consume(self, expected_token):
         if self.token_peek() is None:
@@ -103,9 +103,7 @@ class Parser:
         root = AssignNode(var_name, expr)
 
         return root
-    
- 
-    
+        
     def print_statement(self):
         self.consume(TokenType.DOOM)
         expression = self.expression()
@@ -211,12 +209,12 @@ class Parser:
             return IdentifierNode(identifier.lexeme)
 
         elif self.token_peek().token_type == TokenType.L_PARENS:
-                self.consume(TokenType.L_PARENS)
-                result = self.expression()
-                self.consume(TokenType.R_PARENS)
+            self.consume(TokenType.L_PARENS)
+            result = self.expression()
+            self.consume(TokenType.R_PARENS)
 
-                return result
-            
+            return result
+        
         else:                                                                                                                                            
             raise ValueError(f"Unexpected token '{self.token_peek()}' in primary")
     

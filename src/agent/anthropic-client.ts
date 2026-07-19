@@ -107,10 +107,13 @@ export class AnthropicClient implements InferenceClient {
       input_schema: t.inputSchema as Anthropic.Messages.Tool['input_schema'],
     }))
 
+    const MODELS_WITHOUT_TEMPERATURE = ['claude-sonnet-5']
+    const supportsTemperature = !MODELS_WITHOUT_TEMPERATURE.some((m) => this.model.startsWith(m))
+
     const messageStream = this.client.messages.stream({
       model: this.model,
       max_tokens: MAX_TOKENS,
-      temperature: TEMPERATURE,
+      ...(supportsTemperature && { temperature: TEMPERATURE }),
       system,
       messages: toAnthropicMessages(messages),
       tools: anthropicTools,

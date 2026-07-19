@@ -1,6 +1,6 @@
 from src.lexer import Lexer
 from src.parser import Parser
-# from src.interpreter import Interpreter
+from src.interpreter import Interpreter
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
     know result (x + 2) * 4
     doom result
     
-    suppose x > 5
+    suppose result > 5
         doom 100
     end 
     otherwise
@@ -30,6 +30,25 @@ def main():
 
     """
 
+    source3 = """
+
+    know foo 34
+    know bar -34 
+
+    suppose foo != bar
+        know i 0
+        crime i < 15 
+            doom i
+            know i i + 2
+        end
+    end
+
+    doom bar
+
+
+    """
+
+
     quadratic = """
     
     know i 0
@@ -45,12 +64,12 @@ def main():
 
     """
 
-    print(f"Program: {source}")
+    print(f"Program: {source3}")
     print()
 
     print("Step 1: Lexical Analysis (Tokenization)")
     print()
-    lexer = Lexer(source)
+    lexer = Lexer(source3)
     tokens = lexer.tokenize()
 
     for token in tokens:
@@ -63,11 +82,11 @@ def main():
     print(f"root: {tree}")
     print()
 
-    # print("Step 3: Evaluation (Interpretation)")
-    # interpreter = Interpreter(tree)
-    # output = interpreter.run()
-    # print(output)
-    # print()
+    print("Step 3: Evaluation (Interpretation)")
+    interpreter = Interpreter(tree)
+    output = interpreter.run()
+    print(output)
+    print()
 
 
 if __name__ == '__main__':
