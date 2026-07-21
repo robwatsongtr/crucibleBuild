@@ -11,7 +11,7 @@ The first and flagship project is Luthor — a Turing complete interpreted progr
 - Node >= 20
 - An Anthropic API key (or Google Gemini API key for the free-tier Gemini provider)
 - **Python pass:** Comfortable writing Python — functions, classes, loops, conditionals, enums. No prior knowledge of compilers or interpreters required.
-- **C++ rewrite:** A working understanding of C fundamentals — pointers, heap allocation, stack vs heap, manual memory management. No prior C++ experience required per se, but it doesn't hurt :) 
+- **C++ rewrite:** A working understanding of C fundamentals — static typing, pointers, heap allocation, stack vs heap, manual memory management. No prior C++ experience required per se, but it doesn't hurt :) 
 
 ---
 
