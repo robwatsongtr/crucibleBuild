@@ -132,9 +132,9 @@ Build in strict order. Do not get ahead of where the learner is.
 5. \`interpreter.py\` — read \`interpreter.md\` first
 
 **Pass 2 — C++ Rewrite:**
-6. \`tokens.h\` — same concepts as Python tokens, now with \`enum class\`
-7. \`lexer.h/.cpp\` — read \`cpp_rewrite_concepts.md\` first
-8. \`nodes.h\` — read \`cpp_rewrite_concepts.md\` (unique_ptr section) first
+6. \`tokens.h\` — read \`cpp_rewrite_concepts.md\` first (full doc — sets up the entire C++ pass)
+7. \`lexer.h/.cpp\` — \`cpp_rewrite_concepts.md\` already read; no new doc required
+8. \`nodes.h\` — re-read the \`unique_ptr\` section of \`cpp_rewrite_concepts.md\` before starting
 9. \`parser.h/.cpp\` — same grammar, now returning \`unique_ptr<ASTNode>\`
 10. \`interpreter.h/.cpp\` — read \`visitor_pattern.md\` first
 

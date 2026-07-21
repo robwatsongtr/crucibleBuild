@@ -1,4 +1,4 @@
-# CrucibleBuild - Programming Mentorship App
+# CrucibleBuild - AI Programming Mentor 
 
 CrucibleBuild is a project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
@@ -8,11 +8,11 @@ The first and flagship project is Luthor — a Turing complete interpreted progr
 
 ## Why This Exists
 
-The app developer — a music teacher and developer — built a Turing complete interpreted programming language using an 'inverted AI workflow'. Instead of asking Claude Code to write code, Claude Code was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
+The app developer — developer and music teacher — built a Turing complete interpreted programming language using an 'inverted AI workflow'. Instead of asking Claude Code to write code, Claude Code was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
 
 The result was deeper understanding of tokenizing, recursive descent parsing, AST construction, and interpreter tree walking. More importantly, the struggle produced a genuine leveling-up in the ability to hold code and concepts in mind — which translates directly to better code comprehension and more effective use of AI tools.
 
-This experience is the product.
+Out of this experience was born the idea of an "AI Mentor" that can provide the guidance of a senior developer and assist a learner in building challenging projects.
 
 ---
 

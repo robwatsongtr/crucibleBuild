@@ -8,8 +8,11 @@ This rewrite assumes you have a basic understanding of C — specifically:
 - **Heap allocation** — `malloc`/`free` or `new`/`delete`; the difference between stack and heap
 - **Manual memory management** — what a memory leak is, why forgetting to `free` is a bug
 
-If those concepts are unfamiliar, learn them in C first before starting the rewrite. The concepts are not complicated, but they are load-bearing — everything in this doc assumes you've felt the pain that C++ is solving.
+If those concepts are unfamiliar, learn them in C first before starting the rewrite. The concepts are not complicated, but they are load-bearing. 
 
+It might also be good to get a quick overview of C++ and how it differes from C if you're not already familiar, and to gain familiarity with the Standard Template Library (STL). Templates are fundamental to using C++ as they are used for compile-time polymorphism.
+
+We also have runtime polymorphism, which we achieve through virtual functions and inheritance, and that will be explained later in this document. 
 
 ---
 
@@ -18,7 +21,7 @@ If those concepts are unfamiliar, learn them in C first before starting the rewr
 **C would give you:**
 - Raw pointers and manual `new`/`delete` — you feel the pain, but managing memory *becomes* the lesson instead of the interpreter
 - No constructors or destructors — node cleanup is manual and error-prone
-- Tagged unions and function pointer tables by hand — the mechanism buries the concept
+- Tagged unions and function pointer tables by hand
 - You'd end up teaching C as much as compilers
 
 **C++ maps cleaner to this domain because:**
@@ -166,6 +169,8 @@ Your Python `evaluate()` is already the visitor pattern — one central function
 | single `evaluate()` for everything | consider splitting: expressions return a value, statements don't |
 
 The split between expressions (produce a value) and statements (produce a side effect) maps cleanly to two separate methods with different return types — something Python's duck typing let you paper over but C++'s type system makes you confront explicitly.
+
+The full mechanics of how `accept` and `visit` wire together — and why the double dispatch matters — are in [`visitor_pattern.md`](visitor_pattern.md). Read it before starting the interpreter.
 
 ---
 
