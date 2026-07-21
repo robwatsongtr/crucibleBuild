@@ -6,6 +6,15 @@ The first and flagship project is Luthor — a Turing complete interpreted progr
 
 ---
 
+## Prerequisites
+
+- Node >= 20
+- An Anthropic API key (or Google Gemini API key for the free-tier Gemini provider)
+- **Python pass:** Comfortable writing Python — functions, classes, loops, conditionals, enums. No prior knowledge of compilers or interpreters required.
+- **C++ rewrite:** A working understanding of C fundamentals — pointers, heap allocation, stack vs heap, manual memory management. No prior C++ experience required per se, but it doesn't hurt :) 
+
+---
+
 ## Why This Exists
 
 The app developer — developer and music teacher — built a Turing complete interpreted programming language using an 'inverted AI workflow'. Instead of asking Claude Code to write code, Claude Code was used as a project mentor: providing architecture, guidance, and feedback on code the human wrote — but never writing the code itself.
@@ -68,13 +77,6 @@ Rewrite the same project in C++. Every abstraction Python was hiding becomes vis
 ---
 
 ## Using CrucibleBuild
-
-### Prerequisites
-
-- Node >= 20
-- An Anthropic API key (or Google Gemini API key for the free-tier Gemini provider)
-- For the Python pass: comfortable with Python (functions, classes, loops, enums)
-- For the C++ rewrite: C fundamentals (pointers, heap allocation, stack vs heap)
 
 ### Setup
 
