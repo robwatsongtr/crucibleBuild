@@ -2,7 +2,7 @@
 
 CrucibleBuild is a project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
-The first and flagship project is Luthor — a Turing complete interpreted programming language built in two passes. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. 
+The first and flagship project is Luthor — a Turing complete interpreted programming language built in two passes, a Python pass and C++ pass. 
 
 ---
 
@@ -56,7 +56,7 @@ When you're genuinely stuck, help is calibrated in stages: hints → explanation
 
 ## The Curriculum: Luthor
 
-As mentioed above, the first and flagship project is **Luthor** — a complete interpreted programming language, Turing complete, built in two passes. 
+As mentioed above, the first and flagship project is **Luthor** — a Turing-complete interpreted programming language built in two passes. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. 
 
 **Pass 1: Python**
 Build the full pipeline: lexer, parser (recursive descent), AST nodes, and a tree-walking interpreter. Python lets you focus on the concepts without fighting the language.
