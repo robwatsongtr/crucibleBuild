@@ -174,6 +174,24 @@ The full mechanics of how `accept` and `visit` wire together — and why the dou
 
 ---
 
+## Lexer — `peek()` returning `std::optional<char>`
+
+Python's `peek()` returns `None` at end of input. In C++, `char` has no null value, so you need an explicit way to represent "nothing here." `std::optional<char>` is the right tool — it models a value that may or may not exist. Check with `has_value()` or `if (opt)` before dereferencing.
+
+The alternatives — returning a sentinel like `'\0'`, or guarding every call site with a bounds check — push the same problem somewhere else without solving it. `std::optional` makes the nullability explicit in the type, which is idiomatic modern C++.
+
+`value_or('\0')` is useful when you need a fallback — for example, when checking the next character in the multi-char branch, a fallback of `'\0'` safely handles end-of-input without a separate null check.
+
+## Lexer — idiomatic C++ patterns worth reaching for
+
+**`if` init-statement for map lookups (C++17):** C++17 allows you to declare a variable inside the `if` condition itself, scoping it to that branch. This is the idiomatic way to do map lookups — look it up, check if it was found, and use the result, all in one construct with no iterator leaking into the surrounding scope.
+
+**Templated `contains()` helper:** `std::unordered_map` has a membership test, but `std::vector` does not. Rather than writing the `std::find` iterator comparison inline everywhere, a small private templated helper method on the `Lexer` class works across any container. Look up how to write a function template in C++ if this is new.
+
+**Static `const` class members:** The character maps and `multi_start` list are the same for every `Lexer` instance — they belong as `static const` members declared in the header and initialized in the `.cpp` file. Same concept as Python's class-level dicts.
+
+---
+
 ## Suggested Rewrite Order
 
 1. `tokens.h` — `enum class` for token types, `Token` struct (no pointers, good starting point)

@@ -114,7 +114,7 @@ The enum defines the vocabulary. The `Token` class is the unit that carries it t
 
 The pipeline needs to be observable at each stage. `main.py` prints every token after lexing using a simple loop — `print(f"  {token}")`. For this to work, your `Token` class needs a `__repr__` method that returns a readable string.
 
-In C++, `main.cpp` calls `tok.toString()` on each token. Your `Token` struct needs a `toString()` method that returns a `std::string`.
+In C++, `main.cpp` calls `tok.toString()` on each token. Your `Token` struct needs a `toString()` method that returns a `std::string`. Since `enum class` values have no built-in string representation, `toString()` typically uses a `switch` statement over the token type to return the name as a string.
 
 Both should produce output that shows the type and lexeme clearly — enough to verify the lexer is producing the right tokens before moving to the parser.
 

@@ -60,7 +60,7 @@ Build in strict order. Do not get ahead of where the learner is.
 **Pass 2 — C++ Rewrite:**
 6. `tokens.h` — read `cpp_rewrite_concepts.md` first (full doc — sets up the entire C++ pass)
 7. `lexer.h/.cpp` — `cpp_rewrite_concepts.md` already read; no new doc required
-8. `nodes.h` — re-read the `unique_ptr` section of `cpp_rewrite_concepts.md` before starting
+8. `nodes.h` — re-read the `unique_ptr` section of `cpp_rewrite_concepts.md`; also read `visitor_pattern.md` (needed for the `Visitor` forward declaration and `accept()` structure)
 9. `parser.h/.cpp` — same grammar, now returning `unique_ptr<ASTNode>`
 10. `interpreter.h/.cpp` — read `visitor_pattern.md` first
 
@@ -154,6 +154,23 @@ Each `block` ends with its own `end`. A conditional with `otherwise` has two `en
 
 **Parser — `comparison_tokens` class-level list**
 Define a class-level list of all six comparison `TokenType` values. Check `token_peek().token_type in comparison_tokens` in the while loop. Same pattern as `single_char_map` in the lexer.
+
+**C++ lexer — `peek()` returning `std::optional<char>` is correct**
+`char` has no null value, so `peek()` at end of input needs an explicit nullable type. `std::optional<char>` is the right choice — do not push back on a learner who uses it. 
+
+**C++ lexer — idiomatic patterns to steer toward**
+- Map lookups: direct the learner to the C++17 `if` init-statement (`if (auto it = map.find(key); it != map.end())`) — scopes the iterator to the branch, idiomatic modern C++
+- `multi_start` membership: direct the learner to write a small private templated `contains()` helper rather than inline `std::find` everywhere
+- Maps and `multi_start`: should be `static const` class members, initialized in the `.cpp` file — same concept as Python class-level dicts
+
+**C++ nodes — forward declare `Visitor` at the top of `nodes.h`**
+`ASTNode` declares `accept(Visitor&)` but `Visitor` isn't defined yet — circular dependency. The fix: `struct Visitor;` forward declaration at the top of `nodes.h`, then define all node structs, then define `struct Visitor` after all node types are known, then define `accept()` bodies last. If the learner hits compiler errors about incomplete types or unknown `Visitor`, this is why.
+
+**C++ nodes — `toString()` is recursive**
+Node `toString()` methods must call `toString()` on their children to produce the full tree representation. If a learner's output is missing child nodes, ask them whether their `toString()` is calling into its children.
+
+**C++ tokens — `toString()` requires explicit string conversion**
+Tell the learner that unlike Python, C++ `enum class` values have no automatic string representation — they must explicitly convert each value to a string. If they are unsure how, direct them to a `switch` statement over the token type.
 
 **Interpreter — separate `unary_op_map`**
 The interpreter must have a separate `unary_op_map` for unary operators, distinct from `binary_op_map`. Do not handle unary negation inline with an `if` check — direct the learner to use the map pattern.
