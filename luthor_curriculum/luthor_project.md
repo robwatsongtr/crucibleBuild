@@ -154,6 +154,8 @@ std::unordered_map<std::string, LuthorValue> symbol_table;
 ```
 Arithmetic results are `double`; comparison results are `bool`. The `result` member on `Interpreter` acts as a side-channel return value since `visit()` is `void`.
 
+Unlike Python where booleans are just truthy integers, the C++ rewrite has true `bool` values. Comparison operators produce the `bool` alternative of the variant. `visit(ConditionalNode&)` and `visit(WhileNode&)` extract it with `std::get<bool>(result)` — this throws if a non-bool lands there, which is stricter than Python and correct.
+
 ### Visitor Pattern
 The interpreter uses double dispatch. Every node implements `accept(Visitor&)`, which calls back `v.visit(*this)` with the concrete type. The `Interpreter` inherits from `Visitor` and provides one `visit` overload per node type.
 

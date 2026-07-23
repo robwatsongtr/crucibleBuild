@@ -151,6 +151,8 @@ std::string* p = std::get_if<std::string>(&s);  // returns nullptr if wrong type
 
 In Luthor, the runtime value type holds either a `double` (arithmetic results) or a `bool` (comparison results). You'll define a type alias for it and use it for your symbol table values and as the return type from expression evaluation.
 
+Unlike Python — where `1` and `0` are truthy/falsy and booleans are just integers — the C++ rewrite has true boolean values. Comparison operators return `std::variant<double, bool>` with the `bool` alternative active. `visit(ConditionalNode&)` and `visit(WhileNode&)` extract it with `std::get<bool>(result)`, which throws if the value is not actually a `bool`. This is stricter than Python and correct.
+
 `std::get_if` is the safer accessor — it returns a pointer to the value if the type matches, `nullptr` if it doesn't. Prefer it over `std::get` when you're not certain which type is active.
 
 The symbol table maps string variable names to this value type. The container for that is `std::unordered_map<std::string, YourValueType>` — a hash map from the standard library that works the same way as a Python dict.
@@ -189,6 +191,26 @@ The alternatives — returning a sentinel like `'\0'`, or guarding every call si
 **Templated `contains()` helper:** `std::unordered_map` has a membership test, but `std::vector` does not. Rather than writing the `std::find` iterator comparison inline everywhere, a small private templated helper method on the `Lexer` class works across any container. Look up how to write a function template in C++ if this is new.
 
 **Static `const` class members:** The character maps and `multi_start` list are the same for every `Lexer` instance — they belong as `static const` members declared in the header and initialized in the `.cpp` file. Same concept as Python's class-level dicts.
+
+---
+
+## Header file structure
+
+Write the `.h` file before the `.cpp`. The header is the contract — get the declarations right first, then implement.
+
+**`lexer.h`**
+- Public: constructor, `tokenize()` only
+- Private: `stream` (by value), `pos` as `size_t`, `static const` maps and `multi_start`, `advance()`, `advance_twice()`, `peek()`, `peek_next()`, templated `contains()` helper
+- `peek()` and `peek_next()` return `std::optional<char>`
+
+**`parser.h`**
+- Public: constructor, `program()` only — returns `unique_ptr<ProgramNode>` specifically, not the base type
+- Private: `tok_stream` as `const` reference (parser does not own the tokens), `tok_pos` as `size_t`, `static const comparison_tokens`, all grammar and statement methods, templated `contains()` helper
+
+**`interpreter.h`**
+- Inherits from `Visitor`
+- Public: constructor only — all `visit()` overloads are private
+- Private: `result` side-channel (`std::variant<double, bool>`), `symbol_table`, `static const` op maps with full `std::function` types, `evaluate()`, all `visit()` overloads
 
 ---
 

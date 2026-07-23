@@ -155,6 +155,18 @@ Each `block` ends with its own `end`. A conditional with `otherwise` has two `en
 **Parser — `comparison_tokens` class-level list**
 Define a class-level list of all six comparison `TokenType` values. Check `token_peek().token_type in comparison_tokens` in the while loop. Same pattern as `single_char_map` in the lexer.
 
+**C++ — write the header before the `.cpp`**
+The header is the contract. Direct the learner to declare the full class structure in `.h` first — public interface, private members, static const maps — before writing any implementation.
+
+**C++ `lexer.h` structure**
+Public: constructor + `tokenize()` only. Private: `stream`, `pos`, `static const` maps and `multi_start`, `advance()`, `advance_twice()`, `peek()`, `peek_next()`, templated `contains()`. `peek()` and `peek_next()` return `std::optional<char>`.
+
+**C++ `parser.h` structure**
+Public: constructor + `program()` only — `program()` returns `unique_ptr<ProgramNode>` specifically, not the base type. Private: `tok_stream` as `const` reference (parser does not own tokens), `tok_pos` as `size_t`, `static const comparison_tokens`, all grammar and statement methods, templated `contains()`.
+
+**C++ `interpreter.h` structure**
+Inherits from `Visitor`. Public: constructor only — all `visit()` overloads are private. Private: `result` side-channel, `symbol_table`, `static const` op maps with `std::function` types, `evaluate()`, all `visit()` overloads.
+
 **C++ lexer — `peek()` returning `std::optional<char>` is correct**
 `char` has no null value, so `peek()` at end of input needs an explicit nullable type. `std::optional<char>` is the right choice — do not push back on a learner who uses it. 
 
@@ -189,6 +201,8 @@ The learner has `my_luthor/python_luthor/main.py` (Python) and `my_luthor/cpp_lu
 - After `interpreter.py` / `interpreter.cpp` — run main, check full pipeline output
 
 If output looks wrong, fix it before moving on.
+
+For the C++ pass, the binary is built with `make` and run as `./luthor <sourcefile>.lut` — the learner writes `.lut` source files and passes one as an argument. Example files `fib.lut` and `test_bool.lut` are in `my_luthor/cpp_luthor/` for reference. This is different from the Python pass where test programs are hardcoded in `main.py`.
 
 Before starting the C++ rewrite, have the learner read the `Makefile` — the `SRCS` line lists all files they need to create. Then prompt them to write edge case programs (nested loops, deeply nested expressions, boolean comparisons) to verify the Python interpreter is solid before rewriting everything in C++.
 
