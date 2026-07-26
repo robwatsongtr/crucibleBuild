@@ -130,8 +130,9 @@ Same architecture as Python. Every abstraction Python was hiding becomes explici
 - `src/nodes.h` — AST node hierarchy, `Visitor` interface, `accept` dispatch
 - `src/parser.h` / `src/parser.cpp` — `Parser` class (recursive descent)
 - `src/interpreter.h` / `src/interpreter.cpp` — `Interpreter` class (visitor, tree walker)
-- `src/runner.h` / `src/runner.cpp` — `Runner` class; owns `ProgramNode`, drives the visitor loop.       Allows addition of other visitors easily, like a bytecode emitter. 
+- `src/runner.h` / `src/runner.cpp` — `Runner` class; owns `ProgramNode`, drives the visitor loop. Allows addition of other visitors easily, like a bytecode emitter.
 - `Makefile` — builds with `g++ -std=c++17`
+- `.clangd` — tells clangd to use C++17; required for `std::optional` and other C++17 features to resolve correctly in VS Code
  
 
 

@@ -8,11 +8,26 @@ This rewrite assumes you have a basic understanding of C — specifically:
 - **Heap allocation** — `malloc`/`free` or `new`/`delete`; the difference between stack and heap
 - **Manual memory management** — what a memory leak is, why forgetting to `free` is a bug
 
-If those concepts are unfamiliar, learn them in C first before starting the rewrite. The concepts are not complicated, but they are load-bearing. 
+If those concepts are unfamiliar, learn them in C first before starting the rewrite. The concepts are not complicated, but they are load-bearing.
 
 It might also be good to get a quick overview of C++ and how it differes from C if you're not already familiar, and to gain familiarity with the Standard Template Library (STL). Templates are fundamental to using C++ as they are used for compile-time polymorphism.
 
-We also have runtime polymorphism, which we achieve through virtual functions and inheritance, and that will be explained later in this document. 
+We also have runtime polymorphism, which we achieve through virtual functions and inheritance, and that will be explained later in this document.
+
+---
+
+## Editor Setup — Do This Before Writing Any Code
+
+Use **clangd** for C++ IntelliSense in VS Code. Install the [clangd extension](https://marketplace.visualstudio.com/items?itemName=llvm-vs-code-extensions.vscode-clangd) and disable the Microsoft C/C++ extension's IntelliSense if it's active — the two conflict and clangd is significantly more reliable.
+
+clangd needs to know you're using C++17 or it will flag things like `std::optional` as errors. Create a `.clangd` file in `my_luthor/cpp_luthor/` before you write your first header:
+
+```
+CompileFlags:
+  Add: [-std=c++17]
+```
+
+That's it. Reload your VS Code window after creating the file and squiggles from missing C++17 features will clear.
 
 ---
 

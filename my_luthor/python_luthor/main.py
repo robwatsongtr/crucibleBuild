@@ -5,6 +5,19 @@ from src.interpreter import Interpreter
 
 def main():
 
+    bool = """
+
+    know x 5                                                                                                                                           
+    know y 10                                                                                                                                          
+                                                                                                                                                        
+    doom x < y                                                                                                                                         
+    doom x > y                                                                                                                                       
+    doom x == y                                                                                                                                        
+    doom x != y 
+
+    """
+
+
     source = """
 
     know x 3
@@ -64,12 +77,12 @@ def main():
 
     """
 
-    print(f"Program: {source3}")
+    print(f"Program: {bool}")
     print()
 
     print("Step 1: Lexical Analysis (Tokenization)")
     print()
-    lexer = Lexer(source3)
+    lexer = Lexer(bool)
     tokens = lexer.tokenize()
 
     for token in tokens:

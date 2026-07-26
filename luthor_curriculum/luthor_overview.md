@@ -266,7 +266,7 @@ looks wrong, fix it first. Every phase is a foundation for the next one.
 
 ## What You Are Actually Learning
 
-Luthor is the vehicle. What you are building toward is an understanding of:
+What you are building toward is an understanding of:
 
 - How a program is represented at each stage of compilation
 - How recursive descent parsing works and why it produces correct precedence
@@ -274,6 +274,4 @@ Luthor is the vehicle. What you are building toward is an understanding of:
 - In the C++ rewrite: how ownership, virtual dispatch, and the visitor
   pattern work at a mechanical level
 
-These are not abstract concepts. By the time you finish, you will have felt
-them — through the code you wrote, the bugs you fixed, and the moment the
-interpreter runs its first correct program.
+
