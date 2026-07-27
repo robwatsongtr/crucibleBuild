@@ -1,10 +1,9 @@
 import { mkdirSync, writeFileSync, readFileSync, existsSync } from 'fs'
 import { join } from 'path'
-import { createHash } from 'crypto'
 import { ProjectConfig } from '../models/index.js'
 import { ProjectConfigSchema } from '../schemas/project-config.js'
 import { getPaths } from '../config/paths.js'
-import { PROFILE_VERSION, DEFAULT_PROFILE_ID, DEFAULT_PHASE_ID } from '../config/constants.js'
+import { DEFAULT_PROFILE_ID, DEFAULT_PHASE_ID } from '../config/constants.js'
 
 const CRUCIBLEBUILD_README = `# .cruciblebuild/
 
@@ -31,13 +30,13 @@ export const hasGitRepo = (projectRoot: string = process.cwd()): boolean =>
  * Writes .cruciblebuild/ directory structure, config.json, README.md,
  * and updates .gitignore. Returns the validated config that was written.
  */
-export const scaffold = (acknowledgedAt: string, projectRoot: string = process.cwd()): ProjectConfig => {
+export const scaffold = (projectRoot: string = process.cwd()): ProjectConfig => {
   const paths = getPaths(projectRoot)
 
   mkdirSync(paths.crucibleDir, { recursive: true })
   mkdirSync(paths.stateDir, { recursive: true })
 
-  const config = buildConfig(acknowledgedAt)
+  const config = buildConfig()
 
   writeConfig(paths.configFile, config)
   writeReadme(paths.readmeFile)
@@ -67,17 +66,11 @@ export const loadConfig = (projectRoot: string = process.cwd()): ProjectConfig =
   return result.data
 }
 
-const buildConfig = (acknowledgedAt: string): ProjectConfig => {
-  const versionHash = createHash('sha256').update(PROFILE_VERSION).digest('hex').slice(0, 8)
-
+const buildConfig = (): ProjectConfig => {
   return {
     profileId: DEFAULT_PROFILE_ID,
     projectSlug: 'luthor',
     currentPhaseId: DEFAULT_PHASE_ID,
-    contract: {
-      acknowledgedAt,
-      version: versionHash,
-    },
   }
 }
 

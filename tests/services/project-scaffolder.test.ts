@@ -2,7 +2,12 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { mkdtempSync, rmSync, readFileSync, writeFileSync, existsSync } from 'fs'
 import { tmpdir } from 'os'
 import { join } from 'path'
-import { scaffold, loadConfig, isInitialised, hasGitRepo } from '../../src/services/project-scaffolder.js'
+import {
+  scaffold,
+  loadConfig,
+  isInitialised,
+  hasGitRepo,
+} from '../../src/services/project-scaffolder.js'
 import { ProjectConfigSchema } from '../../src/schemas/project-config.js'
 
 let tempDir: string
@@ -21,7 +26,7 @@ describe('isInitialised', () => {
   })
 
   it('returns true after scaffold runs', () => {
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     expect(isInitialised(tempDir)).toBe(true)
   })
@@ -35,20 +40,19 @@ describe('hasGitRepo', () => {
 
 describe('scaffold', () => {
   it('creates .cruciblebuild/ directory', () => {
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     expect(existsSync(join(tempDir, '.cruciblebuild'))).toBe(true)
   })
 
   it('creates .cruciblebuild/state/ directory', () => {
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     expect(existsSync(join(tempDir, '.cruciblebuild', 'state'))).toBe(true)
   })
 
   it('writes a valid config.json', () => {
-    const acknowledgedAt = '2026-06-12T10:00:00.000Z'
-    scaffold(acknowledgedAt, tempDir)
+    scaffold(tempDir)
 
     const raw = JSON.parse(readFileSync(join(tempDir, '.cruciblebuild', 'config.json'), 'utf-8'))
     const result = ProjectConfigSchema.safeParse(raw)
@@ -57,7 +61,7 @@ describe('scaffold', () => {
   })
 
   it('config.json contains correct profileId and projectSlug', () => {
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     const raw = JSON.parse(readFileSync(join(tempDir, '.cruciblebuild', 'config.json'), 'utf-8'))
 
@@ -66,17 +70,8 @@ describe('scaffold', () => {
     expect(raw.currentPhaseId).toBe('python-tokens')
   })
 
-  it('config.json records the acknowledgedAt timestamp', () => {
-    const acknowledgedAt = '2026-06-12T10:00:00.000Z'
-    scaffold(acknowledgedAt, tempDir)
-
-    const raw = JSON.parse(readFileSync(join(tempDir, '.cruciblebuild', 'config.json'), 'utf-8'))
-
-    expect(raw.contract.acknowledgedAt).toBe(acknowledgedAt)
-  })
-
   it('writes .cruciblebuild/README.md', () => {
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     const readme = readFileSync(join(tempDir, '.cruciblebuild', 'README.md'), 'utf-8')
 
@@ -86,7 +81,7 @@ describe('scaffold', () => {
   })
 
   it('creates .gitignore with state/ entry when none exists', () => {
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     const gitignore = readFileSync(join(tempDir, '.gitignore'), 'utf-8')
 
@@ -98,7 +93,7 @@ describe('scaffold', () => {
     const existing = 'node_modules/\n'
     writeFileSync(gitignorePath, existing, 'utf-8')
 
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     const gitignore = readFileSync(gitignorePath, 'utf-8')
 
@@ -110,7 +105,7 @@ describe('scaffold', () => {
     const gitignorePath = join(tempDir, '.gitignore')
     require('fs').writeFileSync(gitignorePath, '.cruciblebuild/state/\n', 'utf-8')
 
-    scaffold(new Date().toISOString(), tempDir)
+    scaffold(tempDir)
 
     const gitignore = readFileSync(gitignorePath, 'utf-8')
     const count = (gitignore.match(/\.cruciblebuild\/state\//g) ?? []).length
@@ -121,13 +116,12 @@ describe('scaffold', () => {
 
 describe('loadConfig', () => {
   it('returns the config after scaffold', () => {
-    const acknowledgedAt = '2026-06-12T10:00:00.000Z'
-    scaffold(acknowledgedAt, tempDir)
+    scaffold(tempDir)
 
     const config = loadConfig(tempDir)
 
     expect(config.profileId).toBe('luthor-default')
-    expect(config.contract.acknowledgedAt).toBe(acknowledgedAt)
+    expect(config.projectSlug).toBe('luthor')
   })
 
   it('throws if config.json does not exist', () => {

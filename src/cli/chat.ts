@@ -53,7 +53,6 @@ export const runChat = async (): Promise<void> => {
       currentPhaseId: config.currentPhaseId,
       fileTree: contextStore.getFileTree(),
       recentChanges: contextStore.getRecentChanges(),
-      acknowledgedContractAt: config.contract.acknowledgedAt,
     },
     mentorGuide,
   )
@@ -68,7 +67,6 @@ export const runChat = async (): Promise<void> => {
         currentPhaseId: contextStore.currentPhaseId,
         fileTree: contextStore.getFileTree(),
         recentChanges: contextStore.getRecentChanges(),
-        acknowledgedContractAt: config.contract.acknowledgedAt,
       },
       mentorGuide,
     )

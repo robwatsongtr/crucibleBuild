@@ -3,7 +3,7 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { renderMarkdown } from '../tui/markdown.js'
-import { spawnSync } from 'child_process'    
+import { spawnSync } from 'child_process'
 import { luthorDefaultProfile } from '../profile/luthor.default.js'
 import { isInitialised, hasGitRepo, scaffold } from '../services/project-scaffolder.js'
 
@@ -14,7 +14,7 @@ const renderMd = (text: string): string => renderMarkdown(text)
 const paginate = (text: string): void => {
   spawnSync('less', ['-R'], {
     input: text,
-    stdio: ['pipe', 'inherit', 'inherit']
+    stdio: ['pipe', 'inherit', 'inherit'],
   })
 }
 
@@ -58,7 +58,7 @@ export const runInit = async (): Promise<void> => {
   console.log('\n' + chalk.bold.cyan('=== CrucibleBuild ===') + '\n')
   paginate(renderMd(buildWelcomeMarkdown()) + '\n\nPress q to continue.\n')
 
-  const config = scaffold(new Date().toISOString(), cwd)
+  const config = scaffold(cwd)
 
   console.log(chalk.green('✓ Initialised .cruciblebuild/'))
   console.log(chalk.dim(`  Profile:     ${config.profileId}`))

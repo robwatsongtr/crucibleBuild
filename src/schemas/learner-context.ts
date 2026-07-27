@@ -11,5 +11,4 @@ export const LearnerContextSchema = z.object({
       at: z.string(),
     }),
   ),
-  acknowledgedContractAt: z.string(),
 })

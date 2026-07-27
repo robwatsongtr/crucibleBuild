@@ -147,20 +147,14 @@ describe('ProjectConfigSchema', () => {
       profileId: 'luthor-default',
       projectSlug: 'luthor',
       currentPhaseId: 'python-tokens',
-      contract: {
-        acknowledgedAt: '2026-06-10T09:00:00Z',
-        version: '1.0.0',
-      },
     })
 
     expect(result.success).toBe(true)
   })
 
-  it('rejects a config missing contract', () => {
+  it('rejects a config missing required fields', () => {
     const result = ProjectConfigSchema.safeParse({
       profileId: 'luthor-default',
-      projectSlug: 'luthor',
-      currentPhaseId: 'python-tokens',
     })
 
     expect(result.success).toBe(false)

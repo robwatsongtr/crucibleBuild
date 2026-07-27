@@ -12,12 +12,7 @@
 
 import Anthropic from '@anthropic-ai/sdk'
 import { logDebug } from '../logging/logger.js'
-import {
-  DEFAULT_MODEL_ANTHROPIC,
-  MAX_TOKENS,
-  TEMPERATURE,
-  CACHE_HISTORY_THRESHOLD,
-} from '../config/constants.js'
+import { DEFAULT_MODEL_ANTHROPIC, MAX_TOKENS, TEMPERATURE } from '../config/constants.js'
 import {
   InferenceClient,
   InferenceRequest,
@@ -27,19 +22,11 @@ import {
 } from './inference-client-types.js'
 
 const toAnthropicMessages = (messages: InferenceMessage[]): Anthropic.Messages.MessageParam[] => {
-  return messages.map((m, i) => {
-    // Mark the last assistant message with cache_control once history is long
-    // enough — this caches the conversation history on the Anthropic side.
-    const isLastAssistant =
-      m.role === 'assistant' &&
-      i === messages.length - 1 &&
-      messages.length >= CACHE_HISTORY_THRESHOLD
-
+  return messages.map((m) => {
     if (typeof m.content === 'string') {
       const textBlock: Anthropic.Messages.TextBlockParam = {
         type: 'text',
         text: m.content,
-        cache_control: isLastAssistant ? { type: 'ephemeral' } : null,
       }
 
       return { role: m.role, content: [textBlock] }

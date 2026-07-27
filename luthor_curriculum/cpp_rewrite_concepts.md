@@ -46,7 +46,6 @@ That's it. Reload your VS Code window after creating the file and squiggles from
 - The concepts map one-to-one from Python: `isinstance` → virtual dispatch, duck-typed return → `std::variant`, dict → `unordered_map`
 - Constructors make node construction expressive and explicit — you see exactly what a node owns
 
-**The caveat:** C++ only works as a teaching tool here *if you understand what it's abstracting*. Smart pointers only make sense if you know raw pointers. `std::move` only makes sense if you understand why copying a pointer creates two owners. Virtual dispatch only makes sense if you understand that a pointer-to-base doesn't carry the concrete type.
 
 The downside of C++ is that it is a complicated language and the syntax can be hard to read at times, especially templated classes; that being said, we are using just a specific subset of the language and you can get a grip on it fairly quickly. 
 
