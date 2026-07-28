@@ -26,5 +26,5 @@ export const GEMINI_MODEL_FLASH = 'gemini-2.0-flash' // free tier default
 export const DEFAULT_MODEL_ANTHROPIC = ANTHROPIC_MODEL_SONNET
 export const DEFAULT_MODEL_GEMINI = GEMINI_MODEL_FLASH
 
-export const MAX_TOKENS = 2048
+export const MAX_TOKENS = 4096
 export const TEMPERATURE = 0.7

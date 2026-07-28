@@ -1,5 +1,5 @@
 {
   "profileId": "luthor-default",
   "projectSlug": "luthor",
-  "currentPhaseId": "cpp-parser"
+  "currentPhaseId": "cpp-interpreter"
 }

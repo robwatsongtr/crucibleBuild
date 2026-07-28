@@ -196,19 +196,19 @@ class Parser:
         return root
 
     def primary(self):
-        if self.token_peek().token_type == TokenType.NUMBER:
+        if self.token_peek() and self.token_peek().token_type == TokenType.NUMBER:
             num = self.token_peek() 
             self.consume(num.token_type)
 
             return NumberNode(float(num.lexeme))
         
-        elif self.token_peek().token_type == TokenType.IDENTIFIER:
+        elif self.token_peek() and self.token_peek().token_type == TokenType.IDENTIFIER:
             identifier = self.token_peek() 
             self.consume(identifier.token_type)
 
             return IdentifierNode(identifier.lexeme)
 
-        elif self.token_peek().token_type == TokenType.L_PARENS:
+        elif self.token_peek() and self.token_peek().token_type == TokenType.L_PARENS:
             self.consume(TokenType.L_PARENS)
             result = self.expression()
             self.consume(TokenType.R_PARENS)

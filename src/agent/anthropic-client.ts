@@ -123,7 +123,8 @@ export class AnthropicClient implements InferenceClient {
 
     logDebug(
       `Anthropic usage — in: ${usage.input_tokens} out: ${usage.output_tokens} ` +
-        `cache_write: ${usage.cache_creation_input_tokens ?? 0} cache_read: ${usage.cache_read_input_tokens ?? 0}`,
+        `cache_write: ${usage.cache_creation_input_tokens ?? 0} cache_read: ${usage.cache_read_input_tokens ?? 0} ` +
+        `stop_reason: ${final.stop_reason}`,
     )
 
     return {
