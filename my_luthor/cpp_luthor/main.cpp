@@ -57,9 +57,9 @@ int main (int argc, char* argv[]) {
 
         std::cout << "Step 3: Interpreter evaluation"<< "\n";
         std::cout << "\n";
-        Interpreter interpreter; 
+        Interpreter interp; 
         Runner runner(std::move(ast));
-        runner.run(interpreter);
+        runner.run(interp);
         std::cout << "\n";
     
     } catch (const std::exception& e) {

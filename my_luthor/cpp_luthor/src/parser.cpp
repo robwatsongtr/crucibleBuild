@@ -28,6 +28,7 @@ std::optional<Token> Parser::token_peek() {
     }
 
     auto token = tok_stream[tok_pos];
+
     if (token.token_type == TokenType::END_OF_FILE ) {
         return std::nullopt;
     }
