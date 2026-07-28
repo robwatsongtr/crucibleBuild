@@ -175,6 +175,7 @@ std::unique_ptr<ASTNode> Parser::block() {
 
 std::unique_ptr<ASTNode> Parser::expression() {
     auto root = comparison();
+
     return root; 
 }
 
@@ -250,7 +251,9 @@ std::unique_ptr<ASTNode> Parser::unary() {
 }
 
 std::unique_ptr<ASTNode> Parser::primary() {
-    if ( token_peek() && token_peek().value().token_type == TokenType::NUMBER ) {
+    if ( token_peek() 
+        && token_peek().value().token_type == TokenType::NUMBER ) {
+
         auto num = token_peek().value();
         consume(num.token_type);
         auto root = std::make_unique<NumberNode>(std::stod(num.lexeme));
@@ -267,8 +270,8 @@ std::unique_ptr<ASTNode> Parser::primary() {
         return root; 
         
     } else if ( token_peek() 
-        && token_peek().value().token_type == TokenType::L_PARENS ) {
-            
+                && token_peek().value().token_type == TokenType::L_PARENS ) {
+
         consume(TokenType::L_PARENS);
         auto root = expression();
         consume(TokenType::R_PARENS);
@@ -279,5 +282,6 @@ std::unique_ptr<ASTNode> Parser::primary() {
         std::ostringstream oss;
         oss << "Unexpected token in Primary";    
         throw std::runtime_error(oss.str());
+
     }  
 }
