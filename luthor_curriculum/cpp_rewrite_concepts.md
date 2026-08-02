@@ -69,7 +69,7 @@ about it.
 
 `unique_ptr` is a smart pointer that owns its heap object. When the
 `unique_ptr` goes out of scope, it automatically calls `delete`. This pattern
-is called **RAII** — the resource lifetime is tied to the object's lifetime.
+is called **RAII** (Resource Acquistion is Intialization) — the resource lifetime is tied to the object's lifetime. The name is incomplete since it doesn't mention the automatic clean-up in the destructor. s
 
 ```cpp
 // Old way — manual, error prone
@@ -180,11 +180,23 @@ Your Python `evaluate()` is already the visitor pattern — one central function
 | Python | C++ equivalent |
 |---|---|
 | `isinstance(node, NumberNode)` | virtual dispatch via `accept`/`visit` |
-| `self.symbol_table` dict | `std::unordered_map<std::string, LuthorValue>` |
+| `self.symbol_table` dict | `std::unordered_map<std::string, std::variant<double, bool>>` |
 | duck-typed return value from `evaluate` | `std::variant<double, bool>` stored in `result` member |
 | single `evaluate()` for everything | consider splitting: expressions return a value, statements don't |
 
 The split between expressions (produce a value) and statements (produce a side effect) maps cleanly to two separate methods with different return types — something Python's duck typing let you paper over but C++'s type system makes you confront explicitly.
+
+### Truthiness and `to_bool`
+
+Python's `if condition_eval:` accepts any value — nonzero numbers are truthy, zero is falsy. Your C++ `visit(ConditionalNode&)` and `visit(WhileNode&)` need a real `bool` to pass to `if`/`while`, but `result` is `std::variant<double, bool>`. Calling `std::get<bool>(result)` directly throws `std::bad_variant_access` if a number ends up there — which is syntactically valid Luthor (`suppose x` where `x` is a number).
+
+The fix is a small private helper on `Interpreter`:
+
+```
+bool to_bool(const std::variant<double, bool>& v) const
+```
+
+It checks the active alternative with `std::get_if` and returns: the `bool` value as-is, or `*d != 0.0` for a `double`. Both conditional nodes call this instead of raw `std::get<bool>`. This replicates Python's truthiness semantics and prevents a runtime crash on valid input.
 
 The full mechanics of how `accept` and `visit` wire together — and why the double dispatch matters — are in [`visitor_pattern.md`](visitor_pattern.md). Read it before starting the interpreter.
 
@@ -234,4 +246,4 @@ Write the `.h` file before the `.cpp`. The header is the contract — get the de
 2. `lexer.h/.cpp` — straightforward translation
 3. `nodes.h` — AST hierarchy with `unique_ptr` children
 4. `parser.h/.cpp` — returns `unique_ptr<ASTNode>` from each method
-5. `interpreter.h/.cpp` — the tree walker with `LuthorValue` and symbol table
+5. `interpreter.h/.cpp` — the tree walker with `std::variant<double, bool>` and symbol table

@@ -99,6 +99,8 @@ For the parser phase, always direct the learner to read **both** docs in order �
 - Close every substantive response with what the learner should do or think about next
 - If they have written code, read it and give specific feedback
 - When a method is missing, name it and tell the learner to implement it. Do not describe how. "Stuck" means the learner has tried and failed, not that a method is absent.
+- When a learner is engaged in substantive conceptual discussion, do not interrupt it repeatedly with reminders about a pending task. Mention the outstanding item once, then let the discussion resolve before returning to it.
+- When a learner acknowledges they understand a technical point ("ok so what you're saying is..."), stop re-explaining it. One clear explanation is enough — let them make the decision and move on.
 
 ### When a learner is stuck — graduated escalation
 
@@ -177,7 +179,10 @@ Public: constructor + `tokenize()` only. Private: `stream`, `pos`, `static const
 Public: constructor + `program()` only — `program()` returns `unique_ptr<ProgramNode>` specifically, not the base type. Private: `tok_stream` as `const` reference (parser does not own tokens), `tok_pos` as `size_t`, `static const comparison_tokens`, all grammar and statement methods, templated `contains()`.
 
 **C++ `interpreter.h` structure**
-Inherits from `Visitor`. Public: constructor only — all `visit()` overloads are private. Private: `result` side-channel, `symbol_table`, `static const` op maps with `std::function` types, `evaluate()`, all `visit()` overloads.
+Inherits from `Visitor`. Public: constructor only — all `visit()` overloads are private. Private: `result` side-channel, `symbol_table`, `static const` op maps with `std::function` types, `evaluate()`, `to_bool()`, all `visit()` overloads.
+
+**C++ interpreter — `to_bool` helper is required**
+`visit(ConditionalNode&)` and `visit(WhileNode&)` must not call `std::get<bool>(result)` directly — that throws at runtime if a number lands in `result`, which is syntactically valid Luthor (`suppose x` where `x` holds a number). Direct the learner to write a private `bool to_bool(const std::variant<double, bool>&) const` that returns the `bool` alternative as-is, or `*d != 0.0` for a `double`. Both conditional nodes must go through this helper.
 
 **C++ lexer — `peek()` returning `std::optional<char>` is correct**
 `char` has no null value, so `peek()` at end of input needs an explicit nullable type. `std::optional<char>` is the right choice — do not push back on a learner who uses it. 

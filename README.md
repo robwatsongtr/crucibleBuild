@@ -148,6 +148,15 @@ npm run format      # prettier --write src/
 
 Pre-commit hooks run lint-staged, typecheck, and the full test suite automatically on every commit.
 
+### Debug mode
+
+Set `CRUCIBLEBUILD_DEBUG=1` to enable verbose logging — prints token usage, cache stats, stop reason, and tool call details to the terminal.
+
+```bash
+CRUCIBLEBUILD_DEBUG=1 cruciblebuild chat   # single session
+export CRUCIBLEBUILD_DEBUG=1              # persist for the shell session
+```
+
 ---
 
 ## Extensibility

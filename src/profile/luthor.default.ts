@@ -269,7 +269,8 @@ export const luthorDefaultProfile: ConstraintProfile = {
         checkpoints: [
           'Interpreter inherits from Visitor',
           'result side-channel used for return values',
-          'std::variant<double, bool> used for LuthorValue',
+          'std::variant<double, bool> used for runtime values',
+          'to_bool helper used in visit(ConditionalNode&) and visit(WhileNode&)',
           'binary_op_map and unary_op_map as static const members',
           'Runner class implemented',
           'Run main and verify full pipeline output matches Python pass',

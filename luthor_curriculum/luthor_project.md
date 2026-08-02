@@ -150,12 +150,11 @@ All AST nodes are heap-allocated and owned via `std::unique_ptr<ASTNode>`. Child
 
 ### Runtime Values: `std::variant<double, bool>`
 ```cpp
-using LuthorValue = std::variant<double, bool>;
-std::unordered_map<std::string, LuthorValue> symbol_table;
+std::unordered_map<std::string, std::variant<double, bool>> symbol_table;
 ```
 Arithmetic results are `double`; comparison results are `bool`. The `result` member on `Interpreter` acts as a side-channel return value since `visit()` is `void`.
 
-Unlike Python where booleans are just truthy integers, the C++ rewrite has true `bool` values. Comparison operators produce the `bool` alternative of the variant. `visit(ConditionalNode&)` and `visit(WhileNode&)` extract it with `std::get<bool>(result)` — this throws if a non-bool lands there, which is stricter than Python and correct.
+Unlike Python where booleans are just truthy integers, the C++ rewrite has true `bool` values. Comparison operators produce the `bool` alternative of the variant. `visit(ConditionalNode&)` and `visit(WhileNode&)` must not use `std::get<bool>(result)` directly — that throws `std::bad_variant_access` if a number ends up as a condition, which is syntactically valid Luthor. Instead, both use a private `to_bool(const std::variant<double, bool>&) const` helper: returns the `bool` alternative as-is, or `*d != 0.0` for a `double`. This replicates Python's truthiness semantics.
 
 ### Visitor Pattern
 The interpreter uses double dispatch. Every node implements `accept(Visitor&)`, which calls back `v.visit(*this)` with the concrete type. The `Interpreter` inherits from `Visitor` and provides one `visit` overload per node type.
