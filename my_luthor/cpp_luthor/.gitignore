@@ -5,3 +5,6 @@
 *.so
 *.dylib
 luthor
+
+# clangd index cache
+.cache/

@@ -1,0 +1,10 @@
+know i 10
+know total 0
+
+crime i > 0
+    doom i
+    know total total + i
+    know i i - 1
+end
+
+doom total
