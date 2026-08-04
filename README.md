@@ -2,7 +2,9 @@
 
 CrucibleBuild is a project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
-The first and flagship project is Luthor — a Turing complete interpreted programming language built in two passes, a Python pass and C++ pass. 
+
+### The first and flagship project is Luthor — a Turing-complete interpreted programming language built in two passes: a Python pass and a C++ rewrite.
+
 
 ---
 
@@ -186,3 +188,13 @@ One code addition is also required: a profile module (`src/profile/<project>.def
 
 1. Add the new `profileId` to the profile selection logic in `src/cli/chat.ts` — currently `const profile = luthorDefaultProfile` is hardcoded. Add a branch for the new id that imports and returns the new profile module.
 2. Register the new `profileId` as a valid value in `ProjectConfigSchema` in `src/schemas/project-config.ts` so `init` and `chat` accept it without a validation error.
+
+---
+
+## License
+
+MIT License — see `LICENSE` file.
+
+## Contact
+
+Rob Watson — rwatso [at] gmail [dot] com
