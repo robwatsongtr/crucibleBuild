@@ -20,8 +20,7 @@ are done, you will have a complete pipeline that takes source code as a string
 and produces output.
 
 It is intentionally small. Small enough that you can hold the entire thing in
-your head. Every piece must work or nothing works — there is no way to fake
-understanding.
+your head. Every piece must work or nothing works.
 
 It is also Turing complete. Luthor has variables, arithmetic, conditionals, and
 loops. That is enough to compute anything computable. There are no functions or
@@ -84,7 +83,7 @@ something similar — `if`, `for`, and `while` are the implicit openers, with
 The practical effect in Luthor: the parser's `conditional()` method consumes
 `suppose`, parses the condition, and immediately calls `block()`. There's no
 opening delimiter to consume. `block()` just collects statements until it sees
-`end`. Less syntax, simpler parser, same expressive power.
+`end`. 
 
 ---
 
@@ -203,10 +202,9 @@ You are provided with two test harness files — one for each pass:
   command line argument and does the same: prints tokens, AST, then output
 
 These are not implementation files — they are scaffolding that calls your code
-and shows you what it produces. You did not write them and do not need to. Read
-them before you start each pass. They define the interface you are building
-toward — what `Lexer` takes, what `tokenize()` returns, how the pipeline
-connects.
+and shows you what it produces. Read them before you start each pass. 
+They define the interface you are building toward — what `Lexer` takes, what `tokenize()` 
+returns, how the pipeline connects.
 
 For the Python pass, `main.py` imports from `src/` — so your implementation
 files go in `my_luthor/python_luthor/src/`:
