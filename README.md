@@ -29,20 +29,13 @@ Out of this experience was born the idea of an "AI Mentor" that can provide the 
 
 ## The Problem
 
-Until you can implant experience into someone's brain, the only way to get experience is to actually do the task long enough for the proper patterns to get established. There is no other way. You must write programs to understand how to properly use AI to write programs. 
+Until you can implant experience into someone's brain, the only way to get it is to actually do the task long enough for the right patterns to form. There's no shortcut — you have to write programs to understand how to use AI to write programs.
 
-People entering software development now face a fundamental paradox:
+People entering software development now face a paradox: LLMs can write code for you instantly, but using them that way hollows out the understanding you need to steer them well. Effective use requires experience, and LLMs short-circuit the process of getting that experience.
 
-- LLMs can write code for you instantly
-- Using them that way hollows out the understanding you need to use them well
-- You need experience to steer a nondeterministic model effectively
-- But LLMs short-circuit the process of getting that experience
+CrucibleBuild is a structured tool for the struggle these developers know they need: a framework for learning classic deep systems — interpreters, compilers, servers, databases — from scratch, where the difficulty is the point.
 
-The result is developers who can generate code they don't understand, can't debug when it breaks, can't evaluate whether it's good, and can't steer the model when it goes wrong.
-
-The people who are aware of this problem have no structured solution. They know they need to struggle. They don't have a tool designed around that need. CrucibleBuild aims to be a tool that provides a framework to learn classic deep systems: interpreters / compilers, servers, databases, and the like. By building deep systems from scratch you gain fundamental programming skills. 
-
-For more experienced developers, it's important to maintain deliberate practice writing code and working through problems by hand. A regular Leetcode practice is a good way to accomplish this, but those problems are small in scope. Building a language, a web server, or a database engine is a much more in-depth and fun way to keep your chops up. 
+Experienced developers benefit too. Deliberate practice matters — Leetcode is one way to get it, but those problems are small in scope. Building a language, a web server, or a database engine keeps your chops up at a much deeper level.
 
 ---
 
