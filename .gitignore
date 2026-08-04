@@ -30,3 +30,5 @@ Thumbs.db
 
 # Vitest
 coverage/
+
+build_docs/

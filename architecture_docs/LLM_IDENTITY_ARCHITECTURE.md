@@ -39,7 +39,7 @@ The Haiku vs Sonnet difference illustrates the boundary of this. Sonnet infers i
 
 ## A Finite State Machine Bolted onto a Language Model
 
-The phase system is a textbook finite state machine. At any moment the learner is in exactly one state (`python-tokens`, `python-lexer`, etc.). Transitions are defined (`advance_phase`). The trigger condition is defined (all checkpoints met). The transition is deterministic (written to `config.json`).
+The phase system is a finite state machine. At any moment the learner is in exactly one state (`python-tokens`, `python-lexer`, etc.). Transitions are defined (`advance_phase`). The trigger condition is defined (all checkpoints met). The transition is deterministic (written to `config.json`).
 
 The language model sits on top of that structure and handles everything the FSM can't — natural language understanding, Socratic questioning, reading code, giving feedback, graduated escalation. All the fuzzy judgment work a state machine can't encode.
 

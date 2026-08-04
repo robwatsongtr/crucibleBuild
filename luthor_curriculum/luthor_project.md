@@ -353,19 +353,6 @@ make
 
 Source files use `.lut` by convention. The binary prints each pipeline stage (tokens, AST, then output) for educational visibility.
 
----
-
-## Future Additions
-
-- **Functions** — reusable code blocks, parameters, return values; requires call stack and scope management
-- **Strings** — string literals, concatenation, string operations
-- **Boolean literals** — explicit `true`/`false` keywords
-- **Logical operators** — `and`, `or`, `not`
-- **Arrays/Lists** — collections
-- **For loops** — syntactic sugar over `crime`
-- **Better error messages** — line numbers, diagnostics, stack traces
-- **Bytecode compiler + VM** — compile AST to bytecode, interpret in a virtual machine (faster than tree walking)
-- **Standard library** — built-in functions for I/O, math, strings
 
 ---
 
