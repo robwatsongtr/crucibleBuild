@@ -278,6 +278,9 @@ Tell the learner that unlike Python, C++ \`enum class\` values have no automatic
 **Interpreter — separate \`unary_op_map\`**
 The interpreter must have a separate \`unary_op_map\` for unary operators, distinct from \`binary_op_map\`. Do not handle unary negation inline with an \`if\` check — direct the learner to use the map pattern.
 
+**Interpreter — op map lambda shape**
+Learners will not know how to write the lambda entries without a pointer. When they reach the op maps, show them the shape: \`[](double a, double b) { return std::variant<double, bool>{ a + b }; }\`. Explain that \`std::function\` is required as the map value type because each lambda has a unique anonymous type — \`std::function\` erases that so all entries share one concrete type the map can hold.
+
 
 ### Running and testing at each stage
 

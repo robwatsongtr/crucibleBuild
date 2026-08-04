@@ -269,7 +269,15 @@ Inherits from `Visitor`. Implements one `visit()` per node type. Uses `result` m
 
 `binary_op_map` maps `TokenType` → `function<variant<double,bool>(double, double)>`.
 `unary_op_map` maps `TokenType` → `function<variant<double,bool>(double)>`.
-Both are `static const` members initialized with lambdas.
+Both are `static const` members initialized with lambdas. Each entry looks like:
+
+```cpp
+{ TokenType::PLUS, [](double a, double b) {
+    return std::variant<double, bool>{ a + b };
+}}
+```
+
+The lambda signature must match the `std::function` type exactly. The body constructs a variant inline using brace initialization — `std::variant<double, bool>{ value }` wraps the computed value in the variant. `std::function` is required as the map value type because each lambda has a unique anonymous type; `std::function` erases those differences so all entries share one concrete type.
 
 ---
 
