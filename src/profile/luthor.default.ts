@@ -1,6 +1,6 @@
-import { ConstraintProfile } from '../models/index.js'
+import { MentorProfile } from '../models/index.js'
 
-export const luthorDefaultProfile: ConstraintProfile = {
+export const luthorDefaultProfile: MentorProfile = {
   id: 'luthor-default',
   version: '1.0.0',
   persona: {

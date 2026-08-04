@@ -2,10 +2,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { AgentLoop, AgentLoopOptions } from '../../src/agent/agent-loop.js'
 import { InferenceClient, InferenceResponse } from '../../src/agent/inference-client.js'
 import { ContextStore } from '../../src/services/context-store.js'
-import { ConstraintProfile } from '../../src/models/index.js'
+import { MentorProfile } from '../../src/models/index.js'
 
 // Minimal single-phase profile — enough for get_project_phase to work
-const minimalProfile: ConstraintProfile = {
+const minimalProfile: MentorProfile = {
   id: 'test-profile',
   version: '1.0.0',
   persona: {
@@ -103,7 +103,9 @@ describe('AgentLoop — plain text response', () => {
     await loop2.chat('first message', () => {})
     await loop2.chat('second message', () => {})
 
-    expect(capturedMessages.some((m: unknown) => (m as { role: string }).role === 'user')).toBe(true)
+    expect(capturedMessages.some((m: unknown) => (m as { role: string }).role === 'user')).toBe(
+      true,
+    )
     expect(
       capturedMessages.some((m: unknown) => (m as { role: string }).role === 'assistant'),
     ).toBe(true)

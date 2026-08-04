@@ -3,7 +3,7 @@ import { PersonaSchema } from './persona.js'
 import { ConstraintRuleSchema } from './constraint-rule.js'
 import { ProjectDefinitionSchema } from './project-definition.js'
 
-export const ConstraintProfileSchema = z.object({
+export const MentorProfileSchema = z.object({
   id: z.string(),
   version: z.string(),
   persona: PersonaSchema,

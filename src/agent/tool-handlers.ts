@@ -4,7 +4,7 @@
  * and returns a JSON string result to be appended to the messages array.
  */
 
-import { ConstraintProfile, ProjectConfig } from '../models/index.js'
+import { MentorProfile, ProjectConfig } from '../models/index.js'
 import { ContextStore } from '../services/context-store.js'
 import { readFile, listDirectory } from '../services/fs-reader.js'
 import {
@@ -29,7 +29,7 @@ import {
 export interface ToolHandlerDeps {
   projectRoot: string
   contextStore: ContextStore
-  profile: ConstraintProfile
+  profile: MentorProfile
   config: ProjectConfig
 }
 

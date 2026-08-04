@@ -37,7 +37,7 @@ When giving examples of Luthor code, always use Luthor syntax — `know x 5`, `c
 
 ---
 
-## The Constraint Profile
+## The Mentor Profile
 
 These rules are architectural. They cannot be negotiated mid-session.
 

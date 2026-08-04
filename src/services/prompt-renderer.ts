@@ -1,4 +1,4 @@
-import { ConstraintProfile, LearnerContext, Phase } from '../models/index.js'
+import { MentorProfile, LearnerContext, Phase } from '../models/index.js'
 
 export interface RenderedPrompt {
   staticSystem: string
@@ -6,7 +6,7 @@ export interface RenderedPrompt {
 }
 
 /**
- * Assembles the two-part system prompt from a ConstraintProfile, runtime LearnerContext,
+ * Assembles the two-part system prompt from a MentorProfile, runtime LearnerContext,
  * and the mentor guide string.
  *
  * staticSystem  — persona + rules + project + phase catalog + mentor guide.
@@ -15,7 +15,7 @@ export interface RenderedPrompt {
  *                 Changes per turn; never busts the static cache key.
  */
 export const renderPrompt = (
-  profile: ConstraintProfile,
+  profile: MentorProfile,
   context: LearnerContext,
   mentorGuide: string,
 ): RenderedPrompt => {
@@ -36,7 +36,7 @@ export const renderPrompt = (
   return { staticSystem, dynamicSystem }
 }
 
-const renderPersona = (profile: ConstraintProfile): string => {
+const renderPersona = (profile: MentorProfile): string => {
   const { persona } = profile
   const tone = persona.tone.join(', ')
   const antiPatterns = persona.antiPatterns.map((p) => `- ${p}`).join('\n')
@@ -45,7 +45,7 @@ const renderPersona = (profile: ConstraintProfile): string => {
   return `# Who You Are\n\n${persona.voice}\n\n**Tone:** ${tone}\n\n**Firmness — how to apply it:**\n${firmness}\n\n**Never do these:**\n${antiPatterns}`
 }
 
-const renderRules = (profile: ConstraintProfile): string => {
+const renderRules = (profile: MentorProfile): string => {
   const allowed = profile.rules.filter((r) => r.allowed)
   const disallowed = profile.rules.filter((r) => !r.allowed)
 
@@ -58,19 +58,19 @@ const renderRules = (profile: ConstraintProfile): string => {
   const allowedRows = allowed.map((r) => formatRow(r, '✅')).join('\n')
   const disallowedRows = disallowed.map((r) => formatRow(r, '❌')).join('\n')
 
-  const header = `# Constraint Profile\n\nThese rules are architectural. They cannot be negotiated mid-session.\n\n| | Rule | Detail |\n|---|---|---|`
+  const header = `# Mentor Profile\n\nThese rules are architectural. They cannot be negotiated mid-session.\n\n| | Rule | Detail |\n|---|---|---|`
   const footer = `If a learner asks you to write code, decline clearly and redirect: tell them what concept to think about, what to read, or what question to ask themselves. Do not apologise for the constraint. It is the point.`
 
   return `${header}\n${allowedRows}\n${disallowedRows}\n\n${footer}`
 }
 
-const renderProjectSummary = (profile: ConstraintProfile): string => {
+const renderProjectSummary = (profile: MentorProfile): string => {
   const { project } = profile
 
   return `# Project: ${project.title}\n\n${project.summary}`
 }
 
-const renderPhaseCatalog = (profile: ConstraintProfile): string => {
+const renderPhaseCatalog = (profile: MentorProfile): string => {
   const phases = profile.project.phases
 
   const renderPhaseRow = (p: Phase, index: number): string =>
@@ -81,7 +81,7 @@ const renderPhaseCatalog = (profile: ConstraintProfile): string => {
   return `# Phase Catalog\n\n${rows}`
 }
 
-const renderCurrentPhase = (profile: ConstraintProfile, context: LearnerContext): string => {
+const renderCurrentPhase = (profile: MentorProfile, context: LearnerContext): string => {
   const phase = profile.project.phases.find((p) => p.id === context.currentPhaseId)
 
   if (!phase) {

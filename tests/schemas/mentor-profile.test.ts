@@ -3,7 +3,7 @@ import { ConstraintRuleSchema } from '../../src/schemas/constraint-rule.js'
 import { PersonaSchema } from '../../src/schemas/persona.js'
 import { PhaseSchema, ProjectDefinitionSchema } from '../../src/schemas/project-definition.js'
 import { LearnerContextSchema } from '../../src/schemas/learner-context.js'
-import { ConstraintProfileSchema } from '../../src/schemas/constraint-profile.js'
+import { MentorProfileSchema } from '../../src/schemas/mentor-profile.js'
 import { ProjectConfigSchema } from '../../src/schemas/project-config.js'
 import { luthorDefaultProfile } from '../../src/profile/luthor.default.js'
 
@@ -122,7 +122,6 @@ describe('LearnerContextSchema', () => {
       currentPhaseId: 'python-tokens',
       fileTree: 'src/\n  tokens.py',
       recentChanges: [{ path: 'src/tokens.py', kind: 'add', at: '2026-06-10T10:00:00Z' }],
-      acknowledgedContractAt: '2026-06-10T09:00:00Z',
     })
 
     expect(result.success).toBe(true)
@@ -134,7 +133,6 @@ describe('LearnerContextSchema', () => {
       currentPhaseId: 'python-tokens',
       fileTree: '',
       recentChanges: [{ path: 'src/tokens.py', kind: 'delete', at: '2026-06-10T10:00:00Z' }],
-      acknowledgedContractAt: '2026-06-10T09:00:00Z',
     })
 
     expect(result.success).toBe(false)
@@ -161,9 +159,9 @@ describe('ProjectConfigSchema', () => {
   })
 })
 
-describe('ConstraintProfileSchema', () => {
+describe('MentorProfileSchema', () => {
   it('validates the luthor default profile', () => {
-    const result = ConstraintProfileSchema.safeParse(luthorDefaultProfile)
+    const result = MentorProfileSchema.safeParse(luthorDefaultProfile)
 
     expect(result.success).toBe(true)
   })

@@ -44,9 +44,9 @@ For more experienced developers, it's important to maintain deliberate practice 
 
 ---
 
-## The Constraint Profile
+## The Mentor Profile
 
-CrucibleBuild's mentor operates under a structured constraint profile; and explicit set rules with a deliberate escalation path:
+CrucibleBuild's mentor operates under a structured mentor profile — an explicit set of rules with a deliberate escalation path:
 
 | | Allowed |
 |---|---|
@@ -165,7 +165,7 @@ CrucibleBuild is a learning framework. Luthor is the first project. Adding a new
 
 ### What gets reused
 
-The constraint profile mechanics, mentor persona, graduated escalation path, and all CLI plumbing (init, chat, file watching, agent loop) are shared across every project. 
+The mentor profile mechanics, mentor persona, graduated escalation path, and all CLI plumbing (init, chat, file watching, agent loop) are shared across every project. 
 
 ### What gets authored per project
 
@@ -180,7 +180,7 @@ Each project is a self-contained **curriculum bundle** — a directory of markdo
 
 One code addition is also required: a profile module (`src/profile/<project>.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative curriculum docs and drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template.
 
-`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_guide.md`. `luthor_curriculum/` is the canonical example of the full bundle pattern.
+`mentor_profile_example.md` at the repo root provides a ready-to-adapt base for the rules, escalation protocol, and tone sections of a new `mentor_guide.md`. `luthor_curriculum/` is the canonical example of the full bundle pattern.
 
 **Wiring a new profile into the app** requires two small code changes:
 
