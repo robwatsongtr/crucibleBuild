@@ -3,7 +3,7 @@
 ## 1. `cli/chat.ts` — Setup
 
 - Reads and validates `.cruciblebuild/config.json` via Zod (`ProjectConfigSchema`)
-- Loads `luthorDefaultProfile` (the constraint profile + phase catalog)
+- Loads `luthorDefaultProfile` (the mentor profile + phase catalog)
 - Reads `mentor_guide.md` off disk from the package root
 - Creates `ContextStore` with the current phase ID, calls `refreshFileTree()` to snapshot the learner's files
 - Starts `FileWatcher` — from this point on, any file the learner saves pushes an event into the context store's ring buffer

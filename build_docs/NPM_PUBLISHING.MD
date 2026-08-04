@@ -25,7 +25,7 @@ That's it. Your machine is now authorized to publish.
     "luthor_curriculum",
     "python_luthor",
     "cpp_luthor",
-    "constraint_profile_example.md"
+    "mentor_guide_example.md"
   ]
 }
 ```

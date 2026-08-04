@@ -2,7 +2,7 @@
 
 ## Context
 
-CrucibleBuild is a project-based technical mentorship CLI. The learner runs it in a project directory; it watches files, holds context of what they've written, and chats with them in the terminal. The mentor is constrained by a **constraint profile** — architecturally, it cannot write code or give solutions. It can give architecture, point at concepts, answer questions, give feedback on code the learner wrote, and look up syntax.
+CrucibleBuild is a project-based technical mentorship CLI. The learner runs it in a project directory; it watches files, holds context of what they've written, and chats with them in the terminal. The mentor is constrained by a **mentor profile** — architecturally, it cannot write code or give solutions. It can give architecture, point at concepts, answer questions, give feedback on code the learner wrote, and look up syntax.
 
 The repository today is documentation and reference curriculum (Luthor, in `my_luthor/python_luthor/` and `my_luthor/cpp_luthor/`). No app code exists. This plan covers building the MVP from scratch.
 
@@ -10,7 +10,7 @@ The repository today is documentation and reference curriculum (Luthor, in `my_l
 - **TypeScript / Node stack** 
 - **Core loop only — 5 phases**. Phase synthesis docs and packaging deferred.
 - **Terminal-only chat for MVP**. No web UI, no React, no local server. Audience lives in the terminal (Claude Code is the precedent). Web UI deferred.
-- **One constraint profile for MVP** — the Luthor default the founder actually used. "Profile" is an *internal* architectural concept (schemas + renderer) so multi-profile support is trivial later. The learner does not pick at init — they're shown the contract and must explicitly acknowledge it.
+- **One mentor profile for MVP** — the Luthor default the founder actually used. "Profile" is an *internal* architectural concept (schemas + renderer) so multi-profile support is trivial later. The learner does not pick at init — they're shown the contract and must explicitly acknowledge it.
 - **Profile pieces defined as Zod schemas** and assembled into the system prompt by a renderer.
 
 ---
@@ -43,7 +43,7 @@ src/
     persona.ts
     project-definition.ts
     learner-context.ts
-    constraint-profile.ts   # composes the above
+    mentor-profile.ts        # composes the above
     project-config.ts       # on-disk .cruciblebuild/config.json shape
     agent-tool-io.ts        # tool input/output schemas
   models/index.ts           # re-exported inferred types
@@ -77,23 +77,23 @@ bin/cruciblebuild           # shebang → dist/cli/index.js
 
 ---
 
-## Phase 1 — Constraint Profile / System Prompt
+## Phase 1 — Mentor Profile / System Prompt
 
 **The core IP. Everything else is scaffolding around this.**
 
 Deliverables:
-- Zod schemas for every piece of a constraint profile.
+- Zod schemas for every piece of a mentor profile.
 - The Luthor default profile as a typed module in `src/profile/luthor.default.ts` (JSON-on-disk profiles deferred; schemas make adding it trivial).
 - A `renderPrompt(profile, context, mentorGuide)` function in `prompt-renderer.ts` that returns `{ staticSystem, dynamicSystem }`. The split is what makes prompt caching work.
 - Vitest snapshot tests.
 
 Schemas in `src/schemas/`:
-- `ConstraintRuleSchema` — `{ id, label, allowed: boolean, description, examples? }`. Renderer groups by `allowed` into the ✅/❌ tables from `constraint_profile.md`.
+- `ConstraintRuleSchema` — `{ id, label, allowed: boolean, description, examples? }`. Renderer groups by `allowed` into the ✅/❌ tables.
 - `PersonaSchema` — `{ name, voice, tone[], firmnessExamples[], antiPatterns[] }`. Encodes "firm but genuinely helpful, not a lobotomized refuser."
 - `ProjectDefinitionSchema` — `{ slug, title, summary, language, phases: PhaseSchema[], referenceArtifacts[] }`.
 - `PhaseSchema` — `{ id, title, goals[], checkpoints[], conceptsIntroduced[] }`.
 - `LearnerContextSchema` (runtime) — `{ projectSlug, currentPhaseId, fileTree, recentChanges, acknowledgedContractAt }`.
-- `ConstraintProfileSchema` — composes persona, rules, project.
+- `MentorProfileSchema` — composes persona, rules, project.
 - `ProjectConfigSchema` — what `init` writes: `{ profileId, projectSlug, currentPhaseId, contract: { acknowledgedAt, version } }`.
 
 **Luthor curriculum phase order** (sourced from `luthor_curriculum/luthor_project.md`, encoded into `src/profile/luthor.default.ts`):
@@ -349,7 +349,7 @@ The `profileId` in `.cruciblebuild/config.json` ties a session to its curriculum
 
 ## Critical Files
 
-- `src/schemas/constraint-profile.ts` — composed schema everything else keys off.
+- `src/schemas/mentor-profile.ts` — composed schema everything else keys off.
 - `src/services/prompt-renderer.ts` — owns the static/dynamic split that makes caching work.
 - `src/profile/luthor.default.ts` — the single MVP profile, the actual product IP.
 - `src/agent/agent-loop.ts` — streaming + tool-use turn loop, heart of phase 5.

@@ -35,7 +35,7 @@ For more experienced developers, it's important to maintain deliberate practice 
 
 ## The Insight
 
-The founder's workflow was not "Socratic tutoring" in the academic sense. It was a specific, negotiated **constraint profile** applied to a real project:
+The founder's workflow was not "Socratic tutoring" in the academic sense. It was a specific, negotiated **mentor profile** applied to a real project:
 
 - Architecture and structure: ✅
 - Pointing toward the right concepts: ✅
@@ -58,7 +58,7 @@ The key additional elements that made it work:
 
 ## From Insight to System
 
-This constraint profile isn't a loose set of vibes — it's a structured 
+This mentor profile isn't a loose set of vibes — it's a structured 
 set of rules with a deliberate escalation path for when a learner is 
 genuinely stuck, not just looking for a shortcut.
 
@@ -79,7 +79,7 @@ this whole product is designed around) from *unproductive friction*
 (getting stuck on a typo or an undocumented quirk, which teaches 
 nothing and just burns motivation).
 
-The full constraint profile and system prompt design — including how this is enforced and how edge cases are handled — is defined in `luthor_curriculum/mentor_guide.md`.
+The full mentor profile and system prompt design — including how this is enforced and how edge cases are handled — is defined in `luthor_curriculum/mentor_guide.md`.
 
 ---
 
@@ -91,7 +91,7 @@ A **project-based technical mentorship tool** — a CLI application that:
 2. Watches the filesystem in real time (using chokidar)
 3. Maintains live context of what the learner has actually written
 4. Pairs that with a chat interface 
-5. Has the constraint profile baked in architecturally — it cannot give code, by design
+5. Has the mentor profile baked in architecturally — it cannot give code, by design
 6. Reacts to file changes intelligently — sometimes proactively, mostly waiting for the learner to engage
 
 
@@ -220,7 +220,7 @@ The visitor pattern enforces completeness at **compile time** — add a node typ
 | CLI / developer native | Yes | No | No | No |
 | Constraint is the product | Yes | No | No | No |
 
-The Socratic tutoring feature is becoming a commodity — every major AI product is adding it. The differentiation is the constraint profile being architectural, the project-based structure, the filesystem awareness, and the curriculum specifically designed to produce the "everything clicked" moment.
+The Socratic tutoring feature is becoming a commodity — every major AI product is adding it. The differentiation is the mentor profile being architectural, the project-based structure, the filesystem awareness, and the curriculum specifically designed to produce the "everything clicked" moment.
 
 ---
 
@@ -230,7 +230,7 @@ CrucibleBuild is a learning framework. Luthor is the first project. Adding a new
 
 ### What gets reused across every project
 
-The constraint profile mechanics are shared infrastructure. Every project inherits:
+The mentor profile mechanics are shared infrastructure. Every project inherits:
 
 - The mentor persona (firm, technically precise, not a lobotomized refuser)
 - The constraint rules (✅ architecture, concepts, feedback / ❌ code, solutions)
@@ -238,7 +238,7 @@ The constraint profile mechanics are shared infrastructure. Every project inheri
 - The system prompt renderer that assembles static and dynamic blocks
 - All CLI plumbing: `init`, `chat`, file watching, slash commands, the agent loop
 
-None of this changes per project. The constraint profile is the same contract regardless of what the learner is building.
+None of this changes per project. The mentor profile is the same contract regardless of what the learner is building.
 
 ### What gets authored per project
 
@@ -260,7 +260,7 @@ Each project is a self-contained **curriculum bundle** — a directory of markdo
 
 **One code addition is required:** a new profile module (e.g. `src/profile/webserver.default.ts`) that encodes the phase list as typed `PhaseSchema` entries — phase IDs, goals, checkpoints, concepts introduced. This is the structured counterpart to the narrative in the curriculum docs. It's what drives `/phase`, phase advancement, and the dynamic system prompt block. Use `src/profile/luthor.default.ts` as the template — the structure is self-evident and the Zod types guide the rest.
 
-`constraint_profile_example.md` at the repo root provides a ready-to-adapt base for the constraint rules, escalation protocol, and tone sections of a new `mentor_guide.md` — the parts that are largely the same across every project.
+`mentor_guide_example.md` at the repo root provides a ready-to-adapt base for the rules, escalation protocol, and tone sections of a new `mentor_guide.md` — the parts that are largely the same across every project.
 
 The `profileId` field in `.cruciblebuild/config.json` ties a session to its curriculum bundle. `luthor-default` is the first value. New projects register new ids.
 
