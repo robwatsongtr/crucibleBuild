@@ -94,7 +94,7 @@ By default the Anthropic provider is used. Set `CRUCIBLEBUILD_PROVIDER=gemini` t
 
 ### Running
 
-`my_luthor/` is your working directory for the entire Luthor curriculum — both the Python pass and the C++ rewrite. Initialize a git repo there to save your work, then run `init`:
+`my_luthor/` is your working directory for the entire Luthor curriculum — both the Python pass and the C++ rewrite. Initialize a git repo there to save your work, then run `init` **you must be in my_luthor/ to run init**:
 
 ```bash
 cd my_luthor
@@ -104,7 +104,7 @@ cruciblebuild init
 
 This prints the Luthor overview and writes `.cruciblebuild/config.json` into `my_luthor/`.
 
-Then start a chat session:
+Then start a chat session **you must be in my_luthor/ to run chat session**:
 
 ```bash
 cruciblebuild chat
