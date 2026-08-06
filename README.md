@@ -177,10 +177,17 @@ One code addition is also required: a profile module (`src/profile/<project>.def
 
 `mentor_guide_example.md` at the repo root provides a ready-to-adapt base for the rules, escalation protocol, and tone sections of a new `mentor_guide.md`. `luthor_curriculum/` is the canonical example of the full bundle pattern.
 
-**Wiring a new profile into the app** requires two small code changes:
+**Wiring a new profile into the app** requires these code changes:
 
 1. Add the new `profileId` to the profile selection logic in `src/cli/chat.ts` — currently `const profile = luthorDefaultProfile` is hardcoded. Add a branch for the new id that imports and returns the new profile module.
 2. Register the new `profileId` as a valid value in `ProjectConfigSchema` in `src/schemas/project-config.ts` so `init` and `chat` accept it without a validation error.
+3. Update (or generalize) the project-root directory check in `src/services/project-scaffolder.ts` and the messages in `src/cli/init.ts` / `src/cli/chat.ts` — they currently assume Luthor's `my_luthor/`, `python_luthor/`, `cpp_luthor/` naming.
+
+### The learner's working directory
+
+Each project also has its own working directory the learner builds in — `my_luthor/` for Luthor, e.g. `my_webserver/` for a web server project — containing that project's own subdirectories (Luthor's are `python_luthor/` and `cpp_luthor/`). This is separate from the curriculum bundle: the curriculum bundle is docs the agent reads, the working directory is where the learner's code lives and where `init`/`chat` are run.
+
+This directory shape is currently hardcoded for Luthor: `isLuthorProjectRoot` in `src/services/project-scaffolder.ts` checks specifically for `python_luthor/` and `cpp_luthor/` before allowing `init`/`chat` to run, and the CLI's error messages reference `my_luthor/` by name. A new project needs the equivalent check for its own subdirectory names — this is not yet generalized and is a real code change.
 
 ---
 

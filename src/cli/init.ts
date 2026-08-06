@@ -5,7 +5,12 @@ import { fileURLToPath } from 'url'
 import { renderMarkdown } from '../tui/markdown.js'
 import { spawnSync } from 'child_process'
 import { luthorDefaultProfile } from '../profile/luthor.default.js'
-import { isInitialised, hasGitRepo, scaffold } from '../services/project-scaffolder.js'
+import {
+  isInitialised,
+  hasGitRepo,
+  isLuthorProjectRoot,
+  scaffold,
+} from '../services/project-scaffolder.js'
 
 const REPO_ROOT = resolve(fileURLToPath(import.meta.url), '../../../')
 
@@ -48,6 +53,13 @@ export const runInit = async (): Promise<void> => {
   if (isInitialised(cwd)) {
     console.log(chalk.yellow('Already initialised. Delete .cruciblebuild/ to re-run init.'))
     return
+  }
+
+  if (!isLuthorProjectRoot(cwd)) {
+    console.log(chalk.red("This isn't a Luthor project directory."))
+    console.log(chalk.dim('Expected to find python_luthor/ and cpp_luthor/ here.'))
+    console.log(chalk.dim('cd into my_luthor/ and run `cruciblebuild init` again.'))
+    process.exit(1)
   }
 
   if (!hasGitRepo(cwd)) {

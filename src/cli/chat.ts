@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { getPaths } from '../config/paths.js'
+import { isLuthorProjectRoot } from '../services/project-scaffolder.js'
 import { ProjectConfigSchema } from '../schemas/project-config.js'
 import { luthorDefaultProfile } from '../profile/luthor.default.js'
 import { renderPrompt } from '../services/prompt-renderer.js'
@@ -21,7 +22,18 @@ export const runChat = async (): Promise<void> => {
 
   if (!existsSync(paths.configFile)) {
     console.log(chalk.red('No .cruciblebuild/config.json found.'))
-    console.log(chalk.dim('Run `cruciblebuild init` first.'))
+
+    if (isLuthorProjectRoot(cwd)) {
+      console.log(chalk.dim('Run `cruciblebuild init` first.'))
+    } else {
+      console.log(chalk.dim("This isn't a Luthor project directory."))
+      console.log(
+        chalk.dim(
+          'cd into my_luthor/ and run `cruciblebuild init` (or `cruciblebuild chat` if you already have).',
+        ),
+      )
+    }
+
     process.exit(1)
   }
 

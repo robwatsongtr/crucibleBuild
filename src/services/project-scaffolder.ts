@@ -26,6 +26,10 @@ export const isInitialised = (projectRoot: string = process.cwd()): boolean =>
 export const hasGitRepo = (projectRoot: string = process.cwd()): boolean =>
   existsSync(join(projectRoot, '.git'))
 
+/** Returns true if the given directory contains python_luthor/ and cpp_luthor/ — i.e. it's a my_luthor/ project dir, not the repo root above it. */
+export const isLuthorProjectRoot = (projectRoot: string = process.cwd()): boolean =>
+  existsSync(join(projectRoot, 'python_luthor')) && existsSync(join(projectRoot, 'cpp_luthor'))
+
 /**
  * Writes .cruciblebuild/ directory structure, config.json, README.md,
  * and updates .gitignore. Returns the validated config that was written.
