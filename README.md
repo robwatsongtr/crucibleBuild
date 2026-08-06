@@ -60,7 +60,7 @@ When you're genuinely stuck, help is calibrated in stages: hints → explanation
 
 ## The Curriculum: Luthor
 
-As mentioed above, the first and flagship project is **Luthor** — a Turing-complete interpreted programming language built in two passes. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. See [`luthor_curriculum/luthor_overview.md`](luthor_curriculum/luthor_overview.md) for the full learner-facing introduction.
+As mentioed above, the first and flagship project is **Luthor** — a Turing-complete interpreted programming language built in two passes. To keep the focus tight and on the 'lexer -> parser -> interpreter' pipeline, functions and closures were omitted. See [`luthor_curriculum/luthor_overview.md`](luthor_curriculum/luthor_overview.md) for the full learner-facing introduction. Also in that directory are a complete set of reference documents covering the key concepts in language design and implementation from lexer to interpreter. 
 
 **Pass 1: Python**
 Build the full pipeline: lexer, parser (recursive descent), AST nodes, and a tree-walking interpreter. Python lets you focus on the concepts without fighting the language.
