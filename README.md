@@ -1,6 +1,6 @@
-# CrucibleBuild - AI Programming Mentor 
+# CrucibleBuild - Programming Mentor 
 
-CrucibleBuild is a project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The AI mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
+CrucibleBuild is a project-based technical mentorship CLI application. Run it in a project directory — it watches your files, holds context of what you've written, and chats with you in the terminal. The mentor is constrained by a profile: it cannot write code or give solutions, but it can explain architecture, point at concepts, answer questions, and give feedback on code you wrote.
 
 
 ### The first and flagship project is Luthor — a Turing-complete interpreted programming language built in two passes: a Python pass and a C++ rewrite.
